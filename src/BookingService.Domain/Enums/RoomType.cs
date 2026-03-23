@@ -4,10 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Domain.Common
+namespace Booking.Domain.Enums
 {
-    public abstract class Entity
+    public enum RoomType
     {
-        public Guid Id { get; set; } = new Guid();
+        Standard,
+        Double,
+        Family,
+        Suite,
+        Deluxe
     }
 }
