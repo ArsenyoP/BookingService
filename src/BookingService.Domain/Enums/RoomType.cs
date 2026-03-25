@@ -9,9 +9,23 @@ namespace Booking.Domain.Enums
     public enum RoomType
     {
         Standard,
-        Double,
-        Family,
+        Deluxe,
         Suite,
-        Deluxe
+        JuniorSuite,
+        PresidentialSuite,
+
+        Studio,
+        Apartment,
+        Penthouse,
+
+        Cottage,
+        Villa,
+        Bungalow,
+        Townhouse,
+        EntireHouse,
+
+        SharedRoom,
+        Dormitory,
+        HostelBed
     }
 }
