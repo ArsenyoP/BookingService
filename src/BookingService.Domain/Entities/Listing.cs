@@ -20,6 +20,7 @@ namespace Booking.Domain.Entities
 
         private Listing(string title, string description, Address address, decimal pricePerNight)
         {
+            Id = Guid.NewGuid();
             Title = title;
             Description = description;
             Address = address;

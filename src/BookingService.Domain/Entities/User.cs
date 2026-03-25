@@ -24,12 +24,23 @@ namespace Booking.Domain.Entities
         public DateOnly DateOfBirth { get; set; }
         public bool IsActive { get; set; } = true;
 
+        public User(string firstName, string lastName, DateOnly dateOfBirth, string email, string username)
+        {
+            Id = Guid.NewGuid();
+            FirstName = firstName;
+            LastName = lastName;
+            DateOfBirth = dateOfBirth;
+            Email = email;
+            UserName = username;
+            CreatedAt = DateTime.UtcNow;
+            IsActive = true;
+        }
 
         public static Result IsAdult(DateOnly dateOfBirth)
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
-            
-            if(dateOfBirth.AddYears(18) > today)
+
+            if (dateOfBirth.AddYears(18) > today)
             {
                 return Result.Failure(UserErrors.UnderAge);
             }

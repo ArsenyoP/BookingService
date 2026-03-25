@@ -16,6 +16,7 @@ namespace Booking.Domain.Entities
 
         public Amenity(string name, string category)
         {
+            Id = Guid.NewGuid();
             Name = name;
             Category = category;
         }

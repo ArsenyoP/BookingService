@@ -8,6 +8,6 @@ namespace Booking.Domain.Common
 {
     public abstract class Entity
     {
-        public Guid Id { get; set; } = new Guid();
+        public Guid Id { get; protected init; }
     }
 }
