@@ -50,7 +50,7 @@ namespace Booking.Domain.ValueObjects
             Floor = floor;
         }
 
-        private Result<Address> Create(string country, string city, string street, string houseNumber, int floor)
+        public Result<Address> Create(string country, string city, string street, string houseNumber, int floor)
         {
             string[] stringsToValidate = { country, city, street, houseNumber };
 
