@@ -11,21 +11,13 @@ namespace Booking.Domain.Enums
         Standard,
         Deluxe,
         Suite,
-        JuniorSuite,
-        PresidentialSuite,
 
-        Studio,
-        Apartment,
+        OneBedFlar,
+        TwoBedFlar,
+        ThreeBedFlat,
         Penthouse,
 
-        Cottage,
-        Villa,
-        Bungalow,
-        Townhouse,
-        EntireHouse,
-
         SharedRoom,
-        Dormitory,
-        HostelBed
+        DormitoryBed,
     }
 }

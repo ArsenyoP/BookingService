@@ -1,6 +1,7 @@
 using Booking.Domain.Common;
 using Booking.Domain.Errors;
 using Booking.Domain.ValueObjects;
+using Booking.Domain.Enums;
 
 namespace Booking.Domain.Entities
 {
@@ -10,6 +11,7 @@ namespace Booking.Domain.Entities
         public string Description { get; private set; } = string.Empty;
         public Address Address { get; private set; }
         public decimal PricePerNight { get; private set; }
+        public ListingType ListingType { get; private set; }
 
 
         private readonly List<Amenity> _commonAmenities = new();
@@ -18,16 +20,17 @@ namespace Booking.Domain.Entities
 
         private Listing() { }
 
-        private Listing(string title, string description, Address address, decimal pricePerNight)
+        private Listing(string title, string description, Address address, decimal pricePerNight, ListingType listingType)
         {
             Id = Guid.NewGuid();
             Title = title;
             Description = description;
             Address = address;
             PricePerNight = pricePerNight;
+            ListingType = listingType;
         }
 
-        public static Result<Listing> Create(string title, string description, Address address, decimal pricePerNight)
+        public static Result<Listing> Create(string title, string description, Address address, decimal pricePerNight, ListingType listingType)
         {
             if (string.IsNullOrWhiteSpace(title))
                 return Result<Listing>.Failure(ListingErrors.EmptyTitle);
@@ -41,7 +44,7 @@ namespace Booking.Domain.Entities
             if (address is null)
                 return Result<Listing>.Failure(ListingErrors.AddressRequired);
 
-            return Result<Listing>.Success(new Listing(title, description, address, pricePerNight));
+            return Result<Listing>.Success(new Listing(title, description, address, pricePerNight, listingType));
         }
 
         public Result AddAmenity(Amenity amenity)
