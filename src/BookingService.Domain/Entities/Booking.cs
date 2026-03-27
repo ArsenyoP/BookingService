@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Booking.Domain.Common;
 using Booking.Domain.Enums;
 using Booking.Domain.Errors;
+using Booking.Domain.Interfaces;
 using Booking.Domain.ValueObjects;
 
 namespace Booking.Domain.Entities
@@ -69,11 +70,11 @@ namespace Booking.Domain.Entities
             return Result<Booking>.Success(booking);
         }
 
-        public Result<RefundValue> Cancel()
+        public Result<RefundValue> Cancel(DateTime nowUtc, IRefundPolicy refundPolicy)
         {
             //TODO: Add payment refund
             //TODO: Fix race condition 
-            if (Period.StartDate <= DateOnly.FromDateTime(DateTime.UtcNow))
+            if (Period.StartDate <= DateOnly.FromDateTime(nowUtc))
             {
                 return Result<RefundValue>.Failure(BookingErrors.CannotCancelStartedBooking);
             }
@@ -81,17 +82,10 @@ namespace Booking.Domain.Entities
             if (Status != BookingStatus.Confirmed && Status != BookingStatus.Pending)
                 return Result<RefundValue>.Failure(BookingErrors.CannotCancel);
 
-            int daysBeforeStart = Period.StartDate.DayNumber - DateOnly.FromDateTime(DateTime.UtcNow).DayNumber;
 
-            double percentToRefund = daysBeforeStart switch
-            {
-                >= 7 => 100,
-                >= 3 => 75,
-                >= 1 => 50,
-                _ => 0
-            };
 
-            var refundValue = new RefundValue(TotalPrice, percentToRefund);
+
+            RefundValue refundValue = refundPolicy.CalculateRefund(this, nowUtc);
             Status = BookingStatus.Cancelled;
 
             return Result<RefundValue>.Success(refundValue);

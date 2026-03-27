@@ -1,0 +1,30 @@
+﻿using Booking.Domain.Common;
+using Booking.Domain.Interfaces;
+using Booking.Domain.ValueObjects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Booking.Domain.Services
+{
+    public class RefundPolicy : IRefundPolicy
+    {
+        public RefundValue CalculateRefund(Entities.Booking booking, DateTime nowUtc)
+        {
+            DateOnly today = DateOnly.FromDateTime(nowUtc);
+            int daysBeforeStart = booking.Period.StartDate.DayNumber - today.DayNumber;
+
+            decimal percentToRefund = daysBeforeStart switch
+            {
+                >= 7 => 100,
+                >= 3 => 75,
+                >= 1 => 50,
+                _ => 0
+            };
+
+            return new RefundValue(booking.TotalPrice, percentToRefund);
+        }
+    }
+}
