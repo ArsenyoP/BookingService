@@ -25,12 +25,12 @@ namespace Booking.Domain.Entities
         public IReadOnlyCollection<Amenity> Amenities => _amenity.AsReadOnly();
 
         private Room(
-    string title,
-    string description,
-    RoomType type,
-    decimal pricePerNight,
-    int adultsCapacity,
-    int childrenCapacity)
+            string title,
+            string description,
+            RoomType type,
+            decimal pricePerNight,
+            int adultsCapacity,
+            int childrenCapacity)
         {
             Id = Guid.NewGuid();
             Title = title;

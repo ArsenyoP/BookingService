@@ -13,7 +13,7 @@ namespace Booking.Domain.ValueObjects
         public DateOnly StartDate { get; init; }
         public DateOnly EndDate { get; init; }
 
-        public int TotalNights => EndDate.Day - StartDate.Day;
+        public int TotalNights => EndDate.DayNumber - StartDate.DayNumber;
 
         public DateRange(DateOnly startDate, DateOnly endDate)
         {

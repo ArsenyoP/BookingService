@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.ValueObjects
 {
-    public record RefundValue(decimal TotalBookingPrice, double PercentToRefund)
+    public record RefundValue(decimal TotalBookingPrice, decimal PercentToRefund)
     {
-        public decimal AmountToRefund = TotalBookingPrice * (decimal)PercentToRefund / 100;
+        public decimal AmountToRefund => TotalBookingPrice * PercentToRefund / 100;
         public decimal CancellationFee => TotalBookingPrice - AmountToRefund;
-        public string Summary => $"Refund: {AmountToRefund}, ({PercentToRefund}%) from total cost, Fee: {CancellationFee}";
     }
 }
