@@ -15,8 +15,8 @@ namespace Booking.Domain.Errors
         public static readonly Error EmptyDescription =
             new("Room.EmptyDescription", "The room description cannot be empty");
 
-        public static readonly Error InvalidPrice =
-            new("Room.InvalidPrice", "The price per night must be greater than zero");
+        public static readonly Error NegativePrice =
+            new("Room.NegativePrice", "The price per night must be greater than zero");
 
         public static readonly Error InvalidCapacity =
             new("Room.InvalidCapacity", "Capacity must be a non-negative number");
@@ -26,5 +26,8 @@ namespace Booking.Domain.Errors
 
         public static readonly Error NotFound =
             new("Room.NotFound", "The room with the specified ID was not found");
+
+        public static readonly Error NegativeNumberCapacity =
+            new Error("BookingErrors.NegativeNumberCapacity", "Number's capacity can't be negative");
     }
 }

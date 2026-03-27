@@ -22,7 +22,7 @@ namespace Booking.Domain.Entities
 
 
         private readonly List<Amenity> _amenity = new();
-        public IReadOnlyCollection<Amenity> Amenities => _amenity.ToList();
+        public IReadOnlyCollection<Amenity> Amenities => _amenity.AsReadOnly();
 
         private Room(
     string title,
@@ -50,14 +50,14 @@ namespace Booking.Domain.Entities
             int childrenCapacity)
         {
             if (string.IsNullOrWhiteSpace(title))
-            {
                 return Result<Room>.Failure(RoomErrors.EmptyTitle);
-            }
+
 
             if (pricePerNight <= 0)
-            {
-                return Result<Room>.Failure(RoomErrors.InvalidPrice);
-            }
+                return Result<Room>.Failure(RoomErrors.NegativePrice);
+
+            if (adultsCapacity + childrenCapacity <= 0)
+                return Result<Room>.Failure(RoomErrors.NegativeNumberCapacity);
 
             return Result<Room>.Success(new Room(title, description, type, pricePerNight, adultsCapacity, childrenCapacity));
         }

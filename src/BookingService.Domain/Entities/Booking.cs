@@ -13,10 +13,7 @@ namespace Booking.Domain.Entities
     public class Booking : Entity
     {
         public Guid RoomId { get; private set; }
-        public Room Room { get; private set; }
-
         public Guid GuestId { get; private set; }
-        public User Guest { get; private set; }
 
         public DateRange Period { get; private set; }
         public DateTime CreatedAtUtc { get; private set; }
@@ -30,19 +27,17 @@ namespace Booking.Domain.Entities
 
         private Booking() { }
 
-        private Booking(Room room, User guest, DateRange period, int adults, int children)
+        private Booking(Guid roomId, Guid guestId, DateRange period, int adults, int children, decimal pricePerNight)
         {
             Id = Guid.NewGuid();
-            Room = room;
-            Guest = guest;
-            RoomId = room.Id;
-            GuestId = guest.Id;
+            RoomId = roomId;
+            GuestId = guestId;
 
             Period = period;
             CreatedAtUtc = DateTime.UtcNow;
 
-            PricePerNight = room.PricePerNight;
-            TotalPrice = room.PricePerNight * period.TotalNights;
+            PricePerNight = pricePerNight;
+            TotalPrice = pricePerNight * period.TotalNights;
 
             AdultsCount = adults;
             ChildrenCount = children;
@@ -51,15 +46,24 @@ namespace Booking.Domain.Entities
         }
 
 
-        public static Result<Booking> Create(Room room, User guest, DateRange period, int adults, int children)
+        public static Result<Booking> Create(DateRange period,
+            int numberOfAdults, int numberOfChildren,
+            Room room, User guest)
         {
-            if (adults + children > room.AdultsCapacity + room.ChildrenCapacity)
+
+            if (numberOfAdults <= 0)
+                return Result<Booking>.Failure(BookingErrors.AtLeastOneAdultRequired);
+
+            if (numberOfChildren < 0)
+                return Result<Booking>.Failure(BookingErrors.NegativeChildrenCount);
+
+            if (numberOfAdults + numberOfChildren > room.AdultsCapacity + room.ChildrenCapacity)
                 return Result<Booking>.Failure(BookingErrors.ExceedsCapacity);
 
             if (!guest.IsActive)
                 return Result<Booking>.Failure(UserErrors.AccountInactive);
 
-            var booking = new Booking(room, guest, period, adults, children);
+            var booking = new Booking(room.Id, guest.Id, period, numberOfAdults, numberOfChildren, room.PricePerNight);
             booking.Status = BookingStatus.Confirmed;
 
             return Result<Booking>.Success(booking);
@@ -68,6 +72,7 @@ namespace Booking.Domain.Entities
         public Result<RefundValue> Cancel()
         {
             //TODO: Add payment refund
+            //TODO: Fix race condition 
             if (Period.StartDate <= DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 return Result<RefundValue>.Failure(BookingErrors.CannotCancelStartedBooking);
