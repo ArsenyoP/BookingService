@@ -23,5 +23,8 @@ namespace Booking.Domain.Errors
 
         public static readonly Error AmenityAlreadyAdded =
             new("Listing.AmenityAlreadyAdded", "This amenity has already been added to the listing");
+
+        public static readonly Error RoomAlreadyAdded =
+            new("Listing.RoomAlreadyAdded", "This room has already been added to the listing");
     }
 }
