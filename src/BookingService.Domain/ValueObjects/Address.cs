@@ -4,33 +4,6 @@ using Booking.Domain.Errors;
 
 namespace Booking.Domain.ValueObjects
 {
-    //public sealed class Address : ValueObject
-    //{
-    //    public string Country { get; }
-    //    public string City { get; }
-    //    public string Street { get; }
-    //    public string HouseNumber { get; }
-    //    public int Floor { get; }
-
-    //    public Address(string country, string city, string street, string houseNumber, int floor)
-    //    {
-    //        Country = country;
-    //        City = city;
-    //        Street = street;
-    //        HouseNumber = houseNumber;
-    //        Floor = floor;
-    //    }
-
-    //    protected override IEnumerable<object?> GetEqualityComponents()
-    //    {
-    //        yield return Country;
-    //        yield return City;
-    //        yield return Street;
-    //        yield return HouseNumber;
-    //        yield return Floor;
-    //    }
-    //}
-
     public record Address
     {
         public string Country { get; init; } = string.Empty;
@@ -50,7 +23,7 @@ namespace Booking.Domain.ValueObjects
             Floor = floor;
         }
 
-        public Result<Address> Create(string country, string city, string street, string houseNumber, int floor)
+        public static Result<Address> Create(string country, string city, string street, string houseNumber, int floor)
         {
             string[] stringsToValidate = { country, city, street, houseNumber };
 

@@ -21,7 +21,7 @@ namespace Booking.Domain.ValueObjects
             EndDate = endDate;
         }
 
-        public Result<DateRange> Create(DateOnly startDate, DateOnly endDate)
+        public static Result<DateRange> Create(DateOnly startDate, DateOnly endDate)
         {
             if (startDate < DateOnly.FromDateTime(DateTime.UtcNow))
             {
