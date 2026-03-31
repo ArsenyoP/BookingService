@@ -11,7 +11,7 @@ using Booking.Domain.ValueObjects;
 
 namespace Booking.Domain.Entities
 {
-    public class Booking : Entity
+    public class Bookings : Entity
     {
         public Guid RoomId { get; private set; }
         public Guid GuestId { get; private set; }
@@ -26,9 +26,9 @@ namespace Booking.Domain.Entities
         public int ChildrenCount { get; private set; }
         public BookingStatus Status { get; private set; }
 
-        private Booking() { }
+        private Bookings() { }
 
-        private Booking(Guid roomId, Guid guestId, DateRange period, int adults, int children, decimal pricePerNight)
+        private Bookings(Guid roomId, Guid guestId, DateRange period, int adults, int children, decimal pricePerNight)
         {
             Id = Guid.NewGuid();
             RoomId = roomId;
@@ -47,27 +47,27 @@ namespace Booking.Domain.Entities
         }
 
 
-        public static Result<Booking> Create(DateRange period,
+        public static Result<Bookings> Create(DateRange period,
             int numberOfAdults, int numberOfChildren,
             Room room, User guest)
         {
 
             if (numberOfAdults <= 0)
-                return Result<Booking>.Failure(BookingErrors.AtLeastOneAdultRequired);
+                return Result<Bookings>.Failure(BookingErrors.AtLeastOneAdultRequired);
 
             if (numberOfChildren < 0)
-                return Result<Booking>.Failure(BookingErrors.NegativeChildrenCount);
+                return Result<Bookings>.Failure(BookingErrors.NegativeChildrenCount);
 
             if (numberOfAdults + numberOfChildren > room.AdultsCapacity + room.ChildrenCapacity)
-                return Result<Booking>.Failure(BookingErrors.ExceedsCapacity);
+                return Result<Bookings>.Failure(BookingErrors.ExceedsCapacity);
 
             if (!guest.IsActive)
-                return Result<Booking>.Failure(UserErrors.AccountInactive);
+                return Result<Bookings>.Failure(UserErrors.AccountInactive);
 
-            var booking = new Booking(room.Id, guest.Id, period, numberOfAdults, numberOfChildren, room.PricePerNight);
+            var booking = new Bookings(room.Id, guest.Id, period, numberOfAdults, numberOfChildren, room.PricePerNight);
             booking.Status = BookingStatus.Confirmed;
 
-            return Result<Booking>.Success(booking);
+            return Result<Bookings>.Success(booking);
         }
 
         public Result<RefundValue> Cancel(DateTime nowUtc, IRefundPolicy refundPolicy)
