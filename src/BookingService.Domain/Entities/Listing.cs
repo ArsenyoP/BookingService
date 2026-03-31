@@ -17,8 +17,6 @@ namespace Booking.Domain.Entities
         private readonly List<Amenity> _commonAmenities = new();
         public IReadOnlyCollection<Amenity> Amenities => _commonAmenities.AsReadOnly();
 
-        private readonly List<Room> _rooms = new();
-        public IReadOnlyCollection<Room> Rooms => _rooms.AsReadOnly();
 
 
         private Listing() { }
@@ -58,17 +56,6 @@ namespace Booking.Domain.Entities
             }
 
             _commonAmenities.Add(amenity);
-            return Result.Success();
-        }
-
-        public Result AddRoom(Room room)
-        {
-            if (_rooms.Any(x => x.Id == room.Id))
-            {
-                return Result.Failure(ListingErrors.RoomAlreadyAdded);
-            }
-
-            _rooms.Add(room);
             return Result.Success();
         }
     }

@@ -20,6 +20,7 @@ namespace Booking.Domain.Entities
         public int AdultsCapacity { get; private set; }
         public int ChildrenCapacity { get; private set; }
 
+        public int ListingId { get; private set; }
 
         private readonly List<Amenity> _amenity = new();
         public IReadOnlyCollection<Amenity> Amenities => _amenity.AsReadOnly();
@@ -30,7 +31,7 @@ namespace Booking.Domain.Entities
             RoomType type,
             decimal pricePerNight,
             int adultsCapacity,
-            int childrenCapacity)
+            int childrenCapacity, int listingId)
         {
             Id = Guid.NewGuid();
             Title = title;
@@ -39,15 +40,17 @@ namespace Booking.Domain.Entities
             PricePerNight = pricePerNight;
             AdultsCapacity = adultsCapacity;
             ChildrenCapacity = childrenCapacity;
+            ListingId = listingId;
         }
 
+        //TODO: Check whether listing exists in application layer
         public static Result<Room> Create(
             string title,
             string description,
             RoomType type,
             decimal pricePerNight,
             int adultsCapacity,
-            int childrenCapacity)
+            int childrenCapacity, int listingId)
         {
             if (string.IsNullOrWhiteSpace(title))
                 return Result<Room>.Failure(RoomErrors.EmptyTitle);
@@ -59,7 +62,7 @@ namespace Booking.Domain.Entities
             if (adultsCapacity + childrenCapacity <= 0)
                 return Result<Room>.Failure(RoomErrors.NegativeNumberCapacity);
 
-            return Result<Room>.Success(new Room(title, description, type, pricePerNight, adultsCapacity, childrenCapacity));
+            return Result<Room>.Success(new Room(title, description, type, pricePerNight, adultsCapacity, childrenCapacity, listingId));
         }
 
         public Result AddAmentity(Amenity amenity)
