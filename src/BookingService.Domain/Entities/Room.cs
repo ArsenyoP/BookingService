@@ -20,7 +20,7 @@ namespace Booking.Domain.Entities
         public int AdultsCapacity { get; private set; }
         public int ChildrenCapacity { get; private set; }
 
-        public int ListingId { get; private set; }
+        public Guid ListingId { get; private set; }
 
         private readonly List<Amenity> _amenity = new();
         public IReadOnlyCollection<Amenity> Amenities => _amenity.AsReadOnly();
@@ -31,7 +31,7 @@ namespace Booking.Domain.Entities
             RoomType type,
             decimal pricePerNight,
             int adultsCapacity,
-            int childrenCapacity, int listingId)
+            int childrenCapacity, Guid listingId)
         {
             Id = Guid.NewGuid();
             Title = title;
@@ -50,7 +50,7 @@ namespace Booking.Domain.Entities
             RoomType type,
             decimal pricePerNight,
             int adultsCapacity,
-            int childrenCapacity, int listingId)
+            int childrenCapacity, Guid listingId)
         {
             if (string.IsNullOrWhiteSpace(title))
                 return Result<Room>.Failure(RoomErrors.EmptyTitle);
