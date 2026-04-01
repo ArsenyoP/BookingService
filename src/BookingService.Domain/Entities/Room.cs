@@ -26,6 +26,9 @@ namespace Booking.Domain.Entities
         private readonly List<Amenity> _amenity = new();
         public IReadOnlyCollection<Amenity> Amenities => _amenity.AsReadOnly();
 
+
+        private Room() { }
+
         private Room(
             string title,
             string description,
