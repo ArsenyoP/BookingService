@@ -14,7 +14,10 @@ namespace Booking.Domain.Entities
     public class Bookings : Entity
     {
         public Guid RoomId { get; private set; }
+        private Room Room { get; set; }
+
         public Guid GuestId { get; private set; }
+        private User Guest { get; set; }
 
         public DateRange Period { get; private set; }
         public DateTime CreatedAtUtc { get; private set; }
