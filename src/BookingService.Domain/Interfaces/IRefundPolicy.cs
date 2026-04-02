@@ -11,6 +11,6 @@ namespace Booking.Domain.Interfaces
 {
     public interface IRefundPolicy
     {
-        public RefundValue CalculateRefund(Entities.Booking booking, DateTime nowUtc);
+        public RefundValue CalculateRefund(Bookings booking, DateTime nowUtc);
     }
 }

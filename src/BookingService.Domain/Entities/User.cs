@@ -24,6 +24,9 @@ namespace Booking.Domain.Entities
         public DateOnly DateOfBirth { get; set; }
         public bool IsActive { get; set; } = true;
 
+
+        private User() { }
+
         private User(string firstName, string lastName, DateOnly dateOfBirth, string email, string username)
         {
             Id = Guid.NewGuid();
@@ -35,7 +38,7 @@ namespace Booking.Domain.Entities
             CreatedAt = DateTime.UtcNow;
             IsActive = true;
         }
-        //TODO: Create method
+
         public static Result IsAdult(DateOnly dateOfBirth)
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);

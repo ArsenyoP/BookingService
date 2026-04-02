@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Common;
+using Booking.Domain.Errors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,17 @@ namespace Booking.Domain.Entities
 
         private Amenity() { }
 
-        public Amenity(string name, string category)
+        private Amenity(string name, string category)
         {
             Id = Guid.NewGuid();
             Name = name;
             Category = category;
+        }
+
+        public static Result<Amenity> Create(string name, string category)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return Result<Amenity>.Failure(AmenityErrors.EmptyName);
+            return Result<Amenity>.Success(new Amenity(name, category));
         }
     }
 }
