@@ -19,11 +19,7 @@ namespace Booking.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
-            // Підключаємо всі конфігурації
-            builder.ApplyConfiguration(new BookingConfiguration());
-            builder.ApplyConfiguration(new RoomConfiguration());
-            builder.ApplyConfiguration(new ListingConfiguration());
-            // Додавай інші конфігурації аналогічно
+            builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Booking.Domain.Entities
         public int ChildrenCapacity { get; private set; }
 
         public Guid ListingId { get; private set; }
-        private Listing Listing { get; set; }
+        private Listing _listing { get; set; }
 
         private readonly List<Amenity> _amenity = new();
         public IReadOnlyCollection<Amenity> Amenities => _amenity.AsReadOnly();

@@ -45,6 +45,8 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
                 periodBuilder.Property(p => p.EndDate)
                     .HasColumnName("EndDate")
                     .IsRequired();
+
+                periodBuilder.HasIndex(p => new { p.StartDate, p.EndDate });
             });
 
 
@@ -67,7 +69,7 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
 
             builder.HasIndex(x => x.GuestId);
             builder.HasIndex(x => x.RoomId);
-            builder.HasIndex("StartDate", "EndDate");
+
         }
     }
 }
