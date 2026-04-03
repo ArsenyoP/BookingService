@@ -2,6 +2,7 @@ using Booking.Domain.Entities;
 using Booking.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Booking.Application;
 
 namespace Booking.API
 {
@@ -18,9 +19,13 @@ namespace Booking.API
             builder.Services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
+            builder.Services.AddApplication();
+
             var app = builder.Build();
 
             app.Run();
+
+
 
             //// Add services to the container.
             //builder.Services.AddAuthorization();
