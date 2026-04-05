@@ -3,6 +3,7 @@ using Booking.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Booking.Application;
+using Booking.Infrastructure;
 
 namespace Booking.API
 {
@@ -12,14 +13,9 @@ namespace Booking.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<AppDbContext>(options =>
-             options.UseSqlServer(connectionString));
-
-            builder.Services.AddIdentity<User, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.AddApplication();
+            builder.Services.AddInfrastructure(builder.Configuration);
 
             var app = builder.Build();
 
