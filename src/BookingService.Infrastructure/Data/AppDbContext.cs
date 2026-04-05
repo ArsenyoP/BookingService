@@ -15,6 +15,11 @@ namespace Booking.Infrastructure.Data
     {
         public AppDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions) { }
 
+        public DbSet<Bookings> Bookings { get; set; }
+        public DbSet<Listing> Listings { get; set; }
+        public DbSet<Amenity> Amenities { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
