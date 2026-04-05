@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
+using Booking.Domain.Interfaces.IRepositories;
 
 
 namespace Booking.Application

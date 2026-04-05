@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Booking.Application.Interfaces;
+using Booking.Domain.Interfaces.IRepositories;
+using Booking.Infrastructure.Repositories;
 
 namespace Booking.Infrastructure
 {
@@ -26,7 +28,10 @@ namespace Booking.Infrastructure
             services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
+
 
 
             return services;
