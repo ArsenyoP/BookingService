@@ -3,11 +3,6 @@ using Booking.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Booking.Application.Interfaces;
 using Booking.Domain.Interfaces.IRepositories;
@@ -31,6 +26,7 @@ namespace Booking.Infrastructure
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
 
 
 

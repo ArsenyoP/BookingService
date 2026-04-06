@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Booking.Application.DTOs.Bookings
+﻿namespace Booking.Application.DTOs.Bookings
 {
     public record BookingResponseDto(Guid Id,
         Guid RoomId,

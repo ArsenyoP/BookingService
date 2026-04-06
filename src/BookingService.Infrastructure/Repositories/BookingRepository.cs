@@ -3,24 +3,18 @@ using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.ValueObjects;
 using Booking.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Booking.Infrastructure.Repositories
 {
     public class BookingRepository(AppDbContext _dbContext) : IBookingRepository
     {
-
-
-        public void Add(Bookings obj)
+        public void Add(Bookings booking)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(booking);
+            _dbContext.Bookings.Add(booking);
         }
 
-        public void Delete(Bookings obj)
+        public void Delete(Bookings booking)
         {
             throw new NotImplementedException();
         }

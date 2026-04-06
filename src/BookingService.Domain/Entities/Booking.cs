@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Booking.Domain.Common;
+﻿using Booking.Domain.Common;
 using Booking.Domain.Enums;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces;
