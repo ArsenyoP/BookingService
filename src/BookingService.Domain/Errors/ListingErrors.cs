@@ -26,5 +26,8 @@ namespace Booking.Domain.Errors
 
         public static readonly Error RoomAlreadyAdded =
             new("Listing.RoomAlreadyAdded", "This room has already been added to the listing");
+
+        public static readonly Error NotFound =
+            new("Listing.NotFound", "Can't found listing with specifiead Id");
     }
 }

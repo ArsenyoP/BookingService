@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Booking.Application;
 using Booking.Infrastructure;
+using System.Text.Json.Serialization;
 
 namespace Booking.API
 {
@@ -13,7 +14,13 @@ namespace Booking.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
+
+
             builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddSwaggerGen();

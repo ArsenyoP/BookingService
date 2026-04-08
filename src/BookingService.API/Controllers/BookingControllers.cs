@@ -8,15 +8,8 @@ namespace Booking.API.Controllers
 
     [ApiController]
     [Route("api/bookings")]
-    public class BookingControllers : ControllerBase
+    public class BookingControllers(ISender _sender) : ControllerBase
     {
-        private readonly ISender _sender;
-
-        public BookingControllers(ISender sender)
-        {
-            _sender = sender;
-        }
-
 
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken ct)

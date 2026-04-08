@@ -27,6 +27,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IListingRepository, ListingRepository>();
 
 
 
