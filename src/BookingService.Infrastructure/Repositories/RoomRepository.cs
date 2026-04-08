@@ -25,6 +25,15 @@ namespace Booking.Infrastructure.Repositories
                 .ToListAsync(ct);
         }
 
+        public async Task<IReadOnlyList<Room>> GetPagedAsync(int page, int pageSize, CancellationToken ct = default)
+        {
+            return await dbContext.Rooms
+                .AsNoTracking()
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(ct);
+        }
+
         public async Task<Room?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             return await dbContext.Rooms
