@@ -1,20 +1,21 @@
-﻿using Booking.Domain.Entities;
-using Booking.Domain.Interfaces.IRepositories;
-using Booking.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Booking.Domain.Entities;
+using Booking.Domain.Interfaces.IRepositories;
+using Booking.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Repositories
 {
     public class ListingRepository(AppDbContext _dbContext) : IListingRepository
     {
-        public void Add(Listing obj)
+        public void Add(Listing listing)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(listing);
+            _dbContext.Listings.Add(listing);
         }
 
         public void Delete(Listing obj)
@@ -29,7 +30,7 @@ namespace Booking.Infrastructure.Repositories
 
         public async Task<Listing?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
-            return await _dbContext.Listings.FirstOrDefaultAsync(l => l.Id == id);
+            return await _dbContext.Listings.FirstOrDefaultAsync(l => l.Id == id, ct);
         }
     }
 }
