@@ -1,11 +1,12 @@
 using Booking.Application.Abstractions;
 using Booking.Application.DTOs.Rooms;
+using Booking.Application.Queries;
 using Booking.Domain.Common;
 using Booking.Domain.Interfaces.IRepositories;
 
 namespace Booking.Application.UseCases.Room.GetAllRooms
 {
-    internal class GetAllRoomsHandler(IRoomRepository _roomRepository)
+    internal class GetAllRoomsHandler(IRoomQueries _roomQueries)
         : IQueryHandler<GetAllRoomsQuery, List<RoomResponseDto>>
     {
         public async Task<Result<List<RoomResponseDto>>> Handle(GetAllRoomsQuery request, CancellationToken ct)
@@ -14,7 +15,7 @@ namespace Booking.Application.UseCases.Room.GetAllRooms
             var page = request.Page < 1 ? 1 : request.Page;
             var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
 
-            var rooms = await _roomRepository.GetPagedAsync(page, pageSize, ct);
+            var rooms = await _roomQueries.GetPagedAsyncListingTitle(page, pageSize, ct);
 
             var response = rooms.Select(r => new RoomResponseDto(
                 r.Id,
@@ -24,6 +25,7 @@ namespace Booking.Application.UseCases.Room.GetAllRooms
                 r.PricePerNight,
                 r.AdultsCapacity,
                 r.ChildrenCapacity,
+                r.ListingTitle,
                 r.ListingId
             )).ToList();
 

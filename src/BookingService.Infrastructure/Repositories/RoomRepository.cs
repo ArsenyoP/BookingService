@@ -1,7 +1,10 @@
+using Booking.Application.DTOs.Rooms;
 using Booking.Domain.Entities;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Dapper;
 
 namespace Booking.Infrastructure.Repositories
 {
@@ -22,15 +25,6 @@ namespace Booking.Infrastructure.Repositories
         {
             return await dbContext.Rooms
                 .AsNoTracking()
-                .ToListAsync(ct);
-        }
-
-        public async Task<IReadOnlyList<Room>> GetPagedAsync(int page, int pageSize, CancellationToken ct = default)
-        {
-            return await dbContext.Rooms
-                .AsNoTracking()
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
                 .ToListAsync(ct);
         }
 

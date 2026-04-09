@@ -1,7 +1,6 @@
 ﻿using Booking.Application.Abstractions;
 using Booking.Application.DTOs;
 using Booking.Application.DTOs.Rooms;
-using Booking.Application.Mappers;
 using Booking.Domain.Common;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces.IRepositories;
@@ -19,7 +18,16 @@ namespace Booking.Application.UseCases.Room.GetById
                 return Result<RoomResponseDto>.Failure(RoomErrors.NotFound);
             }
 
-            var response = room.FromRoomToRoomResponseDto();
+            var response = new RoomResponseDto(
+                room.Id,
+                room.Title,
+                room.Description,
+                room.Type,
+                room.PricePerNight,
+                room.AdultsCapacity,
+                room.ChildrenCapacity,
+                "Default",
+                room.ListingId);
 
             return Result<RoomResponseDto>.Success(response);
         }

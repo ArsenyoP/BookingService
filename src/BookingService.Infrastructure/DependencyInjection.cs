@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Booking.Application.Interfaces;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Infrastructure.Repositories;
+using Booking.Application.Queries;
+using Booking.Infrastructure.Queries;
+using Booking.Application.Queries;
 
 namespace Booking.Infrastructure
 {
@@ -28,6 +31,9 @@ namespace Booking.Infrastructure
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IListingRepository, ListingRepository>();
+
+            services.AddScoped<IRoomQueries>(provider =>
+             new RoomQueries(connectionString));
 
 
 

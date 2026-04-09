@@ -10,5 +10,6 @@ namespace Booking.Application.DTOs.Rooms
         decimal PricePerNight,
         int AdultsCapacity,
         int ChildrenCapacity,
+        string ListingTitle,
         Guid ListingId);
 }

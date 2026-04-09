@@ -16,4 +16,8 @@
     <ProjectReference Include="..\BookingService.Domain\Booking.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mappers\" />
+  </ItemGroup>
+
 </Project>
