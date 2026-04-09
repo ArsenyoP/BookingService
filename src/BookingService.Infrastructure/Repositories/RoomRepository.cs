@@ -37,6 +37,7 @@ namespace Booking.Infrastructure.Repositories
         public async Task<Room?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             return await dbContext.Rooms
+                .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id, ct);
         }
 
