@@ -10,6 +10,5 @@
         decimal TotalPrice,
         int AdultsCount,
         int ChildrenCount,
-        string Status)
-    { }
+        string Status);
 }
