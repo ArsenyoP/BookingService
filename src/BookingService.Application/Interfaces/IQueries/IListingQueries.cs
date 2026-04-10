@@ -10,7 +10,7 @@ namespace Booking.Application.Interfaces.IQueries
 {
     public interface IListingQueries
     {
-        public Task<Listing> GetEntityByIdAsync(Guid id, CancellationToken ct = default);
-        public Task<IReadOnlyList<ListingResponseDto>?> GetAllPaged(int page, int pageSize, CancellationToken ct = default);
+        public Task<Listing?> GetEntityByIdAsync(Guid id, CancellationToken ct = default);
+        public Task<IReadOnlyList<ListingResponseDto>?> GetAllPagedAsync(int page, int pageSize, CancellationToken ct = default);
     }
 }

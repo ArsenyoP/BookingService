@@ -1,5 +1,6 @@
 using Booking.Application.Abstractions;
 using Booking.Application.Interfaces;
+using Booking.Application.Queries;
 using Booking.Domain.Common;
 using Booking.Domain.Entities;
 using Booking.Domain.Errors;
@@ -11,7 +12,7 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
 {
     internal sealed class CreateBookingHandler(
         IBookingRepository _bookingRepository,
-        IRoomRepository _roomRepository,
+        IRoomQueries _roomQueries,
         UserManager<User> _userManager,
         IUnitOfWork unitOfWork) : ICommandHandler<CreateBookingCommand, Guid>
     {
@@ -23,7 +24,7 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
                 return Result<Guid>.Failure(dateRangeResult.Error);
             }
 
-            var room = await _roomRepository.GetByIdAsync(request.RoomId, ct);
+            var room = await _roomQueries.GetEntityByIdAsync(request.RoomId, ct);
             if (room is null)
             {
                 return Result<Guid>.Failure(RoomErrors.NotFound);

@@ -12,9 +12,9 @@ namespace Booking.API.Controllers
     {
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken ct)
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
         {
-            var result = await _sender.Send(new GetAllBookingsQuery(), ct);
+            var result = await _sender.Send(new GetAllBookingsQuery(page, pageSize), ct);
 
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }

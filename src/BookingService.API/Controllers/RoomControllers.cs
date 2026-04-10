@@ -19,7 +19,7 @@ namespace Booking.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetAll(Guid id, CancellationToken ct = default)
+        public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
         {
             var result = await _sender.Send(new GetByIdQuery(id), ct);
 

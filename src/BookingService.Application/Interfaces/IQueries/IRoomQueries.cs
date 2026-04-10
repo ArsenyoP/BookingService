@@ -10,7 +10,7 @@ namespace Booking.Application.Queries
 {
     public interface IRoomQueries
     {
-        public Task<Room> GetEntityByIdAsync(Guid id, CancellationToken ct = default);
+        public Task<Room?> GetEntityByIdAsync(Guid id, CancellationToken ct = default);
         public Task<RoomResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
         public Task<IReadOnlyList<RoomResponseDto>> GetAllPagedAsync(int page, int pageSize, CancellationToken ct = default);
         public Task<IReadOnlyList<RoomResponseDto>> GetByListingIdAsync(Guid listingId, int page, int pageSize, CancellationToken ct = default);
