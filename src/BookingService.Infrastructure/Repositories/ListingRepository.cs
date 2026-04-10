@@ -16,9 +16,10 @@ namespace Booking.Infrastructure.Repositories
             _dbContext.Listings.Add(listing);
         }
 
-        public void Delete(Listing obj)
+        public void Delete(Listing listing)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(listing);
+            _dbContext.Listings.Remove(listing);
         }
     }
 }

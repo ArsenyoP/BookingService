@@ -10,15 +10,16 @@ namespace Booking.Infrastructure.Repositories
 {
     public class RoomRepository(AppDbContext dbContext) : IRoomRepository
     {
-        public void Add(Room obj)
+        public void Add(Room room)
         {
-            ArgumentNullException.ThrowIfNull(obj);
-            dbContext.Rooms.Add(obj);
+            ArgumentNullException.ThrowIfNull(room);
+            dbContext.Rooms.Add(room);
         }
 
-        public void Delete(Room obj)
+        public void Delete(Room room)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(room);
+            dbContext.Rooms.Remove(room);
         }
     }
 }

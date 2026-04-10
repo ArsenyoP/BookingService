@@ -16,7 +16,8 @@ namespace Booking.Infrastructure.Repositories
 
         public void Delete(Bookings booking)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(booking);
+            _dbContext.Bookings.Remove(booking);
         }
     }
 }
