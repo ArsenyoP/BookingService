@@ -9,8 +9,6 @@ namespace Booking.Domain.Interfaces.IRepositories
 {
     public interface IBaseRepository<T> where T : Entity
     {
-        public Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default);
-        public Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default);
         public void Add(T obj);
         public void Delete(T obj);
     }

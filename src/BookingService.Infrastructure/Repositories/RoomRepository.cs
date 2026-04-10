@@ -20,24 +20,5 @@ namespace Booking.Infrastructure.Repositories
         {
             throw new NotImplementedException();
         }
-
-        public async Task<IReadOnlyList<Room>> GetAllAsync(CancellationToken ct = default)
-        {
-            return await dbContext.Rooms
-                .AsNoTracking()
-                .ToListAsync(ct);
-        }
-
-        public async Task<Room?> GetByIdAsync(Guid id, CancellationToken ct = default)
-        {
-            return await dbContext.Rooms
-                .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Id == id, ct);
-        }
-
-        public Task<IReadOnlyList<Room>> GetByListingIdAsync(Guid listingId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -10,8 +10,5 @@ namespace Booking.Domain.Interfaces.IRepositories
 {
     public interface IBookingRepository : IBaseRepository<Bookings>
     {
-        public Task<IReadOnlyList<Bookings?>> GetBookingsByUserId(Guid userId);
-        public Task<IReadOnlyList<Bookings?>> GetBookingsByRoomId(Guid rooomId);
-        public bool IsRoomAvaible(DateRange period, Guid roomId);
     }
 }
