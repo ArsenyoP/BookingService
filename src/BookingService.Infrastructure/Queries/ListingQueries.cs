@@ -71,9 +71,21 @@ namespace Booking.Infrastructure.Queries
             return result;
         }
 
-        public Task<Listing?> GetEntityByIdAsync(Guid id, CancellationToken ct = default)
+        public async Task<Listing?> GetEntityByIdAsync(Guid id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(connectionString);
+            const string sql = @"SELECT *
+                FROM Listings r 
+                WHERE r.Id=@Id";
+
+            var command = new CommandDefinition(
+                 sql,
+                new { Id = id },
+                cancellationToken: ct);
+
+            var result = await connection.QueryFirstOrDefaultAsync<Listing>(command);
+
+            return result;
         }
     }
 }
