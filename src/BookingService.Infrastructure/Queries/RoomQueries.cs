@@ -34,7 +34,7 @@ namespace Booking.Infrastructure.Queries
                 new { Offset = offset, PageSize = pageSize },
                 cancellationToken: ct);
 
-            var result = await connection.QueryAsync<RoomResponseDto>(sql, new { Offset = offset, PageSize = pageSize });
+            var result = await connection.QueryAsync<RoomResponseDto>(command);
 
             return result.ToList().AsReadOnly();
         }
