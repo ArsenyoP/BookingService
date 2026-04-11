@@ -19,6 +19,7 @@ namespace Booking.Domain.Entities
 
         public decimal PricePerNight { get; private set; }
         public decimal TotalPrice { get; private set; }
+        public int TotalNights { get; private set; }
 
         public int AdultsCount { get; private set; }
         public int ChildrenCount { get; private set; }
