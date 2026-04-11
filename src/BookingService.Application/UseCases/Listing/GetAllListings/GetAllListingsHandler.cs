@@ -7,7 +7,7 @@ using Booking.Domain.Interfaces.IRepositories;
 
 namespace Booking.Application.UseCases.Listing.GetAllListings
 {
-    internal class GetAllListingsHandler(IListingQueries _listingQueries)
+    public class GetAllListingsHandler(IListingQueries _listingQueries)
         : IQueryHandler<GetAllListingsQuery, IReadOnlyList<ListingResponseDto>>
     {
         public async Task<Result<IReadOnlyList<ListingResponseDto>>> Handle(GetAllListingsQuery request, CancellationToken ct)
