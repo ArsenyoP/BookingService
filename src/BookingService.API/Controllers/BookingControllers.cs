@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Booking.Application.UseCases.Bookings.CreateBooking;
 using Booking.Application.UseCases.Bookings.GetAllBookings;
 using Booking.Application.UseCases.Bookings.GetById;
+using Booking.Application.UseCases.Bookings.GetByRoomId;
 
 namespace Booking.API.Controllers
 {
@@ -24,6 +25,14 @@ namespace Booking.API.Controllers
         public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
         {
             var result = await _sender.Send(new GetByIdQuery(id), ct);
+
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
+
+        [HttpGet("room/{id:guid}")]
+        public async Task<IActionResult> GetByRoomId(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+        {
+            var result = await _sender.Send(new GetByRoomIdQuery(id, page, pageSize), ct);
 
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }

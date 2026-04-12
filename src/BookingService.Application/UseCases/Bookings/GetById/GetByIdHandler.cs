@@ -15,7 +15,7 @@ namespace Booking.Application.UseCases.Bookings.GetById
     {
         public async Task<Result<BookingResponseDto>> Handle(GetByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await _bookingQueries.GetByIdAsync(request.id);
+            var result = await _bookingQueries.GetByIdAsync(request.id, cancellationToken);
 
             if (result is null)
             {
