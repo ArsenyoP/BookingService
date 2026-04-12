@@ -133,9 +133,47 @@ namespace Booking.Infrastructure.Queries
             return result.ToList().AsReadOnly();
         }
 
-        public Task<IReadOnlyList<BookingResponseDto>?> GetByUserPagedAsync(int page, int pageSize, CancellationToken ct = default)
+        public async Task<IReadOnlyList<BookingResponseDto>?> GetByUserPagedAsync(Guid userId, int page, int pageSize, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(connectionString);
+            var offset = (page - 1) * pageSize;
+
+            const string sql = @"
+                SELECT b.Id,
+                    b.RoomId,
+                    b.GuestId,
+                    b.StartDate,
+                    b.EndDate,
+                    b.TotalNights,
+                    b.PricePerNight,
+                    b.TotalPrice,
+                    b.AdultsCount,
+                    b.ChildrenCount,
+                    b.Status,
+                    r.Title AS RoomTitle,
+                    u.FirstName,
+                    u.LastName
+                    FROM Bookingss b
+                    INNER JOIN Rooms r ON b.RoomId = r.Id
+                    INNER JOIN Users u ON b.GuestId = u.Id
+                WHERE u.Id = @UserId
+                ORDER BY 
+                CASE
+                    WHEN b.Status = 'Pending' THEN 1
+                    WHEN b.Status = 'Confirmed' THEN 2
+                    ELSE 3 
+                END ASC,
+                    b.StartDate DESC
+                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+            var command = new CommandDefinition(
+                sql,
+                new { UserId = userId, Offset = offset, PageSize = pageSize },
+                cancellationToken: ct);
+
+            var result = await connection.QueryAsync<BookingResponseDto>(command);
+
+            return result.ToList().AsReadOnly();
         }
 
         public Task<Bookings?> GetEntityByIdAsync(Guid id, CancellationToken ct = default)

@@ -14,7 +14,7 @@ namespace Booking.Application.Interfaces.IQueries
         public Task<BookingResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
         public Task<IReadOnlyList<BookingResponseDto>?> GetAllPagedAsync(int page, int pageSize, CancellationToken ct = default);
         public Task<IReadOnlyList<BookingResponseDto>?> GetByRoomPagedAsync(Guid roomId, int page, int pageSize, CancellationToken ct = default);
-        public Task<IReadOnlyList<BookingResponseDto>?> GetByUserPagedAsync(int page, int pageSize, CancellationToken ct = default);
+        public Task<IReadOnlyList<BookingResponseDto>?> GetByUserPagedAsync(Guid userId, int page, int pageSize, CancellationToken ct = default);
         public Task<bool> IsRoomAvailableAsync(Guid roomId, DateOnly start, DateOnly end, CancellationToken ct = default);
     }
 }
