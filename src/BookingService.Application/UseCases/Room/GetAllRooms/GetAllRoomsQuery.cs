@@ -3,5 +3,5 @@ using Booking.Application.DTOs.Rooms;
 
 namespace Booking.Application.UseCases.Room.GetAllRooms
 {
-    public sealed record GetAllRoomsQuery(int Page, int PageSize) : IQuery<List<RoomResponseDto>>;
+    public sealed record GetAllRoomsQuery(int Page, int PageSize) : IQuery<IReadOnlyList<RoomResponseDto>>;
 }

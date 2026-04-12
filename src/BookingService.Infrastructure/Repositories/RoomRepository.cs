@@ -10,34 +10,16 @@ namespace Booking.Infrastructure.Repositories
 {
     public class RoomRepository(AppDbContext dbContext) : IRoomRepository
     {
-        public void Add(Room obj)
+        public void Add(Room room)
         {
-            ArgumentNullException.ThrowIfNull(obj);
-            dbContext.Rooms.Add(obj);
+            ArgumentNullException.ThrowIfNull(room);
+            dbContext.Rooms.Add(room);
         }
 
-        public void Delete(Room obj)
+        public void Delete(Room room)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IReadOnlyList<Room>> GetAllAsync(CancellationToken ct = default)
-        {
-            return await dbContext.Rooms
-                .AsNoTracking()
-                .ToListAsync(ct);
-        }
-
-        public async Task<Room?> GetByIdAsync(Guid id, CancellationToken ct = default)
-        {
-            return await dbContext.Rooms
-                .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Id == id, ct);
-        }
-
-        public Task<IReadOnlyList<Room>> GetByListingIdAsync(Guid listingId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(room);
+            dbContext.Rooms.Remove(room);
         }
     }
 }

@@ -35,7 +35,6 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
             builder.Property(x => x.ChildrenCount)
             .IsRequired();
 
-
             builder.OwnsOne(x => x.Period, periodBuilder =>
             {
                 periodBuilder.Property(p => p.StartDate)
@@ -66,6 +65,10 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
                 .HasConversion<string>()
                 .HasMaxLength(30)
                 .IsRequired();
+
+            builder.Property(x => x.TotalNights)
+                .HasComputedColumnSql("DATEDIFF(day, StartDate, EndDate)");
+
 
             builder.HasIndex(x => x.GuestId);
             builder.HasIndex(x => x.RoomId);

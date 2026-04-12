@@ -1,6 +1,7 @@
 ﻿using Booking.Application.UseCases.Room.CreateRoom;
 using Booking.Application.UseCases.Room.GetAllRooms;
 using Booking.Application.UseCases.Room.GetById;
+using Booking.Application.UseCases.Room.GetByListingId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +20,17 @@ namespace Booking.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetAll(Guid id, CancellationToken ct = default)
+        public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
         {
             var result = await _sender.Send(new GetByIdQuery(id), ct);
+
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
+
+        [HttpGet("listingId/{id:guid}")]
+        public async Task<IActionResult> GetByListingId(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+        {
+            var result = await _sender.Send(new GetByListingIdQuery(page, pageSize, id), ct);
 
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }

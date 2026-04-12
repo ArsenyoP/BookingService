@@ -5,5 +5,5 @@ using Booking.Application.DTOs.Bookings;
 
 namespace Booking.Application.UseCases.Bookings.GetAllBookings
 {
-    public sealed record GetAllBookingsQuery : IQuery<List<BookingResponseDto>>;
+    public sealed record GetAllBookingsQuery(int Page, int PageSize) : IQuery<IReadOnlyList<BookingResponseDto>>;
 }

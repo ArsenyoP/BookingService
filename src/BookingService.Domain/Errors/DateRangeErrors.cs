@@ -15,5 +15,8 @@ namespace Booking.Domain.Errors
 
         public readonly static Error InvalidEnd =
             new Error("Booking.InvalidEnd", "End date must be after start date");
+
+        public readonly static Error InvalidDate =
+            new Error("Booking.InvalidDate", "Date is invalide");
     }
 }
