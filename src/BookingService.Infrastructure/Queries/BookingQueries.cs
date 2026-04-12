@@ -56,9 +56,38 @@ namespace Booking.Infrastructure.Queries
             return result.ToList().AsReadOnly();
         }
 
-        public Task<BookingResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        public async Task<BookingResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var connection = new SqlConnection(connectionString);
+
+            const string sql = @"SELECT b.Id,
+                        b.RoomId,
+                        b.GuestId,
+                        b.StartDate,
+                        b.EndDate,
+                        b.TotalNights,
+                        b.PricePerNight,
+                        b.TotalPrice,
+                        b.AdultsCount,
+                        b.ChildrenCount,
+                        b.Status,
+                        r.Title AS RoomTitle,
+                        u.FirstName,
+                        u.LastName
+                    FROM Bookingss b
+                    INNER JOIN Rooms r ON b.RoomId = r.Id
+                    INNER JOIN Users u ON b.GuestId = u.Id
+                        WHERE b.Id = @Id";
+
+            var command = new CommandDefinition(
+                sql,
+                new { Id = id },
+                cancellationToken: ct);
+
+            var result = await connection.QueryFirstOrDefaultAsync<BookingResponseDto>(command);
+
+            return result;
+
         }
 
         public Task<IReadOnlyList<BookingResponseDto>?> GetByRoomPagedAsync(int page, int pageSize, CancellationToken ct = default)
