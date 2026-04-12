@@ -43,7 +43,8 @@ namespace Booking.Infrastructure.Queries
                     WHEN b.Status = 'Confirmed' THEN 2
                     ELSE 3 
                 END ASC,
-                    b.StartDate DESC";
+                    b.StartDate DESC
+                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
 
             var command = new CommandDefinition(
                 sql,
