@@ -3,12 +3,15 @@
     public record BookingResponseDto(Guid Id,
         Guid RoomId,
         Guid GuestId,
-        DateOnly StartDate,
-        DateOnly EndDate,
+        DateTime StartDate,
+        DateTime EndDate,
         int TotalNights,
         decimal PricePerNight,
         decimal TotalPrice,
         int AdultsCount,
         int ChildrenCount,
-        string Status);
+        string Status,
+        string RoomTitle,
+        string FirstName,
+        string LastName);
 }

@@ -69,6 +69,7 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
             builder.Property(x => x.TotalNights)
                 .HasComputedColumnSql("DATEDIFF(day, StartDate, EndDate)");
 
+
             builder.HasIndex(x => x.GuestId);
             builder.HasIndex(x => x.RoomId);
 
