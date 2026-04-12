@@ -5,6 +5,7 @@ using Booking.Domain.Entities;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -193,9 +194,32 @@ namespace Booking.Infrastructure.Queries
             return result;
         }
 
-        public Task<bool> IsRoomAvailableAsync(Guid roomId, DateOnly start, DateOnly end, CancellationToken ct = default)
+        public async Task<bool> IsRoomAvailableAsync(Guid roomId, DateOnly start, DateOnly end, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var connection = new SqlConnection(connectionString);
+
+            const string sql = @"
+                SELECT CASE 
+                    WHEN EXISTS (
+                        SELECT 1 FROM Bookingss b
+                        WHERE b.RoomId = @RoomId
+                          AND b.Status != 'Cancelled'
+                          AND b.StartDate < @End 
+                          AND b.EndDate > @Start
+                    ) THEN 0 ELSE 1 END";
+
+            var command = new CommandDefinition(
+            sql,
+                new
+                {
+                    Start = start.ToDateTime(TimeOnly.MinValue),
+                    End = end.ToDateTime(TimeOnly.MinValue),
+                    RoomId = roomId
+                },
+                cancellationToken: ct);
+
+            var result = await connection.ExecuteScalarAsync<bool>(command);
+            return result;
         }
     }
 }
