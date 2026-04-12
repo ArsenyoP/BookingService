@@ -176,9 +176,21 @@ namespace Booking.Infrastructure.Queries
             return result.ToList().AsReadOnly();
         }
 
-        public Task<Bookings?> GetEntityByIdAsync(Guid id, CancellationToken ct = default)
+        public async Task<Bookings?> GetEntityByIdAsync(Guid id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(connectionString);
+            const string sql = @"SELECT *
+                FROM Bookingss b 
+                WHERE b.Id=@Id";
+
+            var command = new CommandDefinition(
+                 sql,
+                new { Id = id },
+                cancellationToken: ct);
+
+            var result = await connection.QueryFirstOrDefaultAsync<Bookings>(command);
+
+            return result;
         }
 
         public Task<bool> IsRoomAvailableAsync(Guid roomId, DateOnly start, DateOnly end, CancellationToken ct = default)
