@@ -1,15 +1,15 @@
-﻿using Booking.Domain.Entities;
+﻿using Booking.Application.Interfaces;
+using Booking.Application.Interfaces.IQueries;
+using Booking.Application.Queries;
+using Booking.Domain.Entities;
+using Booking.Domain.Interfaces.IRepositories;
 using Booking.Infrastructure.Data;
+using Booking.Infrastructure.Queries;
+using Booking.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Booking.Application.Interfaces;
-using Booking.Domain.Interfaces.IRepositories;
-using Booking.Infrastructure.Repositories;
-using Booking.Application.Queries;
-using Booking.Infrastructure.Queries;
-using Booking.Application.Interfaces.IQueries;
 
 namespace Booking.Infrastructure
 {

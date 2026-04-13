@@ -1,8 +1,6 @@
 ﻿using Booking.Domain.Entities;
 using Booking.Domain.Interfaces.IRepositories;
-using Booking.Domain.ValueObjects;
 using Booking.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Repositories
 {

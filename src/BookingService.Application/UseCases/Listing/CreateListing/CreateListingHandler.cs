@@ -1,7 +1,6 @@
 using Booking.Application.Abstractions;
 using Booking.Application.Interfaces;
 using Booking.Domain.Common;
-using Booking.Domain.Entities;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.ValueObjects;
 

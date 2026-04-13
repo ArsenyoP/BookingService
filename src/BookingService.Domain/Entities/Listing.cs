@@ -1,7 +1,7 @@
 using Booking.Domain.Common;
+using Booking.Domain.Enums;
 using Booking.Domain.Errors;
 using Booking.Domain.ValueObjects;
-using Booking.Domain.Enums;
 
 namespace Booking.Domain.Entities
 {

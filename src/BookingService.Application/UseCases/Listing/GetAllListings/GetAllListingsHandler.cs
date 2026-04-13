@@ -1,9 +1,7 @@
 using Booking.Application.Abstractions;
 using Booking.Application.DTOs.Listings;
 using Booking.Application.Interfaces.IQueries;
-using Booking.Application.Queries;
 using Booking.Domain.Common;
-using Booking.Domain.Interfaces.IRepositories;
 
 namespace Booking.Application.UseCases.Listing.GetAllListings
 {

@@ -1,5 +1,4 @@
 using Booking.Domain.Common;
-using System.Collections.Generic;
 using Booking.Domain.Errors;
 
 namespace Booking.Domain.ValueObjects

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Booking.Domain.Entities;
+﻿using Booking.Domain.Entities;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Repositories
 {

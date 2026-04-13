@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Booking.Domain.Common
 {
     public abstract class ValueObject

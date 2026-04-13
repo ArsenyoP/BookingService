@@ -1,15 +1,8 @@
 ﻿using Booking.Application.DTOs.Listings;
-using Booking.Application.DTOs.Rooms;
 using Booking.Application.Interfaces.IQueries;
 using Booking.Domain.Entities;
 using Dapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Booking.Infrastructure.Queries
 {
