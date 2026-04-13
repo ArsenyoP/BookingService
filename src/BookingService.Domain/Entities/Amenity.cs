@@ -1,6 +1,6 @@
 ﻿using Booking.Domain.Common;
-using Booking.Domain.Errors;
 using Booking.Domain.Enums;
+using Booking.Domain.Errors;
 
 namespace Booking.Domain.Entities
 {
