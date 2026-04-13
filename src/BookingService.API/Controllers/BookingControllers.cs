@@ -1,11 +1,11 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Booking.Application.UseCases.Bookings.CreateBooking;
+﻿using Booking.Application.UseCases.Bookings.CreateBooking;
 using Booking.Application.UseCases.Bookings.GetAllBookings;
 using Booking.Application.UseCases.Bookings.GetById;
 using Booking.Application.UseCases.Bookings.GetByRoomId;
 using Booking.Application.UseCases.Bookings.GetByUserId;
 using Booking.Application.UseCases.Bookings.IsRoomAvailable;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.API.Controllers
 {
@@ -58,6 +58,7 @@ namespace Booking.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBookingCommand command, CancellationToken ct)
         {
+            //TODO: Check whether amenity allready exists
             var result = await _sender.Send(command, ct);
             return result.IsSuccess
                 ? Created($"/api/bookings/{result.Value}", result.Value)
