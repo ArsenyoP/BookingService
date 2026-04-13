@@ -19,6 +19,12 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
             .HasMaxLength(50)
             .IsRequired();
 
+            builder.Property(x => x.Category)
+                .HasConversion<string>()
+                .HasMaxLength(30)
+                .IsRequired();
+
+            builder.HasIndex(x => x.Name).IsUnique();
             builder.HasIndex(x => new { x.Name, x.Category }).IsUnique();
         }
     }
