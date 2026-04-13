@@ -31,6 +31,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IListingRepository, ListingRepository>();
+            services.AddScoped<IAmenityRepository, AmenityRepository>();
 
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(connectionString!));
             services.AddScoped<IListingQueries>(sp => new ListingQueries(connectionString!));
