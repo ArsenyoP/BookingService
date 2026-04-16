@@ -40,6 +40,9 @@ namespace Booking.Infrastructure.Data
                 .WithMany()
                 .UsingEntity(j => j.ToTable("ListingAmenities"));
 
+            builder.Navigation(x => x.Amenities)
+                .HasField("_amenity")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
 
             builder.HasIndex(x => x.Title);
         }

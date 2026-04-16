@@ -74,5 +74,6 @@ namespace Booking.Domain.Entities
             _amenity.Add(amenity);
             return Result.Success();
         }
+
     }
 }

@@ -31,13 +31,14 @@ namespace Booking.Infrastructure
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IListingRepository, ListingRepository>();
+            services.AddScoped<IAmenityRepository, AmenityRepository>();
 
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(connectionString!));
             services.AddScoped<IListingQueries>(sp => new ListingQueries(connectionString!));
             services.AddScoped<IBookingQueries>(sp => new BookingQueries(connectionString!));
+            services.AddScoped<IAmenityQueries>(sp => new AmenityQueries(connectionString!));
 
-            services.AddScoped<IRoomQueries>(provider =>
-             new RoomQueries(connectionString!));
+
 
 
 

@@ -13,8 +13,8 @@ namespace Booking.Domain.Entities
         public ListingType ListingType { get; private set; }
 
 
-        private readonly List<Amenity> _commonAmenities = new();
-        public IReadOnlyCollection<Amenity> Amenities => _commonAmenities.AsReadOnly();
+        private readonly List<Amenity> _amenity = new();
+        public IReadOnlyCollection<Amenity> Amenities => _amenity.AsReadOnly();
 
 
 
@@ -45,12 +45,12 @@ namespace Booking.Domain.Entities
 
         public Result AddAmenity(Amenity amenity)
         {
-            if (_commonAmenities.Any(x => x.Id == amenity.Id))
+            if (_amenity.Any(x => x.Id == amenity.Id))
             {
                 return Result.Failure(ListingErrors.AmenityAlreadyAdded);
             }
 
-            _commonAmenities.Add(amenity);
+            _amenity.Add(amenity);
             return Result.Success();
         }
     }

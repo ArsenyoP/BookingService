@@ -33,6 +33,10 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
                 .WithMany()
                 .UsingEntity(j => j.ToTable("RoomAmenities"));
 
+            builder.Navigation(x => x.Amenities)
+            .HasField("_amenity")
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
             builder.HasIndex(x => x.Title);
         }
     }
