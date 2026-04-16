@@ -117,7 +117,8 @@ namespace Booking.Infrastructure.Queries
 
         public async Task<IReadOnlyList<RoomResponseDto>> GetAllWithListingTitleAsync(
             int page, int pageSize,
-            List<string>? amenityNames = null)
+            List<string>? amenityNames = null,
+            CancellationToken ct = default)
         {
             var connection = new SqlConnection(connectionString);
             var offset = (page - 1) * pageSize;

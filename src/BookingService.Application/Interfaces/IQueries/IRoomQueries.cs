@@ -13,6 +13,6 @@ namespace Booking.Application.Queries
 
         public Task<IReadOnlyList<RoomResponseDto>> GetAllWithListingTitleAsync(
             int page, int pageSize,
-            List<string>? amenityNames = null);
+            List<string>? amenityNames = null, CancellationToken ct = default);
     }
 }
