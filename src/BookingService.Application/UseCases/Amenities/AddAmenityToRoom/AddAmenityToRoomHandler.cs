@@ -25,7 +25,6 @@ namespace Booking.Application.UseCases.Amenities.AddAmenityToRoom
 
             if (!result.IsSuccess)
             {
-                Console.WriteLine(result.IsSuccess);
                 return Result<Guid>.Failure(result.Error);
             }
 
