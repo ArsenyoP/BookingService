@@ -10,5 +10,9 @@ namespace Booking.Application.Queries
         public Task<RoomResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
         public Task<IReadOnlyList<RoomResponseDto>> GetAllPagedAsync(int page, int pageSize, CancellationToken ct = default);
         public Task<IReadOnlyList<RoomResponseDto>> GetByListingIdAsync(Guid listingId, int page, int pageSize, CancellationToken ct = default);
+
+        public Task<IReadOnlyList<RoomResponseDto>> GetAllWithListingTitleAsync(
+            int page, int pageSize,
+            List<string>? amenityNames = null);
     }
 }

@@ -1,8 +1,10 @@
-﻿using Booking.Application.DTOs.Rooms;
+﻿using Booking.Application.DTOs.Amenities;
+using Booking.Application.DTOs.Rooms;
 using Booking.Application.Queries;
 using Booking.Domain.Entities;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Queries
 {
@@ -111,6 +113,77 @@ namespace Booking.Infrastructure.Queries
             var result = await connection.QueryFirstOrDefaultAsync<Room>(command);
 
             return result;
+        }
+
+        public async Task<IReadOnlyList<RoomResponseDto>> GetAllWithListingTitleAsync(
+            int page, int pageSize,
+            List<string>? amenityNames = null)
+        {
+            var connection = new SqlConnection(connectionString);
+            var offset = (page - 1) * pageSize;
+            var namesCount = amenityNames?.Count ?? 0;
+            var names = amenityNames ?? new List<string>();
+
+            const string sql = """
+                    SELECT 
+                        r.Id,
+                        r.Title,
+                        r.Description,
+                        r.Type,
+                        r.PricePerNight,
+                        r.AdultsCapacity,
+                        r.ChildrenCapacity,
+                        r.ListingId,
+                        l.Title        AS ListingTitle,
+                        a.Id           AS AmenityId,
+                        a.Name         AS Name,
+                        a.Category     AS Category
+                    FROM (
+                        SELECT r2.Id FROM Rooms r2
+                        WHERE (@NamesCount = 0 OR (
+                            SELECT COUNT(DISTINCT a2.Name)
+                            FROM RoomAmenities ra2
+                            INNER JOIN Amenities a2 ON ra2.AmenitiesId = a2.Id
+                            WHERE ra2.RoomId = r2.Id AND a2.Name IN @Names
+                        ) = @NamesCount)
+                        ORDER BY r2.Title
+                        OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
+                    ) AS paged
+                    INNER JOIN Rooms r        ON r.Id = paged.Id
+                    INNER JOIN Listings l     ON l.Id = r.ListingId
+                    LEFT JOIN  RoomAmenities ra ON ra.RoomId = r.Id
+                    LEFT JOIN  Amenities a    ON a.Id = ra.AmenitiesId
+                    ORDER BY r.Title;
+                    """;
+
+            var roomDictionary = new Dictionary<Guid, RoomResponseDto>();
+
+            await connection.QueryAsync<RoomResponseDto, AmenityDto?, RoomResponseDto>(
+                sql,
+                (room, amenity) =>
+                {
+                    if (!roomDictionary.TryGetValue(room.Id, out var existingRoom))
+                    {
+                        existingRoom = room with { Amenities = new List<AmenityDto>() };
+                        roomDictionary[room.Id] = existingRoom;
+                    }
+
+                    if (amenity is not null)
+                        existingRoom.Amenities.Add(amenity);
+
+                    return existingRoom;
+                },
+                new
+                {
+                    Offset = offset,
+                    PageSize = pageSize,
+                    Names = names,
+                    NamesCount = namesCount
+                },
+                splitOn: "AmenityId"
+            );
+
+            return roomDictionary.Values.ToList();
         }
     }
 }
