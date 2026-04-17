@@ -44,25 +44,48 @@ namespace Booking.Infrastructure.Queries
         public async Task<RoomResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             using var connection = new SqlConnection(connectionString);
-            const string sql = @"SELECT  r.Id, 
-                    r.Title, 
-                    r.Description, 
-                    r.Type, 
-                    r.PricePerNight, 
-                    r.AdultsCapacity, 
-                    r.ChildrenCapacity, 
-                    l.Title AS ListingTitle, 
-                    r.ListingId
-                FROM Rooms r 
-                INNER JOIN Listings l ON r.ListingId=l.Id
-                WHERE r.Id=@Id";
+            const string sql = """
+                SELECT 
+                    r.Id,
+                    r.Title,
+                    r.Description,
+                    r.Type,
+                    r.PricePerNight,
+                    r.AdultsCapacity,
+                    r.ChildrenCapacity,
+                    r.ListingId,
+                    l.Title        AS ListingTitle,
+                    a.Id           AS AmenityId,
+                    a.Name         AS Name,
+                    a.Category     AS Category
+                FROM Rooms r
+                INNER JOIN Listings l     ON l.Id = r.ListingId
+                LEFT JOIN  RoomAmenities ra ON ra.RoomId = r.Id
+                LEFT JOIN  Amenities a    ON a.Id = ra.AmenitiesId
+                WHERE r.Id = @Id
+                """;
 
-            var command = new CommandDefinition(
+            RoomResponseDto? result = null;
+
+            await connection.QueryAsync<RoomResponseDto, AmenityDto?, RoomResponseDto>(
                 sql,
-                new { Id = id },
-                cancellationToken: ct);
+                (room, amenity) =>
+                {
+                    if (result == null)
+                    {
+                        result = room;
+                    }
 
-            var result = await connection.QueryFirstOrDefaultAsync<RoomResponseDto>(command);
+                    if (amenity is not null && amenity.AmenityId != Guid.Empty)
+                    {
+                        result.Amenities.Add(amenity);
+                    }
+
+                    return room;
+                },
+                new { Id = id },
+                splitOn: "AmenityId"
+            );
 
             return result;
         }
