@@ -87,24 +87,44 @@ namespace Booking.Infrastructure.Queries
 
             const string sql = @"
                 SELECT 
-                    Id, 
-                    Title, 
-                    Description, 
-                    Address_Country AS Country, 
-                    Address_City AS City, 
-                    Address_Street AS Street, 
-                    Address_HouseNumber AS HouseNumber, 
-                    Address_Floor AS Floor, 
-                    ListingType 
-                FROM Listings 
-                WHERE Id = @Id";
+                    l.Id, 
+                    l.Title, 
+                    l.Description, 
+                    l.Address_Country AS Country, 
+                    l.Address_City AS City, 
+                    l.Address_Street AS Street, 
+                    l.Address_HouseNumber AS HouseNumber, 
+                    l.Address_Floor AS Floor, 
+                    ListingType,
+                    a.Id           AS AmenityId,
+                    a.Name         AS Name,
+                    a.Category     AS Category
+                FROM Listings l
+                LEFT JOIN  ListingAmenities la ON la.ListingId = l.Id
+                LEFT JOIN  Amenities a    ON a.Id = la.AmenitiesId
+                WHERE l.Id = @Id";
 
-            var command = new CommandDefinition(
+            ListingResponseDto? result = null;
+
+            await connection.QueryAsync<ListingResponseDto, AmenityDto?, ListingResponseDto>(
                 sql,
-                new { Id = id },
-                cancellationToken: ct);
+                (listing, amenity) =>
+                {
+                    if (result == null)
+                    {
+                        result = listing;
+                    }
 
-            var result = await connection.QueryFirstOrDefaultAsync<ListingResponseDto>(command);
+                    if (amenity is not null && amenity.AmenityId != Guid.Empty)
+                    {
+                        result.Amenities.Add(amenity);
+                    }
+                    return listing;
+                },
+                new { Id = id },
+                splitOn: "AmenityId"
+                );
+
             return result;
         }
 
