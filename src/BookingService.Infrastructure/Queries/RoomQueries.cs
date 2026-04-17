@@ -10,36 +10,6 @@ namespace Booking.Infrastructure.Queries
 {
     public class RoomQueries(string connectionString) : IRoomQueries
     {
-        public async Task<IReadOnlyList<RoomResponseDto>> GetAllPagedAsync(int page, int pageSize, CancellationToken ct = default)
-        {
-            using var connection = new SqlConnection(connectionString);
-            var offset = (page - 1) * pageSize;
-
-            const string sql = @"
-                SELECT 
-                    r.Id, 
-                    r.Title, 
-                    r.Description, 
-                    r.Type, 
-                    r.PricePerNight, 
-                    r.AdultsCapacity,  
-                    r.ChildrenCapacity, 
-                    l.Title AS ListingTitle, 
-                    r.ListingId
-                FROM Rooms r
-                INNER JOIN Listings l ON r.ListingId = l.Id
-                ORDER BY r.Title
-                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
-
-            var command = new CommandDefinition(
-                sql,
-                new { Offset = offset, PageSize = pageSize },
-                cancellationToken: ct);
-
-            var result = await connection.QueryAsync<RoomResponseDto>(command);
-
-            return result.ToList().AsReadOnly();
-        }
 
         public async Task<RoomResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
@@ -91,10 +61,10 @@ namespace Booking.Infrastructure.Queries
         }
 
         public async Task<IReadOnlyList<RoomResponseDto>> GetByListingIdAsync(
-    Guid listingId,
-    int page,
-    int pageSize,
-    CancellationToken ct = default)
+            Guid listingId,
+            int page,
+            int pageSize,
+            CancellationToken ct = default)
         {
             using var connection = new SqlConnection(connectionString);
             var offset = (page - 1) * pageSize;
@@ -168,7 +138,7 @@ namespace Booking.Infrastructure.Queries
             return result;
         }
 
-        public async Task<IReadOnlyList<RoomResponseDto>> GetAllWithListingTitleAsync(
+        public async Task<IReadOnlyList<RoomResponseDto>> GetAllWithAmenitiesAsync(
             int page, int pageSize,
             List<string>? amenityNames = null,
             CancellationToken ct = default)
