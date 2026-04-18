@@ -21,7 +21,7 @@ namespace Booking.Application.UseCases.Amenities.AddAmenityToRoom
                 return Result<Guid>.Failure(RoomErrors.NotFound);
 
             var result = room.AddAmentity(amenity);
-
+             
 
             if (!result.IsSuccess)
             {
