@@ -13,7 +13,7 @@ namespace Booking.Application.UseCases.Listing.GetAllListings
             var page = request.Page < 1 ? 1 : request.Page;
             var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
 
-            var listings = await _listingQueries.GetAllPagedAsync(page, pageSize, ct);
+            var listings = await _listingQueries.GetAllPagedAsync(page, pageSize);
 
             return Result<IReadOnlyList<ListingResponseDto>>.Success(listings);
         }

@@ -7,6 +7,9 @@ namespace Booking.Domain.Errors
         public static readonly Error NotFound =
             new("Booking.NotFound", "The boooking with the specified ID was not found");
 
+        public static readonly Error RoomNotAvaible =
+            new("Booking.RoomNotAvaible", "The room with the specified ID is not avaible for specified date range");
+
         public static readonly Error ExceedsCapacity =
             new Error("BookingErrors.ExceedsCapacity", "Count of guests can't exceed apartment's capacity");
 

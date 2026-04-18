@@ -58,7 +58,6 @@ namespace Booking.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBookingCommand command, CancellationToken ct)
         {
-            //TODO: Check whether amenity allready exists
             var result = await _sender.Send(command, ct);
             return result.IsSuccess
                 ? Created($"/api/bookings/{result.Value}", result.Value)

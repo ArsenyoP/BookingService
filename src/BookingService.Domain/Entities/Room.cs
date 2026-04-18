@@ -42,7 +42,6 @@ namespace Booking.Domain.Entities
             ListingId = listingId;
         }
 
-        //TODO: Check whether listing exists in application layer
         public static Result<Room> Create(
             string title,
             string description,

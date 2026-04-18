@@ -71,7 +71,6 @@ namespace Booking.Domain.Entities
 
         public Result<RefundValue> Cancel(DateTime nowUtc, IRefundPolicy refundPolicy)
         {
-            //TODO: Add payment refund
             //TODO: Fix race condition 
             if (Period.StartDate <= DateOnly.FromDateTime(nowUtc))
             {
