@@ -32,6 +32,7 @@ namespace Booking.Application.UseCases.Amenities.AddAmenityToRoom
 
             return Result<Guid>.Success(amenity.Id);
 
+
         }
     }
 }
