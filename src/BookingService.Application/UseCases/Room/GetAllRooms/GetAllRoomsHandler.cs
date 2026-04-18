@@ -15,7 +15,7 @@ namespace Booking.Application.UseCases.Room.GetAllRooms
             var page = request.Page < 1 ? 1 : request.Page;
             var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
 
-            var rooms = await _roomQueries.GetAllWithListingTitleAsync(page, pageSize, ct: ct);
+            var rooms = await _roomQueries.GetAllWithAmenitiesAsync(page, pageSize, ct: ct);
 
             return Result<IReadOnlyList<RoomResponseDto>>.Success(rooms);
         }

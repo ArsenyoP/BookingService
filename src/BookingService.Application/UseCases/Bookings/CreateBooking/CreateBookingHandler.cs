@@ -37,22 +37,29 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
                 return Result<Guid>.Failure(UserErrors.NotFound);
             }
 
-            var bookingResult = Booking.Domain.Entities.Bookings.Create(
-                dateRangeResult.Value,
-                request.AdultsCount,
-                request.ChildrenCount,
-                room,
-                guest);
 
-            if (!bookingResult.IsSuccess || bookingResult.Value is null)
+            return await unitOfWork.ExecuteInSerializableTransactionAsync(async () =>
             {
-                return Result<Guid>.Failure(bookingResult.Error);
-            }
+                var isAvailable = await _bookingRepository.IsRoomAvailableAsync(room.Id,
+                    dateRangeResult.Value.StartDate, dateRangeResult.Value.EndDate, ct);
 
-            _bookingRepository.Add(bookingResult.Value);
-            await unitOfWork.SaveChangesAsync(ct);
+                if (!isAvailable)
+                {
+                    return Result<Guid>.Failure(BookingErrors.RoomNotAvaible);
+                }
 
-            return Result<Guid>.Success(bookingResult.Value.Id);
+                var bookingResult = Booking.Domain.Entities.Bookings.Create(dateRangeResult.Value,
+                    request.AdultsCount,
+                    request.ChildrenCount,
+                    room,
+                    guest);
+
+                if (!bookingResult.IsSuccess || bookingResult.Value is null)
+                    return Result<Guid>.Failure(bookingResult.Error);
+
+                _bookingRepository.Add(bookingResult.Value);
+                return Result<Guid>.Success(bookingResult.Value.Id);
+            }, ct);
         }
     }
 }
