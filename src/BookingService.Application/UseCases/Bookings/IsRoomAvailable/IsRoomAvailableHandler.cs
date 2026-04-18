@@ -3,10 +3,11 @@ using Booking.Application.Queries;
 using Booking.Domain.Common;
 using Booking.Domain.Errors;
 using Booking.Application.Interfaces.IQueries;
+using Booking.Domain.Interfaces.IRepositories;
 
 namespace Booking.Application.UseCases.Bookings.IsRoomAvailable
 {
-    public sealed class IsRoomAvailableHandler(IBookingQueries _bookingQueries, IRoomQueries _roomQueries) : IQueryHandler<IsRoomAvailableQuery, bool>
+    public sealed class IsRoomAvailableHandler(IBookingRepository _bookingRepository, IRoomQueries _roomQueries) : IQueryHandler<IsRoomAvailableQuery, bool>
     {
         public async Task<Result<bool>> Handle(IsRoomAvailableQuery request, CancellationToken cancellationToken)
         {
@@ -22,7 +23,7 @@ namespace Booking.Application.UseCases.Bookings.IsRoomAvailable
                 return Result<bool>.Failure(DateRangeErrors.InvalidDate);
             }
 
-            var result = await _bookingQueries.IsRoomAvailableAsync(request.roomId, request.start, request.end);
+            var result = await _bookingRepository.IsRoomAvailableAsync(request.roomId, request.start, request.end);
 
             return Result<bool>.Success(result);
         }

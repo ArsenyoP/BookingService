@@ -31,7 +31,7 @@ namespace Booking.Infrastructure.Repositories
                 ct
                 );
 
-            return result;
+            return !result;
         }
     }
 }
