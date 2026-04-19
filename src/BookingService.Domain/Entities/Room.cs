@@ -76,12 +76,14 @@ namespace Booking.Domain.Entities
 
         public Result RemoveAmenity(Amenity amenity)
         {
-            if (!_amenity.Any(x => x.Id == amenity.Id))
+            var existingAmenity = _amenity.FirstOrDefault(x => x.Id == amenity.Id);
+
+            if (existingAmenity is null)
             {
                 return Result.Failure(RoomErrors.DoesntContainAmenity);
             }
 
-            _amenity.Remove(amenity);
+            _amenity.Remove(existingAmenity);
             return Result.Success();
         }
 
