@@ -4,6 +4,9 @@ namespace Booking.Domain.Errors
 {
     public class RoomErrors
     {
+        public static readonly Error NotFound =
+            new("Room.NotFound", "The room with the specified ID was not found");
+
         public static readonly Error EmptyTitle =
             new("Room.EmptyTitle", "The room title cannot be empty");
 
@@ -19,8 +22,8 @@ namespace Booking.Domain.Errors
         public static readonly Error AmenityAlreadyExists =
             new("Room.AmenityAlreadyExists", "This amenity has already been added to the room");
 
-        public static readonly Error NotFound =
-            new("Room.NotFound", "The room with the specified ID was not found");
+        public static readonly Error DoesntContainAmenity =
+            new("Room.DoesntContainAmenity", "The room with the specified ID doesn't contain specified amenity");
 
         public static readonly Error NegativeNumberCapacity =
             new Error("BookingErrors.NegativeNumberCapacity", "Number's capacity can't be negative");
