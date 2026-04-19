@@ -74,5 +74,16 @@ namespace Booking.Domain.Entities
             return Result.Success();
         }
 
+        public Result RemoveAmenity(Amenity amenity)
+        {
+            if (!_amenity.Any(x => x.Id == amenity.Id))
+            {
+                return Result.Failure(RoomErrors.DoesntContainAmenity);
+            }
+
+            _amenity.Remove(amenity);
+            return Result.Success();
+        }
+
     }
 }
