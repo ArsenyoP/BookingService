@@ -53,5 +53,18 @@ namespace Booking.Domain.Entities
             _amenity.Add(amenity);
             return Result.Success();
         }
+
+        public Result RemoveAmenity(Amenity amenity)
+        {
+            var existingAmenity = _amenity.FirstOrDefault(x => x.Id == amenity.Id);
+
+            if (existingAmenity is null)
+            {
+                return Result.Failure(ListingErrors.DoesntContainAmenity);
+            }
+
+            _amenity.Remove(existingAmenity);
+            return Result.Success();
+        }
     }
 }
