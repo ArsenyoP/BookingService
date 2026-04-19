@@ -17,38 +17,38 @@ namespace Booking.Infrastructure.Queries
             var offset = (page - 1) * pageSize;
             var namesCount = amenityNames?.Count ?? 0;
             var names = amenityNames ?? new List<string>();
-
+            
+            //Interview
             //TODO: Filters
             const string sql = """
                     SELECT 
-                        r.Id,
-                        r.Title,
-                        r.Description,
-                        r.Type,
-                        r.PricePerNight,
-                        r.AdultsCapacity,
-                        r.ChildrenCapacity,
-                        r.ListingId,
-                        l.Title        AS ListingTitle,
+                        l.Id, 
+                        l.Title, 
+                        l.Description, 
+                        l.Address_Country AS Country, 
+                        l.Address_City AS City, 
+                        l.Address_Street AS Street, 
+                        l.Address_HouseNumber AS HouseNumber, 
+                        l.Address_Floor AS Floor, 
+                        l.ListingType,
                         a.Id           AS AmenityId,
                         a.Name         AS Name,
                         a.Category     AS Category
                     FROM (
-                        SELECT r2.Id FROM Rooms r2
+                        SELECT l2.Id FROM Listings l2
                         WHERE (@NamesCount = 0 OR (
                             SELECT COUNT(DISTINCT a2.Name)
-                            FROM RoomAmenities ra2
-                            INNER JOIN Amenities a2 ON ra2.AmenitiesId = a2.Id
-                            WHERE ra2.RoomId = r2.Id AND a2.Name IN @Names
+                            FROM ListingAmenities la2
+                            INNER JOIN Amenities a2 ON la2.AmenitiesId = a2.Id
+                            WHERE la2.ListingId = l2.Id AND a2.Name IN @Names -- ВИПРАВЛЕНО: a2.Name замість l2.Name
                         ) = @NamesCount)
-                        ORDER BY r2.Title
+                        ORDER BY l2.Title
                         OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
                     ) AS paged
-                    INNER JOIN Rooms r        ON r.Id = paged.Id
-                    INNER JOIN Listings l     ON l.Id = r.ListingId
-                    LEFT JOIN  RoomAmenities ra ON ra.RoomId = r.Id
-                    LEFT JOIN  Amenities a    ON a.Id = ra.AmenitiesId
-                    ORDER BY r.Title;
+                    INNER JOIN Listings l     ON l.Id = paged.Id
+                    LEFT JOIN  ListingAmenities la ON la.ListingId = l.Id
+                    LEFT JOIN  Amenities a    ON a.Id = la.AmenitiesId
+                    ORDER BY l.Title;
                     """;
 
             var listingDictionary = new Dictionary<Guid, ListingResponseDto>();
