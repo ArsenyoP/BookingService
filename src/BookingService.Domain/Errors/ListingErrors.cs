@@ -4,6 +4,9 @@ namespace Booking.Domain.Errors
 {
     public class ListingErrors
     {
+        public static readonly Error NotFound =
+            new("Listing.NotFound", "Can't found listing with specifiead Id");
+
         public static readonly Error EmptyTitle =
             new Error("Listing.EmptyTitle", "Title is empty");
 
@@ -19,10 +22,10 @@ namespace Booking.Domain.Errors
         public static readonly Error AmenityAlreadyAdded =
             new("Listing.AmenityAlreadyAdded", "This amenity has already been added to the listing");
 
+        public static readonly Error DoesntContainAmenity =
+            new("Room.DoesntContainAmenity", "The room with the specified ID doesn't contain specified amenity");
+
         public static readonly Error RoomAlreadyAdded =
             new("Listing.RoomAlreadyAdded", "This room has already been added to the listing");
-
-        public static readonly Error NotFound =
-            new("Listing.NotFound", "Can't found listing with specifiead Id");
     }
 }

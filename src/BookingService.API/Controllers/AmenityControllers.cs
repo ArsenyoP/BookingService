@@ -1,6 +1,7 @@
 ﻿using Booking.Application.UseCases.Amenities;
 using Booking.Application.UseCases.Amenities.AddAmenityToListing;
 using Booking.Application.UseCases.Amenities.AddAmenityToRoom;
+using Booking.Application.UseCases.Amenities.RemoveAmenityFromListing;
 using Booking.Application.UseCases.Amenities.RemoveAmenityFromRoom;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,16 @@ namespace Booking.API.Controllers
 
         [HttpPost("addToListing")]
         public async Task<IActionResult> AddAmenityToListing([FromBody] AddAmenityToListingCommand command, CancellationToken ct)
+        {
+            var result = await _sender.Send(command, ct);
+
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
+        }
+
+        [HttpPost("RemoveFromListing")]
+        public async Task<IActionResult> RemoveAmenityFromListing([FromBody] RemoveAmenityFromListingCommand command, CancellationToken ct)
         {
             var result = await _sender.Send(command, ct);
 
