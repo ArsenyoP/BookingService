@@ -1,5 +1,5 @@
-Filtration by amenities for Rooms/Listings
-Delete amenities from listings/rooms
+Filtration by amenities for Rooms/Listings 
+Delete amenities from listings/rooms - ✅
 Fix overlapping while creating booking - ✅
 Add validation for data throught fluentvalidation throught validation pipeline
 Fix race-condition while creating booking - ✅
