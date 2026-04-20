@@ -4,10 +4,12 @@ using Booking.Application.UseCases.Room.GetById;
 using Booking.Application.UseCases.Room.GetByListingId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Booking.API.Controllers
 {
     [Route("api/room")]
+    [EnableRateLimiting("fixed")]
     [ApiController]
     public class RoomControllers(ISender _sender) : ControllerBase
     {
@@ -35,6 +37,7 @@ namespace Booking.API.Controllers
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
+        [EnableRateLimiting("write-limiter")]
         [HttpPost]
         public async Task<IActionResult> CreateRoom([FromBody] CreateRoomCommand command, CancellationToken ct)
         {
