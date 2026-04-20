@@ -5,10 +5,12 @@ using Booking.Application.UseCases.Amenities.RemoveAmenityFromListing;
 using Booking.Application.UseCases.Amenities.RemoveAmenityFromRoom;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Booking.API.Controllers
 {
     [ApiController]
+    [EnableRateLimiting("fixed")]
     [Route("api/amenities")]
     public class AmenityControllers(ISender _sender) : ControllerBase
     {
