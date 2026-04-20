@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Booking.Application;
 using Booking.Infrastructure;
 using System.Text.Json.Serialization;
+using Booking.Infrastructure.ExtensionMethods;
 
 namespace Booking.API
 {
@@ -27,12 +28,14 @@ namespace Booking.API
 
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services.AddRateLimiting();
 
             var app = builder.Build();
 
             app.UseSwagger();
             app.UseSwaggerUI();
 
+            app.UseRateLimiter();
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
