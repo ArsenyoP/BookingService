@@ -7,6 +7,8 @@ using Booking.Domain.Errors;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
+using BookingEntity = Booking.Domain.Entities.Bookings;
+
 
 namespace Booking.Application.UseCases.Bookings.CreateBooking
 {
@@ -48,7 +50,7 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
                     return Result<Guid>.Failure(BookingErrors.RoomNotAvaible);
                 }
 
-                var bookingResult = Booking.Domain.Entities.Bookings.Create(dateRangeResult.Value,
+                var bookingResult = BookingEntity.Create(dateRangeResult.Value,
                     request.AdultsCount,
                     request.ChildrenCount,
                     room,
