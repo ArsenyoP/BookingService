@@ -49,9 +49,11 @@ namespace Booking.API.Controllers
                 : BadRequest(result.Error);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteRoom([FromBody] DeleteRoomCommand command, CancellationToken ct)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteRoom([FromQuery] Guid id, CancellationToken ct)
         {
+
+            var command = new DeleteRoomCommand(id);
             var result = await _sender.Send(command, ct);
 
             return result.IsSuccess
