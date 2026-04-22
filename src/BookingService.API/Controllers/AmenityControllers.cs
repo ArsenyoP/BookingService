@@ -1,6 +1,7 @@
 ﻿using Booking.Application.UseCases.Amenities;
 using Booking.Application.UseCases.Amenities.AddAmenityToListing;
 using Booking.Application.UseCases.Amenities.AddAmenityToRoom;
+using Booking.Application.UseCases.Amenities.DeleteAmenity;
 using Booking.Application.UseCases.Amenities.RemoveAmenityFromListing;
 using Booking.Application.UseCases.Amenities.RemoveAmenityFromRoom;
 using MediatR;
@@ -60,6 +61,17 @@ namespace Booking.API.Controllers
         {
             var result = await _sender.Send(command, ct);
 
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
+        }
+
+        [HttpDelete("{name}")]
+        public async Task<IActionResult> Delete(string name, CancellationToken ct)
+        {
+            var command = new DeleteAmenityCommand(name);
+
+            var result = await _sender.Send(command, ct);
             return result.IsSuccess
                 ? Ok(result.Value)
                 : BadRequest(result.Error);
