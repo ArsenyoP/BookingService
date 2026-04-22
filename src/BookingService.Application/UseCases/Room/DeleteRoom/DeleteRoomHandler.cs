@@ -2,8 +2,8 @@
 using Booking.Application.Interfaces;
 using Booking.Application.Queries;
 using Booking.Domain.Common;
-using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.Errors;
+using Booking.Domain.Interfaces.IRepositories;
 
 namespace Booking.Application.UseCases.Room.DeleteRoom
 {
