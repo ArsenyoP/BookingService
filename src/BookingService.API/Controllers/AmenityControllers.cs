@@ -2,6 +2,7 @@
 using Booking.Application.UseCases.Amenities.AddAmenityToListing;
 using Booking.Application.UseCases.Amenities.AddAmenityToRoom;
 using Booking.Application.UseCases.Amenities.DeleteAmenity;
+using Booking.Application.UseCases.Amenities.GetAllAmenities;
 using Booking.Application.UseCases.Amenities.RemoveAmenityFromListing;
 using Booking.Application.UseCases.Amenities.RemoveAmenityFromRoom;
 using MediatR;
@@ -15,6 +16,17 @@ namespace Booking.API.Controllers
     [Route("api/amenities")]
     public class AmenityControllers(ISender _sender) : ControllerBase
     {
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+        {
+            var command = new GetAllAmenitiesQuery(page, pageSize);
+
+            var result = await _sender.Send(command, ct);
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateAmenity([FromBody] CreateAmenityCommand command, CancellationToken ct)
