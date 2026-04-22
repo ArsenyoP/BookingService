@@ -4,6 +4,8 @@ using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.Errors;
 using Booking.Application.Interfaces;
 using Booking.Application.Interfaces.IQueries;
+using RoomEntity = Booking.Domain.Entities.Room;
+
 
 namespace Booking.Application.UseCases.Room.CreateRoom;
 
@@ -19,7 +21,7 @@ public class CreateRoomHandler(IRoomRepository _roomRepository, IListingQueries 
             return Result<Guid>.Failure(ListingErrors.NotFound);
         }
 
-        var roomResult = Booking.Domain.Entities.Room.Create(
+        var roomResult = RoomEntity.Create(
             request.Title,
             request.Description,
             request.Type,

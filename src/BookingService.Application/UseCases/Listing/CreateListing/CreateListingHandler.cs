@@ -3,6 +3,7 @@ using Booking.Application.Interfaces;
 using Booking.Domain.Common;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.ValueObjects;
+using ListingEntity = Booking.Domain.Entities.Listing;
 
 namespace Booking.Application.UseCases.Listing.CreateListing;
 
@@ -19,7 +20,7 @@ public class CreateListingHandler(IListingRepository _listingRepository,
             return Result<Guid>.Failure(addressResult.Error);
         }
 
-        var listingResult = Booking.Domain.Entities.Listing.Create(
+        var listingResult = ListingEntity.Create(
             request.Title,
             request.Description,
             addressResult.Value,

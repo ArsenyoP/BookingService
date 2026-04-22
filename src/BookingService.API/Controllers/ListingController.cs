@@ -1,4 +1,5 @@
 ﻿using Booking.Application.UseCases.Listing.CreateListing;
+using Booking.Application.UseCases.Listing.DeleteListing;
 using Booking.Application.UseCases.Listing.GetAllListings;
 using Booking.Application.UseCases.Listing.GetById;
 using MediatR;
@@ -34,5 +35,16 @@ namespace Booking.API.Controllers
             return result.IsSuccess ? Created($"api/listing/{result.Value}", result.Value) : BadRequest(result.Error);
         }
 
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteListing(Guid id, CancellationToken ct)
+        {
+            var command = new DeleteListingCommand(id);
+
+            var result = await _sender.Send(command, ct);
+
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
+        }
     }
 }

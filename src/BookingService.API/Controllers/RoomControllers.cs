@@ -1,4 +1,5 @@
 ﻿using Booking.Application.UseCases.Room.CreateRoom;
+using Booking.Application.UseCases.Room.DeleteRoom;
 using Booking.Application.UseCases.Room.GetAllRooms;
 using Booking.Application.UseCases.Room.GetById;
 using Booking.Application.UseCases.Room.GetByListingId;
@@ -45,6 +46,18 @@ namespace Booking.API.Controllers
 
             return result.IsSuccess
                 ? Created($"/api/bookings/{result.Value}", result.Value)
+                : BadRequest(result.Error);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteRoom([FromQuery] Guid id, CancellationToken ct)
+        {
+
+            var command = new DeleteRoomCommand(id);
+            var result = await _sender.Send(command, ct);
+
+            return result.IsSuccess
+                ? Ok(result.Value)
                 : BadRequest(result.Error);
         }
     }

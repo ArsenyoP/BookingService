@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Entities;
+﻿using Booking.Application.DTOs.Amenities;
+using Booking.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Booking.Application.Interfaces.IQueries
     public interface IAmenityQueries
     {
         public Task<Amenity?> GetByNameAsync(string name, CancellationToken ct = default);
+        public Task<IReadOnlyList<AmenityDto>> GetAllAmenities(int page, int pageSize, CancellationToken ct = default);
     }
 }

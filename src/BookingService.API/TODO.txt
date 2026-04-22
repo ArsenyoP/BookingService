@@ -2,9 +2,9 @@ Add rate-limiter - ✅
 Delete amenities from listings/rooms - ✅
 Fix overlapping while creating booking - ✅
 Fix race-condition while creating booking - ✅
+Delete/Update methods for all entities - ✅
 
 
-Delete/Update methods for all entities
 Filtration by amenities for Rooms/Listings 
 Add validation for data throught fluentvalidation throught validation pipeline
 Add filters for GetAllQueries for Rooms/Listings
