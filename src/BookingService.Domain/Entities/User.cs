@@ -43,5 +43,18 @@ namespace Booking.Domain.Entities
             }
             return Result.Success();
         }
+
+        public static Result<User> Create(string firstName, string lastName, DateOnly dateOfBirth, string email, string username)
+        {
+            var ageResult = IsAdult(dateOfBirth);
+            if (!ageResult.IsSuccess)
+            {
+                return Result<User>.Failure(ageResult.Error);
+            }
+
+            var user = new User(firstName, lastName, dateOfBirth, email, username);
+
+            return Result<User>.Success(user);
+        }
     }
 }
