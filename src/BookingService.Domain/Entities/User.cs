@@ -56,5 +56,23 @@ namespace Booking.Domain.Entities
 
             return Result<User>.Success(user);
         }
+
+        public Result<string> SetRole(string role)
+        {
+            var allowedRoles = new string[] { "Admin", "Guest", "Host" };
+            if (!allowedRoles.Contains(role))
+            {
+                return Result<string>.Failure(UserErrors.RoleNotExists);
+            }
+
+            Role = role switch
+            {
+                "Admin" => UserRole.Admin,
+                "Host" => UserRole.Host,
+                "Guest" => UserRole.Guest
+            };
+
+            return Result<string>.Success(Role.ToString());
+        }
     }
 }
