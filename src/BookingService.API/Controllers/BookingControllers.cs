@@ -5,6 +5,7 @@ using Booking.Application.UseCases.Bookings.GetByRoomId;
 using Booking.Application.UseCases.Bookings.GetByUserId;
 using Booking.Application.UseCases.Bookings.IsRoomAvailable;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -56,6 +57,7 @@ namespace Booking.API.Controllers
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
+        [Authorize]
         [HttpPost]
         [EnableRateLimiting("write-limiter")]
         public async Task<IActionResult> Create([FromBody] CreateBookingCommand command, CancellationToken ct)

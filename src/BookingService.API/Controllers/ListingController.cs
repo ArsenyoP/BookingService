@@ -2,6 +2,7 @@
 using Booking.Application.UseCases.Listing.GetAllListings;
 using Booking.Application.UseCases.Listing.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -26,6 +27,7 @@ namespace Booking.API.Controllers
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
+        [Authorize]
         [EnableRateLimiting("write-limiter")]
         [HttpPost]
         public async Task<IActionResult> CreateListing([FromBody] CreateListingCommand command, CancellationToken ct)
