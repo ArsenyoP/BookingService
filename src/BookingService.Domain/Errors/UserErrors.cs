@@ -21,5 +21,8 @@ namespace Booking.Domain.Errors
 
         public static readonly Error AccountInactive =
             new("User.AccountInactive", "Account is deactivated");
+
+        public static readonly Error RoleNotExists =
+            new("User.RoleNotExists", "This role doesn't exist");
     }
 }
