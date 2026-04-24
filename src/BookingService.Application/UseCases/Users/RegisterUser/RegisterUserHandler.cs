@@ -11,7 +11,7 @@ namespace Booking.Application.UseCases.Users.RegisterUser
         {
             var registerDto = request.registerDto;
 
-            var result = await _authService.RegisterUser(registerDto, request.role);
+            var result = await _authService.RegisterUser(registerDto, request.role, cancellationToken);
             return result;
         }
     }

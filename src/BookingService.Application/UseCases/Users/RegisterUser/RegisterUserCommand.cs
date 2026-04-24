@@ -5,5 +5,5 @@ using Booking.Domain.Enums;
 
 namespace Booking.Application.UseCases.Users.RegisterUser
 {
-    public sealed record RegisterUserCommand(RegisterDto registerDto, UserRole role) : ICommand<UserDto>;
+    public sealed record RegisterUserCommand(RegisterDto registerDto, string role) : ICommand<UserDto>;
 }

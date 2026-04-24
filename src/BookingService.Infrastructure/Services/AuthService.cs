@@ -3,6 +3,7 @@ using Booking.Application.Interfaces.Services;
 using Booking.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Booking.Domain.Entities;
+using Booking.Domain.Errors;
 using Booking.Domain.Common;
 using Booking.Domain.Interfaces.Services;
 
@@ -10,8 +11,14 @@ namespace Booking.Infrastructure.Services
 {
     public class AuthService(UserManager<User> _userManager, ITokenService _tokenService) : IAuthService
     {
-        public async Task<Result<UserDto>> RegisterUser(RegisterDto registerDto, UserRole role = UserRole.Guest, CancellationToken ct = default)
+        public async Task<Result<UserDto>> RegisterUser(RegisterDto registerDto, string role = "Guest", CancellationToken ct = default)
         {
+            var allowedRoles = new[] { "Admin", "Guest", "Host" };
+            if (!allowedRoles.Contains(role))
+            {
+                return Result<UserDto>.Failure(UserErrors.RoleNotExists);
+            }
+
             var userResult = User.Create(
                 registerDto.FirstName,
                 registerDto.LastName,
@@ -29,10 +36,12 @@ namespace Booking.Infrastructure.Services
 
             if (createdUserResult.Succeeded)
             {
-                var rolesResult = await _userManager.AddToRoleAsync(userResult.Value, role.ToString());
+                var rolesResult = await _userManager.AddToRoleAsync(userResult.Value, role);
                 if (rolesResult.Succeeded)
                 {
                     var token = await _tokenService.CreateToken(userResult.Value);
+
+                    userResult.Value.SetRole(role);
 
                     var registeredDto = new UserDto(
                         userResult.Value.UserName!,
