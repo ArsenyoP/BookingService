@@ -6,6 +6,7 @@ using Booking.Application.UseCases.Amenities.GetAllAmenities;
 using Booking.Application.UseCases.Amenities.RemoveAmenityFromListing;
 using Booking.Application.UseCases.Amenities.RemoveAmenityFromRoom;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -48,6 +49,7 @@ namespace Booking.API.Controllers
                 : BadRequest(result.Error);
         }
 
+        [Authorize]
         [HttpPost("removeFromRoom")]
         public async Task<IActionResult> RemoveAmenityFromRoom([FromBody] RemoveAmenityFromRoomCommand command, CancellationToken ct)
         {
@@ -68,6 +70,7 @@ namespace Booking.API.Controllers
                 : BadRequest(result.Error);
         }
 
+        [Authorize]
         [HttpPost("RemoveFromListing")]
         public async Task<IActionResult> RemoveAmenityFromListing([FromBody] RemoveAmenityFromListingCommand command, CancellationToken ct)
         {

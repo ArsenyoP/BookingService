@@ -4,6 +4,6 @@
     {
         Guest,
         Host,
-        Admim
+        Admin
     }
 }

@@ -43,5 +43,36 @@ namespace Booking.Domain.Entities
             }
             return Result.Success();
         }
+
+        public static Result<User> Create(string firstName, string lastName, DateOnly dateOfBirth, string email, string username)
+        {
+            var ageResult = IsAdult(dateOfBirth);
+            if (!ageResult.IsSuccess)
+            {
+                return Result<User>.Failure(ageResult.Error);
+            }
+
+            var user = new User(firstName, lastName, dateOfBirth, email, username);
+
+            return Result<User>.Success(user);
+        }
+
+        public Result<string> SetRole(string role)
+        {
+            var allowedRoles = new string[] { "Admin", "Guest", "Host" };
+            if (!allowedRoles.Contains(role))
+            {
+                return Result<string>.Failure(UserErrors.RoleNotExists);
+            }
+
+            Role = role switch
+            {
+                "Admin" => UserRole.Admin,
+                "Host" => UserRole.Host,
+                "Guest" => UserRole.Guest
+            };
+
+            return Result<string>.Success(Role.ToString());
+        }
     }
 }

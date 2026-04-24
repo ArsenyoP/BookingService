@@ -29,6 +29,7 @@ namespace Booking.API
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddRateLimiting();
+            builder.Services.AddPresentation();
 
             var app = builder.Build();
 
@@ -37,6 +38,7 @@ namespace Booking.API
 
             app.UseRateLimiter();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.Run();

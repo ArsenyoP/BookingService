@@ -14,3 +14,4 @@ Add Registration/Login !
 Add external API for changing currency
 Email Notifications
 Rate limiting: instead of IP use ID if autorized, logging
+Middleware for exeptions handling

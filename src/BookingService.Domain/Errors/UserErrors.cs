@@ -4,6 +4,9 @@ namespace Booking.Domain.Errors
 {
     public static class UserErrors
     {
+        public static readonly Error WrongAuthData =
+            new("User.WrongAuthData", "Username or password is incorrect");
+
         public static readonly Error EmailAlreadyExists =
             new("User.EmailAlreadyExists", "User with this email already exists");
 
@@ -21,5 +24,8 @@ namespace Booking.Domain.Errors
 
         public static readonly Error AccountInactive =
             new("User.AccountInactive", "Account is deactivated");
+
+        public static readonly Error RoleNotExists =
+            new("User.RoleNotExists", "This role doesn't exist");
     }
 }
