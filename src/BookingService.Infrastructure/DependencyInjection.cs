@@ -9,10 +9,12 @@ using Booking.Infrastructure.Data;
 using Booking.Infrastructure.Queries;
 using Booking.Infrastructure.Repositories;
 using Booking.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Booking.Infrastructure
 {
@@ -26,10 +28,40 @@ namespace Booking.Infrastructure
             services.AddDbContext<AppDbContext>(options =>
              options.UseSqlServer(connectionString));
 
-            services.AddIdentity<User, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentityCore<User>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = true;
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddRoles<IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddSignInManager();
 
-            services.AddSingleton<ITokenService, TokenService>();
+
+            services.AddAuthorization();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(o =>
+                {
+                    o.RequireHttpsMetadata = false;
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = configuration["JWT:Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = configuration["JWT:Audience"],
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                        System.Text.Encoding.UTF8.GetBytes(configuration["JWT:SigningKey"])
+                    )
+                    };
+                });
+
+
+
+
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBookingRepository, BookingRepository>();

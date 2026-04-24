@@ -37,6 +37,7 @@ namespace Booking.API
 
             app.UseRateLimiter();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
