@@ -9,8 +9,36 @@ using Booking.Domain.Interfaces.Services;
 
 namespace Booking.Infrastructure.Services
 {
-    public class AuthService(UserManager<User> _userManager, ITokenService _tokenService) : IAuthService
+    public class AuthService(UserManager<User> _userManager, SignInManager<User> _signInManager,
+        ITokenService _tokenService) : IAuthService
     {
+        public async Task<Result<UserDto>> LoginUser(LoginDto loginDto, CancellationToken ct = default)
+        {
+            var user = await _userManager.FindByNameAsync(loginDto.UserName);
+            if (user is null)
+            {
+                return Result<UserDto>.Failure(UserErrors.NotFound);
+            }
+
+            var loginedUser = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+            if (!loginedUser.Succeeded)
+            {
+                return Result<UserDto>.Failure(UserErrors.WrongAuthData);
+            }
+
+            var token = await _tokenService.CreateToken(user);
+
+            var userDto = new UserDto(
+                user.UserName!,
+                user.FirstName,
+                user.LastName,
+                user.Email!,
+                token);
+
+            return Result<UserDto>.Success(userDto);
+        }
+
         public async Task<Result<UserDto>> RegisterUser(RegisterDto registerDto, string role = "Guest", CancellationToken ct = default)
         {
             var allowedRoles = new[] { "Admin", "Guest", "Host" };
@@ -65,5 +93,7 @@ namespace Booking.Infrastructure.Services
                 return Result<UserDto>.Failure(new Error("Identity.MultipleErrors", combinedError));
             }
         }
+
+
     }
 }

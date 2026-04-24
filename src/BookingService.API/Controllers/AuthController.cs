@@ -1,4 +1,4 @@
-﻿using Booking.Application.UseCases.Listing.GetAllListings;
+﻿using Booking.Application.UseCases.Users.LoginUser;
 using Booking.Application.UseCases.Users.RegisterUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +13,15 @@ namespace Booking.API.Controllers
     {
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command, CancellationToken ct = default)
+        {
+            var result = await _sender.Send(command, ct);
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserCommand command, CancellationToken ct = default)
         {
             var result = await _sender.Send(command, ct);
             return result.IsSuccess

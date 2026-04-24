@@ -4,6 +4,9 @@ namespace Booking.Domain.Errors
 {
     public static class UserErrors
     {
+        public static readonly Error WrongAuthData =
+            new("User.WrongAuthData", "Username or password is incorrect");
+
         public static readonly Error EmailAlreadyExists =
             new("User.EmailAlreadyExists", "User with this email already exists");
 
