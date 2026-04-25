@@ -3,6 +3,7 @@ Delete amenities from listings/rooms - ✅
 Fix overlapping while creating booking - ✅
 Fix race-condition while creating booking - ✅
 Delete/Update methods for all entities - ✅
+Add Registration/Login - ✅
 
 
 Filtration by amenities for Rooms/Listings 
@@ -10,7 +11,6 @@ Add validation for data throught fluentvalidation throught validation pipeline
 Add filters for GetAllQueries for Rooms/Listings
 Add logging
 Add caching
-Add Registration/Login !
 Add external API for changing currency
 Email Notifications
 Rate limiting: instead of IP use ID if autorized, logging

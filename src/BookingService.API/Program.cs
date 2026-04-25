@@ -6,6 +6,7 @@ using Booking.Application;
 using Booking.Infrastructure;
 using System.Text.Json.Serialization;
 using Booking.Infrastructure.ExtensionMethods;
+using Serilog;
 
 namespace Booking.API
 {
@@ -14,6 +15,18 @@ namespace Booking.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddMediatR(config =>
+            {
+                config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            });
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
 
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
@@ -36,6 +49,7 @@ namespace Booking.API
             app.UseSwagger();
             app.UseSwaggerUI();
 
+            app.UseSerilogRequestLogging();
             app.UseRateLimiter();
             app.UseHttpsRedirection();
             app.UseAuthentication();
