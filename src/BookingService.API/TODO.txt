@@ -13,5 +13,6 @@ Add logging
 Add caching
 Add external API for changing currency
 Email Notifications
-Rate limiting: instead of IP use ID if autorized, logging
+Rate limiting: use Redis to store the number of requests from each IP
 Middleware for exeptions handling
+Move to postman
