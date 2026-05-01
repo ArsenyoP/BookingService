@@ -16,6 +16,7 @@ namespace Booking.Application
                 config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
 
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
             });
 
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
