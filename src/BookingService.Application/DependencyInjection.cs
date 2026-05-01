@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Booking.Application.Behaviors;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -12,6 +14,10 @@ namespace Booking.Application
             services.AddMediatR(config =>
             {
                 config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerfomanceBehavior<,>));
             });
 
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
