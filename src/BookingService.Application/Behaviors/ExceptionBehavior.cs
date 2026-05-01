@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Booking.Application.Behaviors
 {
-    public class ExceptionBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> _logger)
+    public class ExceptionBehavior<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
