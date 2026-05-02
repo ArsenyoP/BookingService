@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Booking.API.Middleware;
+using Microsoft.OpenApi.Models;
 
 namespace Booking.API
 {
@@ -33,6 +34,9 @@ namespace Booking.API
                         }
                     });
             });
+
+            services.AddExceptionHandler<GlobalExceptionHandler>();
+            services.AddProblemDetails();
 
             return services;
         }

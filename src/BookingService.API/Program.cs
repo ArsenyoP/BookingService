@@ -49,6 +49,7 @@ namespace Booking.API
             app.UseSwagger();
             app.UseSwaggerUI();
 
+            app.UseExceptionHandler();
             app.UseSerilogRequestLogging();
             app.UseRateLimiter();
             app.UseHttpsRedirection();
