@@ -5,14 +5,15 @@ Fix race-condition while creating booking - ✅
 Delete/Update methods for all entities - ✅
 Add Registration/Login - ✅
 Added logging throught Behavior Pipeline - ✅ 
+Add validation for data throught fluentvalidation throught validation pipeline - ✅
+Middleware for exeptions handling - ✅
+
 
 
 Filtration by amenities for Rooms/Listings 
-Add validation for data throught fluentvalidation throught validation pipeline
 Add filters for GetAllQueries for Rooms/Listings
 Add caching
 Add external API for changing currency
 Email Notifications
 Rate limiting: use Redis to store the number of requests from each IP
-Middleware for exeptions handling
 Move to postman

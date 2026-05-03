@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.API.Middleware
@@ -41,7 +40,9 @@ namespace Booking.API.Middleware
                 {
                     Status = StatusCodes.Status400BadRequest,
                     Title = "Validation Error",
-                    Detail = "See the errors field for details."
+                    Detail = statusCode == 500
+                        ? "An unexpected error occurred"
+                        : exception.Message
                 };
 
                 await httpContext.Response.WriteAsJsonAsync(validationProblem, cancellationToken);
@@ -52,7 +53,7 @@ namespace Booking.API.Middleware
             httpContext.Response.StatusCode = statusCode;
 
             await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
-            
+
             return true;
         }
     }
