@@ -58,7 +58,10 @@ namespace Booking.Infrastructure
                     };
                 });
 
-
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration["Redis:Connection"];
+            });
 
 
             services.AddScoped<ITokenService, TokenService>();
@@ -69,6 +72,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IListingRepository, ListingRepository>();
             services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICacheService, CacheService>();
 
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(connectionString!));
             services.AddScoped<IListingQueries>(sp => new ListingQueries(connectionString!));

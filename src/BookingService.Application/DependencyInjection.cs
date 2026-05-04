@@ -1,9 +1,7 @@
 ﻿using Booking.Application.Behaviors;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
 namespace Booking.Application
 {
@@ -18,6 +16,7 @@ namespace Booking.Application
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerfomanceBehavior<,>));
             });
 
