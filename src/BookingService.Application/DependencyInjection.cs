@@ -16,6 +16,7 @@ namespace Booking.Application
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehavior<,>));
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
                 config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerfomanceBehavior<,>));
             });
