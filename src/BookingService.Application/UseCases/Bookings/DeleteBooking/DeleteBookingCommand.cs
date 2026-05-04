@@ -2,5 +2,8 @@
 
 namespace Booking.Application.UseCases.Booking.DeleteBooking
 {
-    public sealed record DeleteBookingCommand(Guid BookingId) : ICommand<Guid>;
+    public sealed record DeleteBookingCommand(Guid BookingId) : ICommand<Guid>, ICacheInvalidationCommand
+    {
+        public string Key => $"booking:{BookingId}";
+    }
 }

@@ -3,6 +3,10 @@ using Booking.Application.DTOs.Listings;
 
 namespace Booking.Application.UseCases.Listing.GetById
 {
-    public sealed record GetByIdQuery(Guid id) : IQuery<ListingResponseDto>;
+    public sealed record GetByIdQuery(Guid id) : IQuery<ListingResponseDto>, ICachableQuery
+    {
+        public string Key => $"listing:{id}";
 
+        public TimeSpan Expiration => TimeSpan.FromMinutes(5);
+    }
 }

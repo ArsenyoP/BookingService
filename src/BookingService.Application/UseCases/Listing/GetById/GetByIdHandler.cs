@@ -6,8 +6,15 @@ using Booking.Domain.Errors;
 
 namespace Booking.Application.UseCases.Listing.GetById
 {
-    public sealed class GetByIdHandler(IListingQueries _listingQueries) : IQueryHandler<GetByIdQuery, ListingResponseDto>
+    public sealed class GetByIdHandler(IListingQueries _listingQueries) : IQueryHandler<GetByIdQuery, ListingResponseDto>,
+        ICachableQuery
     {
+        public Guid Id { get; set; }
+
+        public string Key => $"listing:{Id}";
+
+        public TimeSpan Expiration => TimeSpan.FromSeconds(300);
+
         public async Task<Result<ListingResponseDto>> Handle(GetByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _listingQueries.GetByIdAsync(request.id);

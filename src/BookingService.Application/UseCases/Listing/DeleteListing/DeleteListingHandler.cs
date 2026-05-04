@@ -1,7 +1,6 @@
 ﻿using Booking.Application.Abstractions;
 using Booking.Application.Interfaces;
 using Booking.Application.Interfaces.IQueries;
-using Booking.Application.Queries; // Припускаю, що тут лежать IListingQueries
 using Booking.Domain.Common;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces.IRepositories;
