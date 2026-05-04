@@ -1,6 +1,11 @@
 ﻿namespace Booking.Domain.Common
 {
-    public class Result<T>
+    public interface IResult
+    {
+        bool IsSuccess { get; }
+    }
+
+    public class Result<T> : IResult
     {
         public bool IsSuccess { get; }
         public Error Error { get; }
@@ -17,7 +22,7 @@
 
         public static Result<T> Failure(Error error) => new Result<T>(false, error, default);
     }
-    public class Result
+    public class Result : IResult
     {
         public bool IsSuccess { get; }
         public Error Error { get; }
