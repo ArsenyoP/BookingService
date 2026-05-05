@@ -27,6 +27,7 @@ namespace Booking.Infrastructure.Seeding
             _logger.LogInformation("Starting data seeding from path: {Path}", seedPath);
 
             await SeedListingsAsync(seedPath, ct);
+            await SeedRoomsAsync(seedPath, ct);
 
             _logger.LogInformation("Data seeding completed");
         }
@@ -80,6 +81,72 @@ namespace Booking.Infrastructure.Seeding
                 }
 
                 _dbContext.Listings.Add(listingResult.Value!);
+            }
+
+            await _dbContext.SaveChangesAsync(ct);
+        }
+
+        private async Task SeedRoomsAsync(string SeedPath, CancellationToken ct)
+        {
+            var filePath = Path.Combine(SeedPath, "rooms.json");
+            if (!File.Exists(filePath))
+            {
+                _logger.LogWarning("rooms.json not found at {Path}, skipping", filePath);
+                return;
+            }
+
+            var json = await File.ReadAllTextAsync(filePath);
+            var models = JsonSerializer.Deserialize<List<RoomSeedingModel>>(json, _jsonOptions);
+
+            if (models is null || models.Count == 0)
+                return;
+
+            var listings = await _dbContext.Listings
+                .ToDictionaryAsync(l => l.Title, ct);
+
+            var existingRoomTitle = await _dbContext.Rooms
+                .Select(r => r.Title)
+                .ToHashSetAsync(ct);
+
+            var toCreate = models.Where(m => !existingRoomTitle.Contains(m.Title)).ToList();
+
+            if (toCreate.Count == 0)
+            {
+                _logger.LogInformation("All rooms already exist, skipping");
+                return;
+            }
+
+            foreach (var model in toCreate)
+            {
+                if (!listings.TryGetValue(model.ListingTitle, out var listing))
+                {
+                    _logger.LogWarning(
+                         "Listing '{ListingTitle}' not found for room '{RoomTitle}', skipping",
+                         model.ListingTitle, model.Title);
+                    continue;
+                }
+
+                var roomType = Enum.Parse<RoomType>(model.Type);
+
+                var roomResult = Room.Create(
+                    model.Title,
+                    model.Description,
+                    roomType,
+                    model.PricePerNight,
+                    model.AdultsCapacity,
+                    model.ChildrenCapacity,
+                    listing!.Id);
+
+                if (!roomResult.IsSuccess)
+                {
+                    _logger.LogWarning("Failed to create room {Title}: {Error}",
+                        model.Title, roomResult.Error.Description);
+                    continue;
+                }
+
+                _dbContext.Rooms.Add(roomResult.Value!);
+                _logger.LogInformation("Seeding room: {Title} in {Listing}",
+                    model.Title, model.ListingTitle);
             }
 
             await _dbContext.SaveChangesAsync(ct);

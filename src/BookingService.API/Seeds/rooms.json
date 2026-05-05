@@ -1,0 +1,38 @@
+[
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Standard Room 101",
+    "description": "Comfortable standard room with city view",
+    "type": "Standard",
+    "pricePerNight": 80.00,
+    "adultsCapacity": 2,
+    "childrenCapacity": 1
+  },
+  {
+    "listingTitle": "Deluxe hotel Ternopil",
+    "title": "Deluxe Suite 201",
+    "description": "Spacious deluxe suite with premium amenities",
+    "type": "Suite",
+    "pricePerNight": 200.00,
+    "adultsCapacity": 2,
+    "childrenCapacity": 2
+  },
+  {
+    "listingTitle": "Lviv Boutique Apartments",
+    "title": "One Bed Flat A",
+    "description": "Bright one bedroom flat near the centre",
+    "type": "OneBedFlar",
+    "pricePerNight": 60.00,
+    "adultsCapacity": 2,
+    "childrenCapacity": 0
+  },
+  {
+    "listingTitle": "Grand Hotel Kyiv",
+    "title": "Standard Room 101",
+    "description": "Comfortable standard room with city view",
+    "type": "Standard",
+    "pricePerNight": 80.00,
+    "adultsCapacity": 2,
+    "childrenCapacity": 1
+  }
+]
