@@ -28,6 +28,7 @@ namespace Booking.Infrastructure.Seeding
 
             await SeedListingsAsync(seedPath, ct);
             await SeedRoomsAsync(seedPath, ct);
+            await SeedUsersAsync(seedPath, ct);
 
             _logger.LogInformation("Data seeding completed");
         }
@@ -151,5 +152,63 @@ namespace Booking.Infrastructure.Seeding
 
             await _dbContext.SaveChangesAsync(ct);
         }
+
+        private async Task SeedUsersAsync(string SeedPath, CancellationToken ct)
+        {
+            var filePath = Path.Combine(SeedPath, "users.json");
+            if (!File.Exists(filePath))
+            {
+                _logger.LogWarning("users.json not found at {Path}, skipping", filePath);
+                return;
+            }
+
+            var json = File.ReadAllText(filePath);
+            var models = JsonSerializer.Deserialize<List<UserSeedModel>>(json, _jsonOptions);
+
+            if (models is null || models.Count == 0)
+                return;
+
+            foreach (var model in models)
+            {
+                var existing = await _userManager.FindByEmailAsync(model.Email);
+                if (existing is not null)
+                {
+                    _logger.LogInformation("User {Email} already exists, skipping", model.Email);
+                    continue;
+                }
+
+                var userResult = User.Create(
+                    model.FirstName,
+                    model.LastName,
+                    model.DateOfBirth,
+                    model.Email,
+                    model.UserName);
+
+                if (!userResult.IsSuccess)
+                {
+                    _logger.LogWarning("Failed to create user {Email}: {Error}",
+                        model.Email, userResult.Error.Description);
+                    continue;
+                }
+
+                var createResult = await _userManager.CreateAsync(userResult.Value!, model.Password);
+                if (!createResult.Succeeded)
+                {
+                    var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                    _logger.LogWarning("Failed to create user {Email}: {Errors}", model.Email, errors);
+                    continue;
+                }
+
+                var roleResult = await _userManager.AddToRoleAsync(userResult.Value!, model.Role);
+                if (!roleResult.Succeeded)
+                {
+                    var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+                    _logger.LogWarning("Failed to assign role for {Email}: {Errors}", model.Email, errors);
+                }
+
+                _logger.LogInformation("Seeded user: {Email} with role {Role}", model.Email, model.Role);
+            }
+        }
+
     }
 }

@@ -1,0 +1,29 @@
+[
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "userName": "johndoe",
+    "email": "john@example.com",
+    "password": "Password123!",
+    "dateOfBirth": "1990-05-15",
+    "role": "Guest"
+  },
+  {
+    "firstName": "Alice",
+    "lastName": "Smith",
+    "userName": "alicesmith",
+    "email": "alice@example.com",
+    "password": "Password123!",
+    "dateOfBirth": "1985-03-22",
+    "role": "User"
+  },
+  {
+    "firstName": "Arsen",
+    "lastName": "Dev",
+    "userName": "Arsenyo",
+    "email": "arsen@example.com",
+    "password": "Password123!",
+    "dateOfBirth": "2005-03-22",
+    "role": "Admin"
+  }
+]

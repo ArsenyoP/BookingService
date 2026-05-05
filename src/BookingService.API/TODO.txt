@@ -22,3 +22,5 @@ Rewievs module
 Outbox Pattern
 Database seeding
 Add telemetry
+
+!!Add transactions to seeding!!

@@ -19,13 +19,12 @@
         int AdultsCapacity,
         int ChildrenCapacity
         );
-
     public sealed record UserSeedModel(
-        string FirstName,
-        string LastName,
-        string UserName,
-        string Email,
-        string Password,
-        DateOnly DateOfBirth,
-        string Role);
+       string FirstName,
+       string LastName,
+       string UserName,
+       string Email,
+       string Password,
+       DateOnly DateOfBirth,
+       string Role);
 }
