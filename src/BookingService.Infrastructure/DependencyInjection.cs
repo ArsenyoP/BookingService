@@ -8,6 +8,7 @@ using Booking.Domain.Interfaces.Services;
 using Booking.Infrastructure.Data;
 using Booking.Infrastructure.Queries;
 using Booking.Infrastructure.Repositories;
+using Booking.Infrastructure.Seeding;
 using Booking.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -73,6 +74,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<DataSeeder>();
 
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(connectionString!));
             services.AddScoped<IListingQueries>(sp => new ListingQueries(connectionString!));

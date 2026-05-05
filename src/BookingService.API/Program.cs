@@ -1,18 +1,15 @@
-using Booking.Domain.Entities;
-using Booking.Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Booking.Application;
 using Booking.Infrastructure;
-using System.Text.Json.Serialization;
 using Booking.Infrastructure.ExtensionMethods;
+using Booking.Infrastructure.Seeding;
 using Serilog;
+using System.Text.Json.Serialization;
 
 namespace Booking.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +42,13 @@ namespace Booking.API
             builder.Services.AddPresentation();
 
             var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                using var scope = app.Services.CreateScope();
+                var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+                await seeder.SeedAsync();
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI();

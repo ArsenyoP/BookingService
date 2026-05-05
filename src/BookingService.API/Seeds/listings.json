@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Grand Hotel Kyiv",
+    "description": "Luxury hotel in the heart of Kyiv",
+    "country": "Ukraine",
+    "city": "Kyiv",
+    "street": "Khreshchatyk",
+    "houseNumber": "1",
+    "floor": 0,
+    "listingType": "Hotel"
+  },
+  {
+    "title": "Lviv Boutique Apartments",
+    "description": "Cozy apartments in the old town",
+    "country": "Ukraine",
+    "city": "Lviv",
+    "street": "Rynok Square",
+    "houseNumber": "5",
+    "floor": 2,
+    "listingType": "Apartment"
+  },
+  {
+    "title": "Deluxe hotel Ternopil",
+    "description": "The best hotel in Ternopil",
+    "country": "Ukraine",
+    "city": "Ternopil",
+    "street": "Valova",
+    "houseNumber": "4",
+    "floor": 0,
+    "listingType": "Hotel"
+  },
+  {
+    "title": "Hotel Halichina",
+    "description": "Hotel situated on the cost of Ternopil pond",
+    "country": "Ukraine",
+    "city": "Ternopil",
+    "street": "Saharova",
+    "houseNumber": "1",
+    "floor": 2,
+    "listingType": "Hotel"
+  }
+]
