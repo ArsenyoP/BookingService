@@ -30,6 +30,7 @@ namespace Booking.Infrastructure.Seeding
             await SeedRoomsAsync(seedPath, ct);
             await SeedUsersAsync(seedPath, ct);
             await SeedBookingAsync(seedPath, ct);
+            await SeedAmenitiesAsync(seedPath, ct);
 
             _logger.LogInformation("Data seeding completed");
         }
@@ -128,7 +129,11 @@ namespace Booking.Infrastructure.Seeding
                     continue;
                 }
 
-                var roomType = Enum.Parse<RoomType>(model.Type);
+                if (!Enum.TryParse<RoomType>(model.Type, out var roomType))
+                {
+                    _logger.LogWarning("Unknown amenity category: {Category}", model.Type);
+                    continue;
+                }
 
                 var roomResult = Room.Create(
                     model.Title,
@@ -291,5 +296,48 @@ namespace Booking.Infrastructure.Seeding
             await _dbContext.SaveChangesAsync(ct);
         }
 
+        private async Task SeedAmenitiesAsync(string SeedPath, CancellationToken ct)
+        {
+            var filePath = Path.Combine(SeedPath, "amenities.json");
+            if (!File.Exists(filePath))
+            {
+                _logger.LogWarning("amenities.json not found at {Path}, skipping", filePath);
+                return;
+            }
+
+            var json = File.ReadAllText(filePath);
+            var models = JsonSerializer.Deserialize<List<AmenitiesSeedingModel>>(json, _jsonOptions);
+
+            if (models is null || models.Count == 0)
+                return;
+
+            var existingAmenities = await _dbContext.Amenities.Select(a => a.Name)
+                .ToHashSetAsync();
+
+            var toCreate = models.Where(a => !existingAmenities.Contains(a.AmenityName)).ToList();
+
+            foreach (var model in toCreate)
+            {
+                if (!Enum.TryParse<AmenityCategory>(model.AmenityCategory, out var amenityCategory))
+                {
+                    _logger.LogWarning("Unknown amenity category: {Category}", model.AmenityCategory);
+                    continue;
+                }
+
+                var amenityResult = Amenity.Create(model.AmenityName, amenityCategory);
+                if (!amenityResult.IsSuccess)
+                {
+                    _logger.LogWarning("Can't create amenity with name: {amenityName}, error: {amenityError}",
+                        amenityResult.Value!.Name, amenityResult.Error);
+                    continue;
+                }
+
+                _dbContext.Amenities.Add(amenityResult.Value!);
+                _logger.LogInformation("Seeding amenity: {amenityName} with category: {amenityCategory}",
+                    amenityResult.Value!.Name, amenityResult.Value!.Category);
+            }
+
+            await _dbContext.SaveChangesAsync(ct);
+        }
     }
 }

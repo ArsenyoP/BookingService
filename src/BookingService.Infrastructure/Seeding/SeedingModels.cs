@@ -36,4 +36,8 @@
         int NumberOfChildren,
         string RoomTitle,
         string UserName);
+
+    public sealed record AmenitiesSeedingModel(
+        string AmenityName,
+        string AmenityCategory);
 }
