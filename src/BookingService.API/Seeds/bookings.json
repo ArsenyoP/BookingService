@@ -1,0 +1,34 @@
+[
+  {
+    "StartDate": "2026-06-01",
+    "EndDate": "2026-06-07",
+    "NumberOfAdults": 2,
+    "NumberOfChildren": 1,
+    "RoomTitle": "Standard Room 101",
+    "UserName": "johndoe"
+  },
+  {
+    "StartDate": "2026-07-15",
+    "EndDate": "2026-07-20",
+    "NumberOfAdults": 2,
+    "NumberOfChildren": 2,
+    "RoomTitle": "Deluxe Suite 201",
+    "UserName": "alicesmith"
+  },
+  {
+    "StartDate": "2026-08-10",
+    "EndDate": "2026-08-12",
+    "NumberOfAdults": 1,
+    "NumberOfChildren": 0,
+    "RoomTitle": "One Bed Flat A",
+    "UserName": "Arsenyo"
+  },
+  {
+    "StartDate": "2026-09-05",
+    "EndDate": "2026-09-10",
+    "NumberOfAdults": 2,
+    "NumberOfChildren": 0,
+    "RoomTitle": "Standard Room 101",
+    "UserName": "johndoe"
+  }
+]

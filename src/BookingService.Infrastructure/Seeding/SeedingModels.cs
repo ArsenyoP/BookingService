@@ -19,6 +19,7 @@
         int AdultsCapacity,
         int ChildrenCapacity
         );
+
     public sealed record UserSeedModel(
        string FirstName,
        string LastName,
@@ -27,4 +28,12 @@
        string Password,
        DateOnly DateOfBirth,
        string Role);
+
+    public sealed record BookingSeedingModel(
+        DateOnly StartDate,
+        DateOnly EndDate,
+        int NumberOfAdults,
+        int NumberOfChildren,
+        string RoomTitle,
+        string UserName);
 }

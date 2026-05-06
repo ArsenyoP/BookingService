@@ -29,6 +29,7 @@ namespace Booking.Infrastructure.Seeding
             await SeedListingsAsync(seedPath, ct);
             await SeedRoomsAsync(seedPath, ct);
             await SeedUsersAsync(seedPath, ct);
+            await SeedBookingAsync(seedPath, ct);
 
             _logger.LogInformation("Data seeding completed");
         }
@@ -208,6 +209,86 @@ namespace Booking.Infrastructure.Seeding
 
                 _logger.LogInformation("Seeded user: {Email} with role {Role}", model.Email, model.Role);
             }
+        }
+
+        private async Task SeedBookingAsync(string SeedPath, CancellationToken ct)
+        {
+            var filePath = Path.Combine(SeedPath, "bookings.json");
+            if (!File.Exists(filePath))
+            {
+                _logger.LogWarning("bookings.json not found at {Path}, skipping", filePath);
+                return;
+            }
+
+            var json = File.ReadAllText(filePath);
+            var models = JsonSerializer.Deserialize<List<BookingSeedingModel>>(json, _jsonOptions);
+
+            if (models is null || models.Count == 0)
+                return;
+
+            var rooms = await _dbContext.Rooms.ToDictionaryAsync(r => r.Title, ct);
+            var users = await _dbContext.Users.ToDictionaryAsync(u => u.UserName!, ct);
+
+            var existingBookings = _dbContext.Bookings
+                .Select(b => new { b.RoomId, b.GuestId, b.Period.StartDate })
+                .AsEnumerable()
+                .Select(b => (b.RoomId, b.GuestId, b.StartDate))
+                .ToHashSet();
+
+            var toCreate = models.Where(m =>
+            {
+                if (!rooms.TryGetValue(m.RoomTitle, out var room) ||
+                    !users.TryGetValue(m.UserName, out var user))
+                {
+                    return false;
+                }
+
+                var key = (room.Id, user.Id, m.StartDate);
+
+                var booking = existingBookings.Contains(key);
+
+                if (booking)
+                {
+                    _logger.LogWarning("Booking for room: {roomTitle} for user: {user.Username} from: {startDate} allready exsists",
+                        m.RoomTitle, m.UserName, m.StartDate);
+                }
+
+                return !booking;
+            }).ToList();
+
+            foreach (var model in toCreate)
+            {
+                if (!rooms.TryGetValue(model.RoomTitle, out var room))
+                {
+                    _logger.LogWarning("Can't get room with title: {roomTitle}", model.RoomTitle);
+                    continue;
+                }
+
+                if (!users.TryGetValue(model.UserName, out var user))
+                {
+                    _logger.LogWarning("Can't get user with username: {userName}", model.UserName);
+                    continue;
+                }
+
+                var periodResult = DateRange.Create(model.StartDate, model.EndDate);
+                if (!periodResult.IsSuccess)
+                    continue;
+
+                var bookingResult = Bookings.Create(
+                    periodResult.Value!,
+                    model.NumberOfAdults,
+                    model.NumberOfChildren,
+                    room,
+                    user);
+
+                if (!bookingResult.IsSuccess)
+                    continue;
+
+                _dbContext.Bookings.Add(bookingResult.Value!);
+                _logger.LogInformation("Seeding room: guest: {userName}, room: {roomTitle}, startDate: {startDate}",
+                    user.UserName, room.Title, bookingResult.Value!.Period.StartDate);
+            }
+            await _dbContext.SaveChangesAsync(ct);
         }
 
     }
