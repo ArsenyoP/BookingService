@@ -20,6 +20,8 @@ namespace Booking.Infrastructure.Seeding
             PropertyNameCaseInsensitive = true
         };
 
+
+
         public async Task SeedAsync(CancellationToken ct = default)
         {
             var seedPath = _configuration["SeedData:Path"] ?? "Seeds";
@@ -31,9 +33,12 @@ namespace Booking.Infrastructure.Seeding
             await SeedUsersAsync(seedPath, ct);
             await SeedBookingAsync(seedPath, ct);
             await SeedAmenitiesAsync(seedPath, ct);
+            await SeedAmenitiesToListingdAsync(seedPath, ct);
 
             _logger.LogInformation("Data seeding completed");
         }
+
+
 
         private async Task SeedListingsAsync(string SeedPath, CancellationToken ct)
         {
@@ -335,6 +340,100 @@ namespace Booking.Infrastructure.Seeding
                 _dbContext.Amenities.Add(amenityResult.Value!);
                 _logger.LogInformation("Seeding amenity: {amenityName} with category: {amenityCategory}",
                     amenityResult.Value!.Name, amenityResult.Value!.Category);
+            }
+
+            await _dbContext.SaveChangesAsync(ct);
+        }
+
+        private async Task SeedAmenitiesToListingdAsync(string SeedPath, CancellationToken ct)
+        {
+            //First Solution
+
+            //var filePath = Path.Combine(SeedPath, "listing_amenities.json");
+            //if (!File.Exists(filePath))
+            //{
+            //    _logger.LogWarning("listing_amenities.json not found at {Path}, skipping", filePath);
+            //    return;
+            //}
+
+            //var json = File.ReadAllText(filePath);
+            //var models = JsonSerializer.Deserialize<List<SeedToListingModel>>(json, _jsonOptions);
+
+            //if (models is null || models.Count == 0)
+            //    return;
+
+
+            //var modelTitles = models.Select(m => m.ListingTitle).ToHashSet();
+            //var listingsToSeeed = await _dbContext.Listings
+            //    .Where(l => modelTitles.Contains(l.Title))
+            //    .Select(l => l)
+            //    .ToHashSetAsync(ct);
+
+
+            //var modelAmenities = models.Select(m => m.AmenityName).ToHashSet();
+            //var ammenitiesToSeed = await _dbContext.Amenities
+            //    .Where(a => modelAmenities.Contains(a.Name))
+            //    .Select(a => a)
+            //    .ToHashSetAsync();
+
+            //foreach (var listing in listingsToSeeed)
+            //{
+            //    var toAdd = models
+            //        .Where(m => m.ListingTitle == listing.Title)
+            //        .Select(m => m.AmenityName)
+            //        .ToList();
+
+            //    var amenitiesToAdd = ammenitiesToSeed
+            //        .Where(a => toAdd.Contains(a.Name))
+            //        .ToHashSet();
+
+            //    foreach (var amenity in amenitiesToAdd)
+            //    {
+            //        listing.AddAmenity(amenity);
+            //        _dbContext.Update(listing);
+            //    }
+            //}
+            //await _dbContext.SaveChangesAsync(ct);
+
+            //return;
+
+
+
+            var filePath = Path.Combine(SeedPath, "listing_amenities.json");
+            if (!File.Exists(filePath)) return;
+
+            var json = await File.ReadAllTextAsync(filePath, ct);
+            var models = JsonSerializer.Deserialize<List<SeedToListingModel>>(json, _jsonOptions);
+
+            if (models is null || models.Count == 0) return;
+
+            var modelListingTitles = models.Select(m => m.ListingTitle).Distinct().ToList();
+            var listingsMap = await _dbContext.Listings
+                .Include(l => l.Amenities)
+                .Where(l => modelListingTitles.Contains(l.Title))
+                .ToDictionaryAsync(l => l.Title, ct);
+
+            var modelAmenityNames = models.Select(m => m.AmenityName).Distinct().ToList();
+            var amenitiesMap = await _dbContext.Amenities
+                .Where(a => modelAmenityNames.Contains(a.Name))
+                .ToDictionaryAsync(a => a.Name, ct);
+
+            foreach (var model in models)
+            {
+                if (listingsMap.TryGetValue(model.ListingTitle, out var listing) &&
+                    amenitiesMap.TryGetValue(model.AmenityName, out var amenity))
+                {
+                    if (!listing.Amenities.Any(a => a.Id == amenity.Id))
+                    {
+                        listing.AddAmenity(amenity);
+                        _logger.LogInformation("Linked: {Amenity} -> {Listing}", amenity.Name, listing.Title);
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("Could not find Listing '{L}' or Amenity '{A}'",
+                        model.ListingTitle, model.AmenityName);
+                }
             }
 
             await _dbContext.SaveChangesAsync(ct);

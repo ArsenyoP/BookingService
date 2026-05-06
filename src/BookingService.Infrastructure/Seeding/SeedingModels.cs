@@ -40,4 +40,8 @@
     public sealed record AmenitiesSeedingModel(
         string AmenityName,
         string AmenityCategory);
+
+    public sealed record SeedToListingModel(
+        string ListingTitle,
+        string AmenityName);
 }
