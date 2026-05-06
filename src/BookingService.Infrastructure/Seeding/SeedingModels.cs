@@ -44,4 +44,8 @@
     public sealed record SeedToListingModel(
         string ListingTitle,
         string AmenityName);
+
+    public sealed record SeedToRoomModel(
+        string RoomTitle,
+        string AmenityName);
 }

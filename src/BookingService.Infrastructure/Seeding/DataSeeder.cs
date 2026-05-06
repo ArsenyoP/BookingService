@@ -34,6 +34,7 @@ namespace Booking.Infrastructure.Seeding
             await SeedBookingAsync(seedPath, ct);
             await SeedAmenitiesAsync(seedPath, ct);
             await SeedAmenitiesToListingdAsync(seedPath, ct);
+            await SeedAmenitiesToRoomAsync(seedPath, ct);
 
             _logger.LogInformation("Data seeding completed");
         }
@@ -400,7 +401,11 @@ namespace Booking.Infrastructure.Seeding
 
 
             var filePath = Path.Combine(SeedPath, "listing_amenities.json");
-            if (!File.Exists(filePath)) return;
+            if (!File.Exists(filePath))
+            {
+                _logger.LogWarning("listing_amenities.json not found at {Path}, skipping", filePath);
+                return;
+            }
 
             var json = await File.ReadAllTextAsync(filePath, ct);
             var models = JsonSerializer.Deserialize<List<SeedToListingModel>>(json, _jsonOptions);
@@ -428,11 +433,69 @@ namespace Booking.Infrastructure.Seeding
                         listing.AddAmenity(amenity);
                         _logger.LogInformation("Linked: {Amenity} -> {Listing}", amenity.Name, listing.Title);
                     }
+                    else
+                    {
+                        _logger.LogWarning("Amenity: {amenity} allready added to {Listing}",
+                            amenity.Name, listing.Title);
+                        continue;
+                    }
                 }
                 else
                 {
                     _logger.LogWarning("Could not find Listing '{L}' or Amenity '{A}'",
                         model.ListingTitle, model.AmenityName);
+                }
+            }
+
+            await _dbContext.SaveChangesAsync(ct);
+        }
+
+        private async Task SeedAmenitiesToRoomAsync(string SeedPath, CancellationToken ct)
+        {
+            var filePath = Path.Combine(SeedPath, "rooms_amenities.json");
+            if (!File.Exists(filePath))
+            {
+                _logger.LogWarning("rooms_amenities.json not found at {Path}, skipping", filePath);
+                return;
+            }
+
+            var json = await File.ReadAllTextAsync(filePath, ct);
+            var models = JsonSerializer.Deserialize<List<SeedToRoomModel>>(json, _jsonOptions);
+
+            if (models is null || models.Count == 0) return;
+
+            var modelAmenityNames = models.Select(m => m.AmenityName).Distinct().ToList();
+            var modelAmenities = await _dbContext.Amenities
+                .Where(a => modelAmenityNames.Contains(a.Name))
+                .ToDictionaryAsync(a => a.Name, ct);
+
+            var modelRoomTitles = models.Select(r => r.RoomTitle).Distinct().ToList();
+            var modelRooms = await _dbContext.Rooms
+                .Where(r => modelRoomTitles.Contains(r.Title))
+                .Include(r => r.Amenities)
+                .ToDictionaryAsync(r => r.Title, ct);
+
+            foreach (var model in models)
+            {
+                if (modelAmenities.TryGetValue(model.AmenityName, out var amenity) &&
+                    modelRooms.TryGetValue(model.RoomTitle, out var room))
+                {
+                    if (!room.Amenities.Any(a => a.Name == amenity.Name))
+                    {
+                        room.AddAmentity(amenity);
+                        _logger.LogInformation("Linked: {Amenity} -> {Room}", amenity.Name, room.Title);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Amenity: {amenity} allready added to {Room}",
+                            amenity.Name, room.Title);
+                        continue;
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("Could not find Room '{R}' or Amenity '{A}'",
+                        model.RoomTitle, model.AmenityName);
                 }
             }
 
