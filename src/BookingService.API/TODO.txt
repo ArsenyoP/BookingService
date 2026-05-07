@@ -8,7 +8,7 @@ Added logging throught Behavior Pipeline - ✅
 Add validation for data throught fluentvalidation throught validation pipeline - ✅
 Middleware for exeptions handling - ✅
 Add caching - ✅
-
+Add transactions to seeding - ✅
 
 
 Filtration by amenities for Rooms/Listings 
@@ -23,4 +23,3 @@ Outbox Pattern
 Database seeding
 Add telemetry
 
-!!Add transactions to seeding!!
