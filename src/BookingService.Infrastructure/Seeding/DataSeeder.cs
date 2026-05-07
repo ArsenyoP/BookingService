@@ -28,28 +28,32 @@ namespace Booking.Infrastructure.Seeding
 
             _logger.LogInformation("Starting data seeding from path: {Path}", seedPath);
 
-            using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
+            var strategy = _dbContext.Database.CreateExecutionStrategy();
 
-            try
+            await strategy.ExecuteAsync(async () =>
             {
-                await SeedListingsAsync(seedPath, ct);
-                await SeedRoomsAsync(seedPath, ct);
-                await SeedUsersAsync(seedPath, ct);
-                await SeedBookingAsync(seedPath, ct);
-                await SeedAmenitiesAsync(seedPath, ct);
-                await SeedAmenitiesToListingdAsync(seedPath, ct);
-                await SeedAmenitiesToRoomAsync(seedPath, ct);
+                await using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
 
-                await _dbContext.Database.CommitTransactionAsync(ct);
-                _logger.LogInformation("Data seeding completed");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Data seeding failed. All changes rolled back.");
-                await _dbContext.Database.RollbackTransactionAsync(ct);
-                throw;
-            }
+                try
+                {
+                    await SeedListingsAsync(seedPath, ct);
+                    await SeedRoomsAsync(seedPath, ct);
+                    await SeedUsersAsync(seedPath, ct);
+                    await SeedBookingAsync(seedPath, ct);
+                    await SeedAmenitiesAsync(seedPath, ct);
+                    await SeedAmenitiesToListingdAsync(seedPath, ct);
+                    await SeedAmenitiesToRoomAsync(seedPath, ct);
 
+                    await transaction.CommitAsync(ct);
+                    _logger.LogInformation("Data seeding completed");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Data seeding failed. All changes rolled back.");
+                    //await transaction.RollbackAsync(ct);
+                    throw;
+                }
+            });
         }
 
 
