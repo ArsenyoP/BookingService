@@ -1,0 +1,26 @@
+[
+  {
+    "AmenityName": "Shower Gel",
+    "AmenityCategory": "Bathroom"
+  },
+  {
+    "AmenityName": "King Size Bed",
+    "AmenityCategory": "Bedroom"
+  },
+  {
+    "AmenityName": "Microwave",
+    "AmenityCategory": "Kitchen"
+  },
+  {
+    "AmenityName": "Smart TV",
+    "AmenityCategory": "Entertainment"
+  },
+  {
+    "AmenityName": "Private Balcony",
+    "AmenityCategory": "Outdoor"
+  },
+  {
+    "AmenityName": "Wheelchair Ramp",
+    "AmenityCategory": "Accessibility"
+  }
+]
