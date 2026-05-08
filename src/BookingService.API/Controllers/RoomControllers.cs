@@ -16,9 +16,10 @@ namespace Booking.API.Controllers
     public class RoomControllers(ISender _sender) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10,
+            [FromQuery] List<string>? AmenityNames = null, CancellationToken ct = default)
         {
-            var result = await _sender.Send(new GetAllRoomsQuery(page, pageSize), ct);
+            var result = await _sender.Send(new GetAllRoomsQuery(page, pageSize, AmenityNames), ct);
 
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }

@@ -4,7 +4,6 @@ using Booking.Application.Queries;
 using Booking.Domain.Entities;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Queries
 {
