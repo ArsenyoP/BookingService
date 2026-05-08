@@ -1,6 +1,5 @@
 ﻿using Booking.Application.DTOs.Amenities;
 using Booking.Application.DTOs.Listings;
-using Booking.Application.DTOs.Rooms;
 using Booking.Application.Interfaces.IQueries;
 using Booking.Domain.Entities;
 using Dapper;
@@ -17,9 +16,7 @@ namespace Booking.Infrastructure.Queries
             var offset = (page - 1) * pageSize;
             var namesCount = amenityNames?.Count ?? 0;
             var names = amenityNames ?? new List<string>();
-            
-            //Interview
-            //TODO: Filters
+
             const string sql = """
                     SELECT 
                         l.Id, 
