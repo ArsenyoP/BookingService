@@ -10,10 +10,10 @@ namespace Booking.Application.UseCases.Listing.GetAllListings
     {
         public async Task<Result<IReadOnlyList<ListingResponseDto>>> Handle(GetAllListingsQuery request, CancellationToken ct)
         {
-            var page = request.Page < 1 ? 1 : request.Page;
-            var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
+            var page = request.QueryObject.Page < 1 ? 1 : request.QueryObject.Page;
+            var pageSize = request.QueryObject.PageSize < 1 ? 10 : request.QueryObject.PageSize;
 
-            var listings = await _listingQueries.GetAllPagedAsync(page, pageSize, amenityNames: request.AmenityNames, ct);
+            var listings = await _listingQueries.GetAllPagedAsync(request.QueryObject, ct);
 
             return Result<IReadOnlyList<ListingResponseDto>>.Success(listings);
         }

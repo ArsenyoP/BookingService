@@ -1,5 +1,6 @@
 ﻿using Booking.Application.DTOs.Amenities;
 using Booking.Application.DTOs.Listings;
+using Booking.Application.Helpers.Room;
 using Booking.Application.Interfaces.IQueries;
 using Booking.Domain.Entities;
 using Dapper;
@@ -9,15 +10,61 @@ namespace Booking.Infrastructure.Queries
 {
     public class ListingQueries(string connectionString) : IListingQueries
     {
-        public async Task<IReadOnlyList<ListingResponseDto>?> GetAllPagedAsync(int page, int pageSize,
-            List<string>? amenityNames = null, CancellationToken ct = default)
+        public async Task<IReadOnlyList<ListingResponseDto>?> GetAllPagedAsync(ListingQueryObject filter, CancellationToken ct = default)
         {
-            var connection = new SqlConnection(connectionString);
-            var offset = (page - 1) * pageSize;
-            var namesCount = amenityNames?.Count ?? 0;
-            var names = amenityNames ?? new List<string>();
+            using var connection = new SqlConnection(connectionString);
+            var offset = (filter.Page - 1) * filter.PageSize;
 
-            const string sql = """
+            var innerConditions = new List<string>();
+            var parameters = new DynamicParameters();
+            parameters.Add("Offset", offset);
+            parameters.Add("PageSize", filter.PageSize);
+
+            if (!string.IsNullOrEmpty(filter.Title))
+            {
+                innerConditions.Add("l2.Title = @Title");
+                parameters.Add("Title", filter.Title);
+            }
+
+            if (!string.IsNullOrEmpty(filter.Country))
+            {
+                innerConditions.Add("l2.Address_Country = @Country");
+                parameters.Add("Country", filter.Country);
+            }
+
+            if (!string.IsNullOrEmpty(filter.City))
+            {
+                innerConditions.Add("l2.Address_City = @City");
+                parameters.Add("City", filter.City);
+            }
+
+            if (!string.IsNullOrEmpty(filter.Type))
+            {
+                innerConditions.Add("l2.ListingType = @Type");
+                parameters.Add("Type", filter.Type);
+            }
+
+            var namesCount = filter.AmenityNames?.Count ?? 0;
+            var names = filter.AmenityNames ?? new List<string>();
+
+            if (namesCount > 0)
+            {
+                innerConditions.Add(@"(
+                    SELECT COUNT(DISTINCT a2.Name)
+                    FROM ListingAmenities la2
+                    INNER JOIN Amenities a2 ON la2.AmenitiesId = a2.Id
+                    WHERE la2.ListingId = l2.Id AND a2.Name IN @Names
+                ) = @NamesCount");
+
+                parameters.Add("Names", names);
+                parameters.Add("NamesCount", namesCount);
+            }
+
+            var whereClause = innerConditions.Count > 0
+                ? "WHERE " + string.Join(" AND ", innerConditions)
+                : string.Empty;
+
+            var sql = $"""
                     SELECT 
                         l.Id, 
                         l.Title, 
@@ -33,12 +80,7 @@ namespace Booking.Infrastructure.Queries
                         a.Category     AS Category
                     FROM (
                         SELECT l2.Id FROM Listings l2
-                        WHERE (@NamesCount = 0 OR (
-                            SELECT COUNT(DISTINCT a2.Name)
-                            FROM ListingAmenities la2
-                            INNER JOIN Amenities a2 ON la2.AmenitiesId = a2.Id
-                            WHERE la2.ListingId = l2.Id AND a2.Name IN @Names -- ВИПРАВЛЕНО: a2.Name замість l2.Name
-                        ) = @NamesCount)
+                        {whereClause}
                         ORDER BY l2.Title
                         OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
                     ) AS paged
@@ -65,13 +107,7 @@ namespace Booking.Infrastructure.Queries
 
                     return existingListing;
                 },
-                new
-                {
-                    Offset = offset,
-                    PageSize = pageSize,
-                    Names = names,
-                    NamesCount = namesCount
-                },
+                parameters,
                 splitOn: "AmenityId"
             );
 

@@ -1,4 +1,5 @@
 ﻿using Booking.Application.DTOs.Listings;
+using Booking.Application.Helpers.Room;
 using Booking.Domain.Entities;
 
 
@@ -8,7 +9,6 @@ namespace Booking.Application.Interfaces.IQueries
     {
         public Task<Listing?> GetEntityByIdAsync(Guid id, CancellationToken ct = default);
         public Task<ListingResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
-        public Task<IReadOnlyList<ListingResponseDto>?> GetAllPagedAsync(int page, int pageSize,
-            List<string>? amenityNames = null, CancellationToken ct = default);
+        public Task<IReadOnlyList<ListingResponseDto>?> GetAllPagedAsync(ListingQueryObject queryObject, CancellationToken ct = default);
     }
 }

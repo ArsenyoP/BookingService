@@ -1,4 +1,5 @@
-﻿using Booking.Application.UseCases.Listing.CreateListing;
+﻿using Booking.Application.Helpers.Room;
+using Booking.Application.UseCases.Listing.CreateListing;
 using Booking.Application.UseCases.Listing.DeleteListing;
 using Booking.Application.UseCases.Listing.GetAllListings;
 using Booking.Application.UseCases.Listing.GetById;
@@ -15,12 +16,9 @@ namespace Booking.API.Controllers
     public class ListingController(ISender _sender) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] List<string>? amenityNames = null,
-            CancellationToken ct = default)
+        public async Task<IActionResult> GetAll([FromQuery] ListingQueryObject queryObject, CancellationToken ct = default)
         {
-            var result = await _sender.Send(new GetAllListingsQuery(page, pageSize, amenityNames), ct);
+            var result = await _sender.Send(new GetAllListingsQuery(queryObject), ct);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
