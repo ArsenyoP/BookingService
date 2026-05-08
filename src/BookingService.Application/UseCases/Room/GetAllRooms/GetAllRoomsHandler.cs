@@ -10,10 +10,10 @@ namespace Booking.Application.UseCases.Room.GetAllRooms
     {
         public async Task<Result<IReadOnlyList<RoomResponseDto>>> Handle(GetAllRoomsQuery request, CancellationToken ct)
         {
-            var page = request.Page < 1 ? 1 : request.Page;
-            var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
+            var page = request.QueryObject.Page < 1 ? 1 : request.QueryObject.Page;
+            var pageSize = request.QueryObject.PageSize < 1 ? 10 : request.QueryObject.PageSize;
 
-            var rooms = await _roomQueries.GetAllWithAmenitiesAsync(page, pageSize, request.AmenityNames, ct);
+            var rooms = await _roomQueries.GetAllWithAmenitiesAsync(request.QueryObject, ct);
 
             return Result<IReadOnlyList<RoomResponseDto>>.Success(rooms);
         }
