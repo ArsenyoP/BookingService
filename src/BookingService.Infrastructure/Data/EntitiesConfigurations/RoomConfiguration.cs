@@ -22,6 +22,13 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
             builder.Property(x => x.PricePerNight)
                 .HasColumnType("decimal(18,2)");
 
+            builder.Property(x => x.AverageRating)
+                .HasColumnType("decimal(3,2)")
+                .HasDefaultValue(0.0m);
+
+            builder.Property(x => x.ReviewsCount)
+                .IsRequired()
+                .HasDefaultValue(0);
 
             builder.HasOne<Listing>("_listing")
                .WithMany()
