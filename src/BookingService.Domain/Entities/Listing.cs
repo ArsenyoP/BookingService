@@ -68,5 +68,12 @@ namespace Booking.Domain.Entities
             _amenity.Remove(existingAmenity);
             return Result.Success();
         }
+
+        public Result UpdateRating(int newScore)
+        {
+            AverageRating = (AverageRating * ReviewsCount + newScore) / ReviewsCount + 1;
+            ReviewsCount++;
+            return Result.Success();
+        }
     }
 }
