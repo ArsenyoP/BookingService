@@ -12,6 +12,8 @@ namespace Booking.Domain.Entities
         public Address Address { get; private set; }
         public ListingType ListingType { get; private set; }
 
+        public decimal AverageRating { get; set; }
+        public int ReviewsCount { get; set; }
 
         private readonly List<Amenity> _amenity = new();
         public IReadOnlyCollection<Amenity> Amenities => _amenity.AsReadOnly();
