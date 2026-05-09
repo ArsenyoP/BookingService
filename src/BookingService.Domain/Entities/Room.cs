@@ -90,5 +90,11 @@ namespace Booking.Domain.Entities
             return Result.Success();
         }
 
+        public Result UpdateRating(int newScore)
+        {
+            AverageRating = (AverageRating * ReviewsCount + newScore) / ReviewsCount + 1;
+            ReviewsCount++;
+            return Result.Success();
+        }
     }
 }
