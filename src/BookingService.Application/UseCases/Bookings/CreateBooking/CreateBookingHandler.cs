@@ -18,7 +18,6 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
         UserManager<User> _userManager,
         IUnitOfWork unitOfWork) : ICommandHandler<CreateBookingCommand, Guid>
     {
-        //TODO: fix overlapping
         public async Task<Result<Guid>> Handle(CreateBookingCommand request, CancellationToken ct)
         {
             var dateRangeResult = DateRange.Create(request.StartDate, request.EndDate);
