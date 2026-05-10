@@ -2,7 +2,7 @@
 
 namespace Booking.Application.Interfaces.IQueries
 {
-    public interface IReviewQuery
+    public interface IReviewQueries
     {
         public Task<IReadOnlyList<ReviewResponseDto>> GetAll(int page, int pageSize, CancellationToken ct);
         public Task<ReviewResponseDto> GetById(Guid id, CancellationToken ct);

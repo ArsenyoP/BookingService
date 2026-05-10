@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Booking.Infrastructure.Queries
 {
-    public sealed class ReviewQueries(string connectionString) : IReviewQuery
+    public sealed class ReviewQueries(string connectionString) : IReviewQueries
     {
         public async Task<IReadOnlyList<ReviewResponseDto>> GetAll(int page, int pageSize, CancellationToken ct)
         {
