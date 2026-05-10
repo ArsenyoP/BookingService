@@ -21,6 +21,7 @@ namespace Booking.Domain.Entities
             ReviewsTargetType targetType,
             int score, string text)
         {
+            Id = Guid.NewGuid();
             UserId = userId;
             TargetId = targetId;
             TargetType = targetType;
