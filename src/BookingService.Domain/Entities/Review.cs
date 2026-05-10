@@ -12,7 +12,7 @@ namespace Booking.Domain.Entities
         public Guid TargetId { get; private set; }
         public Guid UserId { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public bool IsEdited { get; set; } = false;
+        public bool IsEdited { get; private set; } = false;
 
         private Review() { }
 

@@ -228,7 +228,6 @@ namespace Booking.Infrastructure.Queries
                 ORDER BY r.Title;
                 """;
 
-            Console.WriteLine(sql);
 
             var roomDictionary = new Dictionary<Guid, RoomResponseDto>();
 
