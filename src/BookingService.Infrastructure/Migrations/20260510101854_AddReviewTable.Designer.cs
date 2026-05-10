@@ -4,6 +4,7 @@ using Booking.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260510101854_AddReviewTable")]
+    partial class AddReviewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,11 +206,9 @@ namespace Booking.Infrastructure.Migrations
 
                     b.ToTable("Reviews", null, t =>
                         {
+                            t.HasCheckConstraint("CK+Review_Text_Range", "LEN([Text]) > 10 AND LEN([Text]) < 1000");
+
                             t.HasCheckConstraint("CK_Review_Score_Range", "[Score] >= 1 AND [Score] <= 5");
-
-                            t.HasCheckConstraint("CK_Review_TargetType", "[TargetType] IN ('Room', 'Listing')");
-
-                            t.HasCheckConstraint("CK_Review_Text_Range", "LEN([Text]) > 10 AND LEN([Text]) < 1000");
                         });
                 });
 
