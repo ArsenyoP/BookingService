@@ -48,6 +48,10 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
             builder.Property(x => x.CreatedAt)
                 .IsRequired();
 
+            builder.HasIndex(x => x.UserId);
+            builder.HasIndex(x => x.Score);
+
+            builder.HasIndex(x => new { x.TargetId, x.CreatedAt });
         }
     }
 }
