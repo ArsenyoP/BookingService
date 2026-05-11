@@ -1,4 +1,5 @@
 ﻿using Booking.Application.UseCases.Reviews.GetAllReviews;
+using Booking.Application.UseCases.Reviews.GetById;
 using Booking.Application.UseCases.Reviews.GetByTargetId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace Booking.API.Controllers
 
             return result.IsSuccess
                 ? Ok(result.Value)
-                : BadRequest(result.Error);
+                : NotFound(result.Error);
         }
 
         [HttpGet("{targetId:guid}")]
@@ -29,7 +30,17 @@ namespace Booking.API.Controllers
 
             return result.IsSuccess
                 ? Ok(result.Value)
-                : BadRequest(result.Error);
+                : NotFound(result.Error);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
+        {
+            var result = await _sender.Send(new GetReviewByIdQuery(id), ct);
+
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : NotFound(result.Error);
         }
 
     }
