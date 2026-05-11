@@ -1,4 +1,5 @@
 ﻿using Booking.Application.UseCases.Reviews.GetAllReviews;
+using Booking.Application.UseCases.Reviews.GetByTargetId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -13,12 +14,23 @@ namespace Booking.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
         {
-            var command = new GetAllReviewsQuery(page, pageSize);
+            var result = await _sender.Send(new GetAllReviewsQuery(page, pageSize));
 
-            var result = await _sender.Send(command, ct);
             return result.IsSuccess
                 ? Ok(result.Value)
                 : BadRequest(result.Error);
         }
+
+        [HttpGet("{targetId:guid}")]
+        public async Task<IActionResult> GetAll([FromRoute] Guid targetId, [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10, CancellationToken ct = default)
+        {
+            var result = await _sender.Send(new GetReviewsByTargetIdQuery(page, pageSize, targetId));
+
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
+        }
+
     }
 }
