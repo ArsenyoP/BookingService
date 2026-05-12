@@ -1,7 +1,9 @@
 ﻿using Booking.Application.DTOs.Reviews;
 using Booking.Application.Interfaces.IQueries;
+using Booking.Domain.Enums;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Booking.Infrastructure.Queries
 {
@@ -127,6 +129,100 @@ namespace Booking.Infrastructure.Queries
 
             var result = await connection.QueryAsync<ReviewResponseDto>(command);
             return result.ToList().AsReadOnly();
+        }
+
+        public async Task<bool> HasReviewByUserAsync(Guid userId, Guid targetId, CancellationToken ct)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            await connection.OpenAsync(ct);
+
+            var sql = @"SELECT CASE WHEN EXISTS( 
+	            SELECT 1 FROM Reviews r
+	            WHERE r.UserId = @UserId AND 
+	            r.TargetId = @TargetId
+            ) THEN 1 ELSE 0 END";
+
+            var comamnd = new CommandDefinition(
+                sql,
+                new { UserId = userId, TargetId = targetId },
+                cancellationToken: ct);
+
+            var result = await connection.ExecuteScalarAsync<bool>(comamnd);
+            return result;
+        }
+
+        public async Task<bool> HasListingBooking(Guid userId, Guid listingId, CancellationToken ct)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            await connection.OpenAsync(ct);
+
+            var sql = @"SELECT CASE WHEN EXISTS( 
+	            SELECT 1 FROM Bookingss b
+	            INNER JOIN Rooms r ON r.id = b.RoomId	
+	            WHERE b.GuestId = @GuestId AND 
+	            r.ListingId = @ListingId AND
+	            (b.Status = 'Confirmed' OR b.Status = 'Completed')
+            ) THEN 1 ELSE 0 END";
+
+            var comamnd = new CommandDefinition(
+                sql,
+                new { GuestId = userId, ListingId = listingId },
+                cancellationToken: ct);
+
+            var result = await connection.ExecuteScalarAsync<bool>(comamnd);
+            return result;
+        }
+
+        public async Task<bool> HasRoomBooking(Guid userId, Guid roomId, CancellationToken ct)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            await connection.OpenAsync(ct);
+
+            var sql = @"SELECT CASE WHEN EXISTS( 
+	            SELECT 1 FROM Bookingss b
+	            WHERE b.RoomId = @RoomId AND
+                (b.Status = 'Confirmed' OR b.Status = 'Completed') 
+            ) THEN 1 ELSE 0 END";
+
+            var comamnd = new CommandDefinition(
+                sql,
+                new { UserId = userId, RoomId = roomId },
+                cancellationToken: ct);
+
+            var result = await connection.ExecuteScalarAsync<bool>(comamnd);
+            return result;
+        }
+
+        public async Task AddedReviewToTarget(Guid targetId, int score, ReviewsTargetType targetType, IDbTransaction transaction, CancellationToken ct)
+        {
+            var connection = transaction.Connection;
+
+            if (connection is null) throw new Exception("Connection is null");
+
+            string tableName = targetType switch
+            {
+                ReviewsTargetType.Room => "Rooms",
+                ReviewsTargetType.Listing => "Listings",
+                _ => throw new ArgumentException("Invalid type")
+            };
+
+            var sql = $@"UPDATE {tableName}
+                SET 
+                    AverageRating = ((AverageRating * ReviewsCount) + @Score) / (ReviewsCount + 1),
+                    ReviewsCount = ReviewsCount + 1.0
+                WHERE Id = @TargetId ";
+
+            var command = new CommandDefinition(
+                sql,
+                new { TargetId = targetId, Score = score },
+                transaction: transaction,
+                cancellationToken: ct);
+
+            var result = await connection.ExecuteAsync(command);
+
         }
     }
 }
