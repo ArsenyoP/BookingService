@@ -15,6 +15,7 @@ namespace Booking.Infrastructure.Repositories
         public void Delete(Review obj)
         {
             ArgumentNullException.ThrowIfNull(obj);
+            _dbContext.Attach(obj);
             _dbContext.Remove(obj);
         }
     }

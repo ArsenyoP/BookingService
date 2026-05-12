@@ -1,7 +1,6 @@
 using Booking.Application;
 using Booking.Infrastructure;
 using Booking.Infrastructure.ExtensionMethods;
-using Booking.Infrastructure.Seeding;
 using Serilog;
 using System.Text.Json.Serialization;
 

@@ -1,5 +1,6 @@
 ﻿using Booking.Application.DTOs.Reviews;
 using Booking.Application.Interfaces.IQueries;
+using Booking.Domain.Entities;
 using Booking.Domain.Enums;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -66,7 +67,7 @@ namespace Booking.Infrastructure.Queries
 
             var result = await connection.QueryFirstOrDefaultAsync<ReviewResponseDto>(command);
 
-            return result!;
+            return result;
         }
 
         public async Task<IReadOnlyList<ReviewResponseDto>> GetByTargetId(int page, int pageSize, Guid targetId, CancellationToken ct)
@@ -223,6 +224,56 @@ namespace Booking.Infrastructure.Queries
 
             var result = await connection.ExecuteAsync(command);
 
+        }
+
+        public async Task<Review> GetReviewByUserAndTargetId(Guid userId, Guid targetId, CancellationToken ct)
+        {
+            var connection = new SqlConnection(connectionString);
+
+            var sql = @"SELECT * FROM Reviews r
+                WHERE r.UserId = @UserId AND r.TargetId = @TargetId ";
+
+            var command = new CommandDefinition(
+                sql,
+                new { UserId = userId, TargetId = targetId },
+                cancellationToken: ct);
+
+            var result = await connection.QueryFirstOrDefaultAsync<Review>(command);
+            return result;
+        }
+
+        public async Task RemovedReviewFromTarget(Guid targetId, int score, ReviewsTargetType targetType, IDbTransaction transaction, CancellationToken ct)
+        {
+            var connection = transaction.Connection;
+
+            if (connection is null) throw new Exception("Connection is null");
+
+            string tableName = targetType switch
+            {
+                ReviewsTargetType.Room => "Rooms",
+                ReviewsTargetType.Listing => "Listings",
+                _ => throw new ArgumentException("Invalid type")
+            };
+
+            var sql = $@"UPDATE {tableName}
+                SET 
+                    AverageRating = CASE 
+                        WHEN ReviewsCount > 1 THEN ((AverageRating * ReviewsCount) - @Score) / (ReviewsCount - 1)
+                        ELSE 0 
+                    END,
+                    ReviewsCount = CASE 
+                        WHEN ReviewsCount > 0 THEN ReviewsCount - 1 
+                        ELSE 0 
+                    END
+                WHERE Id = @TargetId";
+
+            var command = new CommandDefinition(
+                sql,
+                new { TargetId = targetId, Score = score },
+                transaction: transaction,
+                cancellationToken: ct);
+
+            await connection.ExecuteAsync(command);
         }
     }
 }

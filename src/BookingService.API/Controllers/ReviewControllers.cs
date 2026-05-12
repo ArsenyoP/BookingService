@@ -1,5 +1,6 @@
 ﻿using Booking.Application.DTOs.Reviews;
 using Booking.Application.UseCases.Reviews.CreateReview;
+using Booking.Application.UseCases.Reviews.DeleteReview;
 using Booking.Application.UseCases.Reviews.GetAllReviews;
 using Booking.Application.UseCases.Reviews.GetById;
 using Booking.Application.UseCases.Reviews.GetByTargetId;
@@ -76,5 +77,17 @@ namespace Booking.API.Controllers
                 : BadRequest(result.Error);
         }
 
+        [Authorize]
+        [HttpDelete("delete/{targetId:guid}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid targetId)
+        {
+            var userId = User.GetUserID();
+
+            var command = new DeleteReviewCommand(Guid.Parse(userId), targetId);
+            var result = await _sender.Send(command);
+
+            return result.IsSuccess ? Ok(result.Value)
+                : BadRequest(result.Error);
+        }
     }
 }

@@ -30,5 +30,8 @@ namespace Booking.Domain.Errors
 
         public static readonly Error AllreadyCreated =
             new Error("Review.AllreadyCreated", "Review to this object is allready created");
+
+        public static readonly Error NotFound =
+            new Error("Review.NotFound", "This review has't been found");
     }
 }
