@@ -24,5 +24,11 @@ namespace Booking.Domain.Errors
 
         public static readonly Error EmptyTargetId =
             new Error("Review.EmptyTargetId", "Target's id can't be empty");
+
+        public static readonly Error NoBooking =
+            new Error("Review.NoBooking", "To leave review you should have a booking");
+
+        public static readonly Error AllreadyCreated =
+            new Error("Review.AllreadyCreated", "Review to this object is allready created");
     }
 }

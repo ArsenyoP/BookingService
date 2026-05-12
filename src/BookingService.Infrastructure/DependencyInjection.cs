@@ -77,6 +77,8 @@ namespace Booking.Infrastructure
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IListingRepository, ListingRepository>();
             services.AddScoped<IAmenityRepository, AmenityRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<DataSeeder>();
