@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 
 namespace Booking.Application.Interfaces
 {
@@ -17,5 +18,7 @@ namespace Booking.Application.Interfaces
         Task<T> ExecuteInSerializableTransactionAsync<T>(
             Func<Task<T>> operation,
             CancellationToken ct = default);
+
+        IExecutionStrategy CreateExecutingStrategy();
     }
 }

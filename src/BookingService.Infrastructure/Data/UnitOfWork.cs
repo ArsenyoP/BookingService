@@ -91,5 +91,10 @@ namespace Booking.Infrastructure.Data
             _currentTransaction?.Dispose();
             _currentTransaction = null;
         }
+
+        public IExecutionStrategy CreateExecutingStrategy()
+        {
+            return _dbContext.Database.CreateExecutionStrategy();
+        }
     }
 }
