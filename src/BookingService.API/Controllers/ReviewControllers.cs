@@ -1,6 +1,7 @@
 ﻿using Booking.Application.UseCases.Reviews.GetAllReviews;
 using Booking.Application.UseCases.Reviews.GetById;
 using Booking.Application.UseCases.Reviews.GetByTargetId;
+using Booking.Application.UseCases.Reviews.GetReviewsByUserId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -33,7 +34,7 @@ namespace Booking.API.Controllers
                 : NotFound(result.Error);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("details/{id:guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
         {
             var result = await _sender.Send(new GetReviewByIdQuery(id), ct);
@@ -41,6 +42,20 @@ namespace Booking.API.Controllers
             return result.IsSuccess
                 ? Ok(result.Value)
                 : NotFound(result.Error);
+        }
+
+        [HttpGet("user/{userId:guid}")]
+        public async Task<IActionResult> GetByUserId(
+            [FromRoute] Guid userId,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            CancellationToken ct = default)
+        {
+            var result = await _sender.Send(new GetReviewsByUserIdQuery(page, pageSize, userId), ct);
+
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
         }
 
     }
