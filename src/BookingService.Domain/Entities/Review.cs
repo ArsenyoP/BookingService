@@ -95,7 +95,7 @@ namespace Booking.Domain.Entities
             return Result<Review>.Success(this);
         }
 
-        public Result<Review> UpdateScore(string newText)
+        public Result<Review> UpdateText(string newText)
         {
             if (IsEdited) return Result<Review>.Failure(ReviewErrors.AlreadyEdited);
 
