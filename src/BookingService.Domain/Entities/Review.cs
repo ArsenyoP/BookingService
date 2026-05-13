@@ -74,5 +74,50 @@ namespace Booking.Domain.Entities
             Review review = new Review(userId, targetId, targetType, score, text);
             return Result<Review>.Success(review);
         }
+
+        public Result<Review> UpdateScore(int newScore)
+        {
+            if (IsEdited) return Result<Review>.Failure(ReviewErrors.AlreadyEdited);
+
+            if (Score == newScore)
+            {
+                return Result<Review>.Success(this);
+            }
+
+            if (newScore < 1 || newScore > 5)
+            {
+                return Result<Review>.Failure(ReviewErrors.InvalidScore);
+            }
+
+            Score = newScore;
+            IsEdited = true;
+
+            return Result<Review>.Success(this);
+        }
+
+        public Result<Review> UpdateScore(string newText)
+        {
+            if (IsEdited) return Result<Review>.Failure(ReviewErrors.AlreadyEdited);
+
+            if (Text == newText)
+            {
+                return Result<Review>.Success(this);
+            }
+
+            if (newText.Length < 10)
+            {
+                return Result<Review>.Failure(ReviewErrors.TextTooShort);
+            }
+
+            if (newText.Length > 1000)
+            {
+                return Result<Review>.Failure(ReviewErrors.TextTooLong);
+            }
+
+            Text = newText;
+            IsEdited = true;
+
+            return Result<Review>.Success(this);
+        }
     }
 }

@@ -33,5 +33,8 @@ namespace Booking.Domain.Errors
 
         public static readonly Error NotFound =
             new Error("Review.NotFound", "This review has't been found");
+
+        public static readonly Error AlreadyEdited =
+            new Error("Review.AlreadyEdited", "You can't edit review twice");
     }
 }
