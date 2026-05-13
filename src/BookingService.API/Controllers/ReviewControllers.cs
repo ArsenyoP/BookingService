@@ -5,6 +5,7 @@ using Booking.Application.UseCases.Reviews.GetAllReviews;
 using Booking.Application.UseCases.Reviews.GetById;
 using Booking.Application.UseCases.Reviews.GetByTargetId;
 using Booking.Application.UseCases.Reviews.GetReviewsByUserId;
+using Booking.Application.UseCases.Reviews.UpdateReview;
 using Booking.Infrastructure.ExtensionMethods;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +27,20 @@ namespace Booking.API.Controllers
 
             var command = new CreateReviewCommand(reviewDto, userId);
             var result = await _sender.Send(command);
+
+            return result.IsSuccess ? Ok(result.Value)
+                : BadRequest(result.Error);
+        }
+
+        [Authorize]
+        [HttpPatch("edit/{targetId:guid}")]
+        public async Task<IActionResult> UpdateReview([FromBody] UpdateReviewDto updateDto,
+            [FromRoute] Guid targetId, CancellationToken ct = default)
+        {
+            var userId = User.GetUserID();
+
+            var command = new UpdateReviewCommand(updateDto, Guid.Parse(userId), targetId);
+            var result = await _sender.Send(command, ct);
 
             return result.IsSuccess ? Ok(result.Value)
                 : BadRequest(result.Error);

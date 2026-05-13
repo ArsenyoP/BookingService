@@ -17,5 +17,6 @@ namespace Booking.Application.Interfaces.IQueries
         public Task<bool> HasListingBooking(Guid userId, Guid listingId, CancellationToken ct);
         public Task AddedReviewToTarget(Guid targetId, int score, ReviewsTargetType targetType, IDbTransaction transaction, CancellationToken ct);
         public Task RemovedReviewFromTarget(Guid targetId, int score, ReviewsTargetType targetType, IDbTransaction transaction, CancellationToken ct);
+        public Task UpdatedReviewScoreOnTarget(Guid targetId, int newScore, int oldScore, ReviewsTargetType targetType, IDbTransaction transaction, CancellationToken ct);
     }
 }

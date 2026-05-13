@@ -24,4 +24,4 @@ Outbox Pattern
 Email Notifications
 Add telemetry
 Add payment
-
+Automapper

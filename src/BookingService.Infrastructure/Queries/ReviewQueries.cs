@@ -275,5 +275,32 @@ namespace Booking.Infrastructure.Queries
 
             await connection.ExecuteAsync(command);
         }
+
+        public async Task UpdatedReviewScoreOnTarget(Guid targetId, int newScore, int oldScore, ReviewsTargetType targetType, IDbTransaction transaction, CancellationToken ct)
+        {
+            var connection = transaction.Connection;
+
+            if (connection is null) throw new Exception("Connection is null");
+
+            string tableName = targetType switch
+            {
+                ReviewsTargetType.Room => "Rooms",
+                ReviewsTargetType.Listing => "Listings",
+                _ => throw new ArgumentException("Invalid type")
+            };
+
+            var sql = $@"UPDATE {tableName}
+                SET 
+                    AverageRating = ((AverageRating * ReviewsCount) - @OldScore + @NewScore) / ReviewsCount
+                WHERE Id = @TargetId AND ReviewsCount > 0";
+
+            var command = new CommandDefinition(
+                sql,
+                new { TargetId = targetId, OldScore = oldScore, NewScore = newScore },
+                transaction: transaction,
+                cancellationToken: ct);
+
+            await connection.ExecuteAsync(command);
+        }
     }
 }
