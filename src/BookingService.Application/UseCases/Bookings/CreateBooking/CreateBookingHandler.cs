@@ -20,13 +20,13 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
     {
         public async Task<Result<Guid>> Handle(CreateBookingCommand request, CancellationToken ct)
         {
-            var dateRangeResult = DateRange.Create(request.StartDate, request.EndDate);
+            var dateRangeResult = DateRange.Create(request.CreateDto.StartDate, request.CreateDto.EndDate);
             if (!dateRangeResult.IsSuccess || dateRangeResult.Value is null)
             {
                 return Result<Guid>.Failure(dateRangeResult.Error);
             }
 
-            var room = await _roomQueries.GetEntityByIdAsync(request.RoomId, ct);
+            var room = await _roomQueries.GetEntityByIdAsync(request.CreateDto.RoomId, ct);
             if (room is null)
             {
                 return Result<Guid>.Failure(RoomErrors.NotFound);
@@ -50,8 +50,8 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
                 }
 
                 var bookingResult = BookingEntity.Create(dateRangeResult.Value,
-                    request.AdultsCount,
-                    request.ChildrenCount,
+                    request.CreateDto.AdultsCount,
+                    request.CreateDto.ChildrenCount,
                     room,
                     guest);
 

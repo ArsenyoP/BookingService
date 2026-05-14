@@ -1,10 +1,12 @@
-﻿using Booking.Application.UseCases.Booking.DeleteBooking;
+﻿using Booking.Application.DTOs.Bookings;
+using Booking.Application.UseCases.Booking.DeleteBooking;
 using Booking.Application.UseCases.Bookings.CreateBooking;
 using Booking.Application.UseCases.Bookings.GetAllBookings;
 using Booking.Application.UseCases.Bookings.GetById;
 using Booking.Application.UseCases.Bookings.GetByRoomId;
 using Booking.Application.UseCases.Bookings.GetByUserId;
 using Booking.Application.UseCases.Bookings.IsRoomAvailable;
+using Booking.Infrastructure.ExtensionMethods;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -61,9 +63,14 @@ namespace Booking.API.Controllers
         [Authorize]
         [HttpPost]
         [EnableRateLimiting("write-limiter")]
-        public async Task<IActionResult> Create([FromBody] CreateBookingCommand command, CancellationToken ct)
+        public async Task<IActionResult> Create([FromBody] CreateBookingDto createDto, CancellationToken ct)
         {
+            var userId = User.GetUserID();
+
+            var command = new CreateBookingCommand(createDto, Guid.Parse(userId));
+
             var result = await _sender.Send(command, ct);
+
             return result.IsSuccess
                 ? Created($"/api/bookings/{result.Value}", result.Value)
                 : BadRequest(result.Error);

@@ -1,6 +1,7 @@
 using Booking.Application;
 using Booking.Infrastructure;
 using Booking.Infrastructure.ExtensionMethods;
+using Booking.Infrastructure.Seeding;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -42,12 +43,12 @@ namespace Booking.API
 
             var app = builder.Build();
 
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    using var scope = app.Services.CreateScope();
-            //    var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
-            //    await seeder.SeedAsync();
-            //}
+            if (app.Environment.IsDevelopment())
+            {
+                using var scope = app.Services.CreateScope();
+                var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+                await seeder.SeedAsync();
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI();

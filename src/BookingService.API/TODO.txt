@@ -12,9 +12,9 @@ Add transactions to seeding - ✅
 Filtration by amenities for Rooms/Listings - ✅
 Database seeding - ✅
 Add filters for GetAllQueries for Rooms/Listings - ✅
+Refactor Create Booking to fetch userId from claims - ✅
 
 
-Refactor Create Booking to fetch userId from claims
 Add external API for changing currency
 Rate limiting: use Redis to store the number of requests from each IP
 Move to postman
@@ -25,3 +25,6 @@ Email Notifications
 Add telemetry
 Add payment
 Automapper
+
+
+!!OUTPUT CACHING!!
