@@ -10,6 +10,7 @@ using Booking.Infrastructure.ExtensionMethods;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace Booking.API.Controllers
@@ -57,6 +58,8 @@ namespace Booking.API.Controllers
                 : NotFound(result.Error);
         }
 
+
+        [OutputCache(PolicyName = "PublicReviews")]
         [HttpGet("{targetId:guid}")]
         public async Task<IActionResult> GetAll([FromRoute] Guid targetId, [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10, CancellationToken ct = default)

@@ -78,6 +78,13 @@ namespace Booking.Infrastructure
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration["Redis:Connection"];
+                options.InstanceName = "Distributed_Cache_";
+            });
+
+            services.AddStackExchangeRedisOutputCache(options =>
+            {
+                options.Configuration = configuration["Redis:Connection"];
+                options.InstanceName = "Output_Cache_";
             });
 
 

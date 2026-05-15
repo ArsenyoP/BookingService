@@ -1,4 +1,5 @@
 ﻿using Booking.API.Middleware;
+using Booking.API.OutputCaching;
 using Microsoft.OpenApi.Models;
 
 namespace Booking.API
@@ -37,6 +38,14 @@ namespace Booking.API
 
             services.AddExceptionHandler<GlobalExceptionHandler>();
             services.AddProblemDetails();
+
+            services.AddOutputCache(options =>
+            {
+                options.AddPolicy("PublicReviews", b => b
+                    .AddPolicy<CustomOutputCachingPolicy>()
+                    .SetCacheKeyPrefix("reviews_")
+                    .Expire(TimeSpan.FromMinutes(10)));
+            });
 
             return services;
         }
