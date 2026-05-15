@@ -4,12 +4,13 @@ using Booking.Application.Interfaces.IQueries;
 using Booking.Domain.Common;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces.IRepositories;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Application.UseCases.Reviews.DeleteReview
 {
     public sealed class DeleteReviewHandler(IReviewQueries _reviewQueries,
-        IReviewRepository _reviewRepo, IUnitOfWork _unitOfWork) : ICommandHandler<DeleteReviewCommand, Guid>
+        IReviewRepository _reviewRepo, IUnitOfWork _unitOfWork, IOutputCacheStore _outputCache) : ICommandHandler<DeleteReviewCommand, Guid>
     {
         public async Task<Result<Guid>> Handle(DeleteReviewCommand request, CancellationToken ct)
         {
@@ -22,14 +23,12 @@ namespace Booking.Application.UseCases.Reviews.DeleteReview
 
             var strategy = _unitOfWork.CreateExecutingStrategy();
 
-            return await strategy.ExecuteAsync(async () =>
+            var result = await strategy.ExecuteAsync(async () =>
             {
                 using var transaction = await _unitOfWork.BeginTransactionAsync(ct);
-
                 try
                 {
                     _reviewRepo.Delete(review);
-
                     await _unitOfWork.SaveChangesAsync();
 
                     await _reviewQueries.RemovedReviewFromTarget(
@@ -48,6 +47,14 @@ namespace Booking.Application.UseCases.Reviews.DeleteReview
                     throw;
                 }
             });
+
+
+            if (result.IsSuccess)
+            {
+                await _outputCache.EvictByTagAsync($"target_{request.TargetId.ToString().ToLowerInvariant()}", ct);
+            }
+
+            return result;
         }
     }
 }

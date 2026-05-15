@@ -16,7 +16,6 @@ namespace Booking.Application.Behaviors
 
             var cached = await _cache.GetAsync<TResponse>(cacheable.Key, cancellationToken);
 
-            //if data in cache
             if (cached is not null)
                 return Result<TResponse>.Success(cached);
 

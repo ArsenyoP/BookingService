@@ -6,12 +6,13 @@ using Booking.Domain.Entities;
 using Booking.Domain.Enums;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces.IRepositories;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Application.UseCases.Reviews.CreateReview
 {
     public sealed class CreateReviewHandler(IReviewRepository _reviewRepo,
-        IReviewQueries _reviewQueries, IUnitOfWork _unitOfWork) : ICommandHandler<CreateReviewCommand, Guid>
+        IReviewQueries _reviewQueries, IUnitOfWork _unitOfWork, IOutputCacheStore _outputCache) : ICommandHandler<CreateReviewCommand, Guid>
     {
         public async Task<Result<Guid>> Handle(CreateReviewCommand request, CancellationToken ct)
         {
@@ -41,7 +42,7 @@ namespace Booking.Application.UseCases.Reviews.CreateReview
 
             var strategy = _unitOfWork.CreateExecutingStrategy();
 
-            return await strategy.ExecuteAsync(async () =>
+            var result = await strategy.ExecuteAsync(async () =>
             {
                 using var transaction = await _unitOfWork.BeginTransactionAsync(ct);
 
@@ -68,6 +69,14 @@ namespace Booking.Application.UseCases.Reviews.CreateReview
                 }
             });
 
+            if (result.IsSuccess)
+            {
+                await _outputCache.EvictByTagAsync($"target_{reviewResult.Value.TargetId.ToString().ToLowerInvariant()}", ct);
+            }
+
+            return result;
         }
+
     }
 }
+
