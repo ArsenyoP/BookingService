@@ -11,10 +11,12 @@ using Booking.Infrastructure.Repositories;
 using Booking.Infrastructure.Seeding;
 using Booking.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Booking.Infrastructure
@@ -22,9 +24,18 @@ namespace Booking.Infrastructure
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration, IWebHostEnvironment environment)
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            string connectionString;
+
+            if (environment.IsDevelopment())
+            {
+                connectionString = configuration.GetConnectionString("LocalConnections")!;
+            }
+            else
+            {
+                connectionString = configuration.GetConnectionString("CloudConnection")!;
+            }
 
             services.AddDbContext<AppDbContext>(options =>
              options.UseSqlServer(connectionString, sqlOptions =>

@@ -37,7 +37,7 @@ namespace Booking.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddApplication();
-            builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
             builder.Services.AddRateLimiting();
             builder.Services.AddPresentation();
 
