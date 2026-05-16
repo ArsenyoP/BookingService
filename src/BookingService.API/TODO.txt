@@ -14,14 +14,13 @@ Database seeding - ✅
 Add filters for GetAllQueries for Rooms/Listings - ✅
 Refactor Create Booking to fetch userId from claims - ✅
 Output caching - ✅
+Rewievs module - ✅
 
 
-Change Room/Listing response Dto to include reviews
 Add external API for changing currency
 Rate limiting: use Redis to store the number of requests from each IP
 Move to postman
 Tests
-Rewievs module  
 Outbox Pattern
 Email Notifications
 Add telemetry
