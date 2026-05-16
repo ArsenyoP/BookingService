@@ -2,7 +2,9 @@
 using Booking.Application.DTOs.Reviews;
 using Booking.Application.Interfaces;
 using Booking.Application.Interfaces.IQueries;
+using Booking.Application.Interfaces.Services;
 using Booking.Domain.Common;
+using Booking.Domain.Enums;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces.IRepositories;
 using Microsoft.AspNetCore.OutputCaching;
@@ -11,7 +13,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Booking.Application.UseCases.Reviews.UpdateReview
 {
     public sealed class UpdateReviewHandler(IReviewQueries _reviewQueries,
-        IReviewRepository _reviewRepo, IUnitOfWork _unitOfWork, IOutputCacheStore _outputCache) : ICommandHandler<UpdateReviewCommand, ReviewResponseDto>
+        IReviewRepository _reviewRepo, IUnitOfWork _unitOfWork,
+        IOutputCacheStore _outputCache, ICacheService _cacheService) : ICommandHandler<UpdateReviewCommand, ReviewResponseDto>
     {
         public async Task<Result<ReviewResponseDto>> Handle(UpdateReviewCommand request, CancellationToken ct)
         {
@@ -68,6 +71,17 @@ namespace Booking.Application.UseCases.Reviews.UpdateReview
             if (result.IsSuccess)
             {
                 await _outputCache.EvictByTagAsync($"target_{review.TargetId.ToString().ToLowerInvariant()}", ct);
+            }
+
+            //invalidates room/listing distributed cache
+            if (review.TargetType == ReviewsTargetType.Room)
+            {
+                await _cacheService.RemoveAsync($"room:{review.TargetId}", ct);
+            }
+
+            if (review.TargetType == ReviewsTargetType.Listing)
+            {
+                await _cacheService.RemoveAsync($"listing:{review.TargetId}", ct);
             }
 
             return result;
