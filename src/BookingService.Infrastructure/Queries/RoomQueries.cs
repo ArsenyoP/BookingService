@@ -25,6 +25,8 @@ namespace Booking.Infrastructure.Queries
                     r.AdultsCapacity,
                     r.ChildrenCapacity,
                     r.ListingId,
+                    r.AverageRating,
+                    r.ReviewsCount,
                     l.Title        AS ListingTitle,
                     a.Id           AS AmenityId,
                     a.Name         AS Name,
