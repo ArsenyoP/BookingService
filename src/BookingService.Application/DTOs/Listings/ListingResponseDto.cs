@@ -14,6 +14,8 @@ namespace Booking.Application.DTOs.Listings
         public string HouseNumber { get; init; } = string.Empty;
         public int Floor { get; init; }
         public ListingType ListingType { get; init; }
+        public decimal AverageRating { get; init; }
+        public int ReviewsCount { get; set; }
 
         public List<AmenityDto> Amenities { get; init; } = new();
     }
