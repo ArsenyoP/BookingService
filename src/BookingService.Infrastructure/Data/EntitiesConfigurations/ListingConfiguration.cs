@@ -19,6 +19,14 @@ namespace Booking.Infrastructure.Data
                 .HasMaxLength(1000)
                 .IsRequired();
 
+            builder.Property(x => x.AverageRating)
+                .HasColumnType("decimal(3,2)")
+                .HasDefaultValue(0.0m);
+
+            builder.Property(x => x.ReviewsCount)
+                .IsRequired()
+                .HasDefaultValue(0);
+
             builder.OwnsOne(x => x.Address, addressBuilder =>
             {
                 addressBuilder.Property(a => a.Country).HasMaxLength(50).IsRequired();

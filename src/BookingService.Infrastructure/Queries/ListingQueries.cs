@@ -75,6 +75,8 @@ namespace Booking.Infrastructure.Queries
                         l.Address_HouseNumber AS HouseNumber, 
                         l.Address_Floor AS Floor, 
                         l.ListingType,
+                        l.AverageRating,
+                        l.ReviewsCount,
                         a.Id           AS AmenityId,
                         a.Name         AS Name,
                         a.Category     AS Category
@@ -128,6 +130,8 @@ namespace Booking.Infrastructure.Queries
                     l.Address_Street AS Street, 
                     l.Address_HouseNumber AS HouseNumber, 
                     l.Address_Floor AS Floor, 
+                    l.AverageRating,
+                    l.ReviewsCount,
                     ListingType,
                     a.Id           AS AmenityId,
                     a.Name         AS Name,

@@ -15,6 +15,9 @@ namespace Booking.Domain.Entities
         public int AdultsCapacity { get; private set; }
         public int ChildrenCapacity { get; private set; }
 
+        public decimal AverageRating { get; set; }
+        public int ReviewsCount { get; set; }
+
         public Guid ListingId { get; private set; }
         private Listing _listing { get; set; }
 
@@ -87,5 +90,11 @@ namespace Booking.Domain.Entities
             return Result.Success();
         }
 
+        public Result UpdateRating(int newScore)
+        {
+            AverageRating = (AverageRating * ReviewsCount + newScore) / ReviewsCount + 1;
+            ReviewsCount++;
+            return Result.Success();
+        }
     }
 }

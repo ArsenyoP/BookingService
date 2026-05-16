@@ -131,6 +131,11 @@ namespace Booking.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("AverageRating")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(3,2)")
+                        .HasDefaultValue(0.0m);
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -140,6 +145,11 @@ namespace Booking.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("ReviewsCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -153,6 +163,60 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("Listings", (string)null);
                 });
 
+            modelBuilder.Entity("Booking.Domain.Entities.Review", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsEdited")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TargetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"));
+
+                    b.Property<string>("TargetType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"));
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Score");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("TargetId", "CreatedAt");
+
+                    b.ToTable("Reviews", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Review_Score_Range", "[Score] >= 1 AND [Score] <= 5");
+
+                            t.HasCheckConstraint("CK_Review_TargetType", "[TargetType] IN ('Room', 'Listing')");
+
+                            t.HasCheckConstraint("CK_Review_Text_Range", "LEN([Text]) > 10 AND LEN([Text]) < 1000");
+                        });
+                });
+
             modelBuilder.Entity("Booking.Domain.Entities.Room", b =>
                 {
                     b.Property<Guid>("Id")
@@ -161,6 +225,11 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Property<int>("AdultsCapacity")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("AverageRating")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(3,2)")
+                        .HasDefaultValue(0.0m);
 
                     b.Property<int>("ChildrenCapacity")
                         .HasColumnType("int");
@@ -175,6 +244,11 @@ namespace Booking.Infrastructure.Migrations
 
                     b.Property<decimal>("PricePerNight")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ReviewsCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Title")
                         .IsRequired()

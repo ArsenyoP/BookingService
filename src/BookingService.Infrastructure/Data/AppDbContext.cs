@@ -13,6 +13,7 @@ namespace Booking.Infrastructure.Data
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Review> Review { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -17,8 +17,6 @@ namespace Booking.Infrastructure.Services
 
             var result = JsonSerializer.Deserialize<T>(value);
 
-            _logger.LogInformation("Getted {value} from cache", value);
-
             return result;
         }
 
@@ -32,7 +30,6 @@ namespace Booking.Infrastructure.Services
             var json = JsonSerializer.Serialize(value);
 
             await _cache.SetStringAsync(key, json, options, ct);
-            _logger.LogInformation("Setted {value} to cache", value);
         }
 
         public async Task RemoveAsync(string key, CancellationToken ct = default)

@@ -25,6 +25,8 @@ namespace Booking.Infrastructure.Queries
                     r.AdultsCapacity,
                     r.ChildrenCapacity,
                     r.ListingId,
+                    r.AverageRating,
+                    r.ReviewsCount,
                     l.Title        AS ListingTitle,
                     a.Id           AS AmenityId,
                     a.Name         AS Name,
@@ -79,6 +81,8 @@ namespace Booking.Infrastructure.Queries
                     r.PricePerNight, 
                     r.AdultsCapacity, 
                     r.ChildrenCapacity, 
+                    r.AverageRating,
+                    r.ReviewsCount,
                     l.Title AS ListingTitle, 
                     r.ListingId,
                     a.Id       AS AmenityId,
@@ -210,6 +214,9 @@ namespace Booking.Infrastructure.Queries
                     r.PricePerNight,
                     r.AdultsCapacity,
                     r.ChildrenCapacity,
+                    r.AverageRating,
+                    r.ReviewsCount,
+                    r.ReviewsCount,
                     r.ListingId,
                     l.Title        AS ListingTitle,
                     a.Id           AS AmenityId,
@@ -228,7 +235,6 @@ namespace Booking.Infrastructure.Queries
                 ORDER BY r.Title;
                 """;
 
-            Console.WriteLine(sql);
 
             var roomDictionary = new Dictionary<Guid, RoomResponseDto>();
 

@@ -14,6 +14,8 @@ namespace Booking.Application.DTOs.Rooms
         public int ChildrenCapacity { get; init; }
         public string ListingTitle { get; init; }
         public Guid ListingId { get; init; }
+        public decimal AverageRating { get; init; }
+        public int ReviewsCount { get; set; }
         public List<AmenityDto> Amenities { get; init; } = new();
     }
 }

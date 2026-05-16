@@ -11,10 +11,12 @@ using Booking.Infrastructure.Repositories;
 using Booking.Infrastructure.Seeding;
 using Booking.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Booking.Infrastructure
@@ -22,9 +24,18 @@ namespace Booking.Infrastructure
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration, IWebHostEnvironment environment)
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            string connectionString;
+
+            if (environment.IsDevelopment())
+            {
+                connectionString = configuration.GetConnectionString("LocalConnections")!;
+            }
+            else
+            {
+                connectionString = configuration.GetConnectionString("CloudConnection")!;
+            }
 
             services.AddDbContext<AppDbContext>(options =>
              options.UseSqlServer(connectionString, sqlOptions =>
@@ -67,6 +78,13 @@ namespace Booking.Infrastructure
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration["Redis:Connection"];
+                options.InstanceName = "Distributed_Cache_";
+            });
+
+            services.AddStackExchangeRedisOutputCache(options =>
+            {
+                options.Configuration = configuration["Redis:Connection"];
+                options.InstanceName = "Output_Cache_";
             });
 
 
@@ -77,6 +95,8 @@ namespace Booking.Infrastructure
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IListingRepository, ListingRepository>();
             services.AddScoped<IAmenityRepository, AmenityRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<DataSeeder>();
@@ -85,6 +105,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IListingQueries>(sp => new ListingQueries(connectionString!));
             services.AddScoped<IBookingQueries>(sp => new BookingQueries(connectionString!));
             services.AddScoped<IAmenityQueries>(sp => new AmenityQueries(connectionString!));
+            services.AddScoped<IReviewQueries>(sp => new ReviewQueries(connectionString!));
 
 
 
