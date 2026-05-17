@@ -48,4 +48,10 @@
     public sealed record SeedToRoomModel(
         string RoomTitle,
         string AmenityName);
+
+    public sealed record SeedToReviewsModel(
+        Guid userId,
+        Guid targetId,
+        string targetType,
+        int score, string text);
 }
