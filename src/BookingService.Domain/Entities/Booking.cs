@@ -6,7 +6,7 @@ using Booking.Domain.ValueObjects;
 
 namespace Booking.Domain.Entities
 {
-    public class Bookings : Entity
+    public class Bookings : AggregateRoot
     {
         public Guid RoomId { get; private set; }
         private Room Room { get; set; }
@@ -71,7 +71,6 @@ namespace Booking.Domain.Entities
 
         public Result<RefundValue> Cancel(DateTime nowUtc, IRefundPolicy refundPolicy)
         {
-            //TODO: Fix race condition 
             if (Period.StartDate <= DateOnly.FromDateTime(nowUtc))
             {
                 return Result<RefundValue>.Failure(BookingErrors.CannotCancelStartedBooking);
