@@ -63,7 +63,7 @@ namespace Booking.Domain.Entities
             if (adultsCapacity + childrenCapacity <= 0)
                 return Result<Room>.Failure(RoomErrors.NegativeNumberCapacity);
 
-            var room = new Room(title, description, type, pricePerNight, adultsCapacity, childrenCapacity, listingId)
+            var room = new Room(title, description, type, pricePerNight, adultsCapacity, childrenCapacity, listingId);
 
             return Result<Room>.Success(room);
         }
