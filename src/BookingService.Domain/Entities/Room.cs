@@ -4,7 +4,7 @@ using Booking.Domain.Errors;
 
 namespace Booking.Domain.Entities
 {
-    public class Room : Entity
+    public class Room : AggregateRoot
     {
         public string Title { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
@@ -63,7 +63,9 @@ namespace Booking.Domain.Entities
             if (adultsCapacity + childrenCapacity <= 0)
                 return Result<Room>.Failure(RoomErrors.NegativeNumberCapacity);
 
-            return Result<Room>.Success(new Room(title, description, type, pricePerNight, adultsCapacity, childrenCapacity, listingId));
+            var room = new Room(title, description, type, pricePerNight, adultsCapacity, childrenCapacity, listingId)
+
+            return Result<Room>.Success(room);
         }
 
         public Result AddAmentity(Amenity amenity)
