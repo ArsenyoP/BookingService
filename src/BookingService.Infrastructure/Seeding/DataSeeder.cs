@@ -557,7 +557,7 @@ namespace Booking.Infrastructure.Seeding
 
                 if (existingReviews.Contains(reviewKey))
                 {
-                    _logger.LogInformation("Review from user {UserName} for target {TargetTitle} already exists, skipping", model.UserName, model.TargetTitle);
+                    _logger.LogWarning("Review from user {UserName} for target {TargetTitle} already exists, skipping", model.UserName, model.TargetTitle);
                     continue;
                 }
 

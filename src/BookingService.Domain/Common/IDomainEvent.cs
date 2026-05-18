@@ -1,6 +1,8 @@
-﻿namespace Booking.Domain.Common
+﻿using MediatR;
+
+namespace Booking.Domain.Common
 {
-    public interface IDomainEvent
+    public interface IDomainEvent : INotification
     {
     }
 }
