@@ -43,6 +43,7 @@ namespace Booking.Infrastructure.Seeding
                     await SeedAmenitiesAsync(seedPath, ct);
                     await SeedAmenitiesToListingdAsync(seedPath, ct);
                     await SeedAmenitiesToRoomAsync(seedPath, ct);
+                    await SeedReviewsAsync(seedPath, ct);
 
                     await transaction.CommitAsync(ct);
                     _logger.LogInformation("Data seeding completed");
@@ -365,58 +366,6 @@ namespace Booking.Infrastructure.Seeding
 
         private async Task SeedAmenitiesToListingdAsync(string SeedPath, CancellationToken ct)
         {
-            //First Solution
-
-            //var filePath = Path.Combine(SeedPath, "listing_amenities.json");
-            //if (!File.Exists(filePath))
-            //{
-            //    _logger.LogWarning("listing_amenities.json not found at {Path}, skipping", filePath);
-            //    return;
-            //}
-
-            //var json = File.ReadAllText(filePath);
-            //var models = JsonSerializer.Deserialize<List<SeedToListingModel>>(json, _jsonOptions);
-
-            //if (models is null || models.Count == 0)
-            //    return;
-
-
-            //var modelTitles = models.Select(m => m.ListingTitle).ToHashSet();
-            //var listingsToSeeed = await _dbContext.Listings
-            //    .Where(l => modelTitles.Contains(l.Title))
-            //    .Select(l => l)
-            //    .ToHashSetAsync(ct);
-
-
-            //var modelAmenities = models.Select(m => m.AmenityName).ToHashSet();
-            //var ammenitiesToSeed = await _dbContext.Amenities
-            //    .Where(a => modelAmenities.Contains(a.Name))
-            //    .Select(a => a)
-            //    .ToHashSetAsync();
-
-            //foreach (var listing in listingsToSeeed)
-            //{
-            //    var toAdd = models
-            //        .Where(m => m.ListingTitle == listing.Title)
-            //        .Select(m => m.AmenityName)
-            //        .ToList();
-
-            //    var amenitiesToAdd = ammenitiesToSeed
-            //        .Where(a => toAdd.Contains(a.Name))
-            //        .ToHashSet();
-
-            //    foreach (var amenity in amenitiesToAdd)
-            //    {
-            //        listing.AddAmenity(amenity);
-            //        _dbContext.Update(listing);
-            //    }
-            //}
-            //await _dbContext.SaveChangesAsync(ct);
-
-            //return;
-
-
-
             var filePath = Path.Combine(SeedPath, "listing_amenities.json");
             if (!File.Exists(filePath))
             {
@@ -481,6 +430,7 @@ namespace Booking.Infrastructure.Seeding
 
             if (models is null || models.Count == 0) return;
 
+            //getting only amenities which name is in modelAmenityNames
             var modelAmenityNames = models.Select(m => m.AmenityName).Distinct().ToList();
             var modelAmenities = await _dbContext.Amenities
                 .Where(a => modelAmenityNames.Contains(a.Name))
@@ -517,6 +467,124 @@ namespace Booking.Infrastructure.Seeding
             }
 
             await _dbContext.SaveChangesAsync(ct);
+        }
+
+        private async Task SeedReviewsAsync(string SeedPath, CancellationToken ct)
+        {
+            var filePath = Path.Combine(SeedPath, "reviews.json");
+            if (!File.Exists(filePath))
+            {
+                _logger.LogWarning("reviews.json not found at {Path}, skipping", filePath);
+                return;
+            }
+
+            var json = File.ReadAllText(filePath);
+            var models = JsonSerializer.Deserialize<List<SeedReviewsModel>>(json, _jsonOptions);
+
+            if (models is null || models.Count == 0)
+                return;
+
+            var userNames = models.Select(x => x.UserName).Distinct().ToList();
+
+            var users = await _dbContext.Users
+                .Where(x => userNames.Contains(x.UserName!))
+                .ToDictionaryAsync(x => x.UserName!, x => x.Id, ct);
+
+
+            var roomTitles = models
+                .Where(x => x.TargetType == "Room")
+                .Select(x => x.TargetTitle).Distinct().ToList();
+
+            var listingTitles = models
+                .Where(x => x.TargetType == "Listing")
+                .Select(x => x.TargetTitle).Distinct().ToList();
+
+
+            var roomEntities = await _dbContext.Rooms
+                .Where(x => roomTitles.Contains(x.Title))
+                .ToDictionaryAsync(x => x.Title, ct);
+
+            var listingEntities = await _dbContext.Listings
+                .Where(x => listingTitles.Contains(x.Title))
+                .ToDictionaryAsync(x => x.Title, ct);
+
+
+            //Id's of users who is in JSON
+            var userIds = users
+                .Select(x => x.Value)
+                .ToList();
+
+            var existingReviews = await _dbContext.Review
+                 .Where(r => userIds.Contains(r.UserId))
+                 .Select(r => new { r.UserId, r.TargetId })
+                 .ToHashSetAsync(ct);
+
+            foreach (var model in models)
+            {
+                if (!users.TryGetValue(model.UserName, out var userId))
+                {
+                    _logger.LogWarning("User {UserName} not found, skipping review", model.UserName);
+                    continue;
+                }
+
+                Guid targetId = Guid.Empty;
+                ReviewsTargetType targetType;
+
+                Room? roomEntity = null;
+                Listing? listingEntity = null;
+
+                if (model.TargetType == "Room" && roomEntities.TryGetValue(model.TargetTitle, out var room))
+                {
+                    targetId = room.Id;
+                    targetType = ReviewsTargetType.Room;
+                    roomEntity = room;
+                }
+                else if (model.TargetType == "Listing" && listingEntities.TryGetValue(model.TargetTitle, out var listing))
+                {
+                    targetId = listing.Id;
+                    targetType = ReviewsTargetType.Listing;
+                    listingEntity = listing;
+                }
+                else
+                {
+                    _logger.LogWarning("Target '{TargetTitle}' of type '{TargetType}' not found, skipping", model.TargetTitle, model.TargetType);
+                    continue;
+                }
+
+
+                //checks for duplicates
+                var reviewKey = new { UserId = userId, TargetId = targetId };
+
+                if (existingReviews.Contains(reviewKey))
+                {
+                    _logger.LogInformation("Review from user {UserName} for target {TargetTitle} already exists, skipping", model.UserName, model.TargetTitle);
+                    continue;
+                }
+
+
+                var reviewResult = Review.Create(userId, targetId, targetType, model.Score, model.Text);
+
+                if (!reviewResult.IsSuccess)
+                {
+                    _logger.LogWarning("Failed to create review for {TargetTitle}: {Error}", model.TargetTitle, reviewResult.Error.Description);
+                    continue;
+                }
+
+                if (roomEntity != null)
+                {
+                    roomEntity.UpdateRating(reviewResult.Value!.Score);
+                }
+                else if (listingEntity != null)
+                {
+                    listingEntity.UpdateRating(reviewResult.Value!.Score);
+                }
+
+                _dbContext.Review.Add(reviewResult.Value!);
+                _logger.LogInformation("Seeded review from {User} to {Target}", model.UserName, model.TargetTitle);
+            }
+
+            await _dbContext.SaveChangesAsync(ct);
+
         }
     }
 }

@@ -1,0 +1,30 @@
+[
+  {
+    "userName": "Arsenyo",
+    "targetTitle": "Hotel Halichina",
+    "targetType": "Listing",
+    "score": 5,
+    "text": "Прекрасне місце для відпочинку! Сервіс на найвищому рівні, персонал дуже привітний. Обов'язково повернуся сюди ще раз."
+  },
+  {
+    "userName": "alicesmith",
+    "targetTitle": "Lviv Boutique Apartments",
+    "targetType": "Listing",
+    "score": 2,
+    "text": "Не задоволена візитом. Номер не відповідав фотографіям, а заселення затримали на годину без жодних пояснень."
+  },
+  {
+    "userName": "Arsenyo",
+    "targetTitle": "Deluxe Suite 201",
+    "targetType": "Room",
+    "score": 4,
+    "text": "Кімната чиста та затишна. З мінусів — трохи шумно з вулиці, але загалом враження дуже позитивні."
+  },
+  {
+    "userName": "johndoe",
+    "targetTitle": "One Bed Flat A",
+    "targetType": "Room",
+    "score": 5,
+    "text": "Чудова квартира біля самого центру міста. Дуже світла, є все необхідне для тривалого проживання. Рекомендую!"
+  }
+]
