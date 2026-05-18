@@ -5,7 +5,7 @@ using Booking.Domain.ValueObjects;
 
 namespace Booking.Domain.Entities
 {
-    public class Listing : Entity
+    public class Listing : AggregateRoot
     {
         public string Title { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
@@ -42,7 +42,9 @@ namespace Booking.Domain.Entities
             if (address is null)
                 return Result<Listing>.Failure(ListingErrors.AddressRequired);
 
-            return Result<Listing>.Success(new Listing(title, description, address, listingType));
+            var listing = new Listing(title, description, address, listingType);
+
+            return Result<Listing>.Success(listing);
         }
 
         public Result AddAmenity(Amenity amenity)
