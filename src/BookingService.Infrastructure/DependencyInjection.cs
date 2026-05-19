@@ -5,6 +5,7 @@ using Booking.Application.Queries;
 using Booking.Domain.Entities;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.Interfaces.Services;
+using Booking.Infrastructure.BackgroundJobs;
 using Booking.Infrastructure.Data;
 using Booking.Infrastructure.Interceptors;
 using Booking.Infrastructure.Queries;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 
 namespace Booking.Infrastructure
 {
@@ -53,6 +55,25 @@ namespace Booking.Infrastructure
                 var interceptor = sp.GetRequiredService<ConvertDomainEventToOutboxMessageInterceptor>();
                 options.AddInterceptors(interceptor);
             });
+
+            services.AddQuartz(configure =>
+            {
+                var jobKey = new JobKey(nameof(ProcessOutboxMessageJob));
+
+                configure
+                    .AddJob<ProcessOutboxMessageJob>(jobKey)
+                    .AddTrigger(
+                        trigger =>
+                            trigger.ForJob(jobKey)
+                                .WithSimpleSchedule(
+                                    schedule =>
+                                        schedule.WithIntervalInSeconds(10)
+                                            .RepeatForever()));
+
+            });
+
+            services.AddQuartzHostedService();
+
 
             services.AddIdentityCore<User>(options =>
             {
