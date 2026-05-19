@@ -27,5 +27,6 @@ Email Notifications
 Add telemetry
 Add payment
 Automapper
+Cancellation booking
 
 

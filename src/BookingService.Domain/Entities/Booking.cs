@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Common;
+using Booking.Domain.DomainEvents;
 using Booking.Domain.Enums;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces;
@@ -65,6 +66,8 @@ namespace Booking.Domain.Entities
 
             var booking = new Bookings(room.Id, guest.Id, period, numberOfAdults, numberOfChildren, room.PricePerNight);
             booking.Status = BookingStatus.Confirmed;
+
+            booking.RaiseDomainEvent(new BookingCreatedDomainEvent())
 
             return Result<Bookings>.Success(booking);
         }
