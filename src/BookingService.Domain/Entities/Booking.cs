@@ -67,7 +67,7 @@ namespace Booking.Domain.Entities
             var booking = new Bookings(room.Id, guest.Id, period, numberOfAdults, numberOfChildren, room.PricePerNight);
             booking.Status = BookingStatus.Confirmed;
 
-            booking.RaiseDomainEvent(new BookingCreatedDomainEvent())
+            booking.RaiseDomainEvent(new BookingCreatedDomainEvent(booking.Id));
 
             return Result<Bookings>.Success(booking);
         }

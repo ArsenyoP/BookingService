@@ -6,6 +6,7 @@ using Booking.Domain.Entities;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Infrastructure.Data;
+using Booking.Infrastructure.Interceptors;
 using Booking.Infrastructure.Queries;
 using Booking.Infrastructure.Repositories;
 using Booking.Infrastructure.Seeding;
@@ -37,13 +38,21 @@ namespace Booking.Infrastructure
                 connectionString = configuration.GetConnectionString("CloudConnection")!;
             }
 
-            services.AddDbContext<AppDbContext>(options =>
-             options.UseSqlServer(connectionString, sqlOptions =>
-             {
-                 sqlOptions.EnableRetryOnFailure(maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(10),
-                    errorNumbersToAdd: null);
-             }));
+            services.AddSingleton<ConvertDomainEventToOutboxMessageInterceptor>();
+
+            services.AddDbContext<AppDbContext>((sp, options) =>
+            {
+                options.UseSqlServer(connectionString, sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null);
+                });
+
+                var interceptor = sp.GetRequiredService<ConvertDomainEventToOutboxMessageInterceptor>();
+                options.AddInterceptors(interceptor);
+            });
 
             services.AddIdentityCore<User>(options =>
             {
@@ -106,7 +115,6 @@ namespace Booking.Infrastructure
             services.AddScoped<IBookingQueries>(sp => new BookingQueries(connectionString!));
             services.AddScoped<IAmenityQueries>(sp => new AmenityQueries(connectionString!));
             services.AddScoped<IReviewQueries>(sp => new ReviewQueries(connectionString!));
-
 
 
 
