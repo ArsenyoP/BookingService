@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Quartz;
+using Web.API.Models.Settings;
 
 namespace Booking.Infrastructure
 {
@@ -130,6 +131,9 @@ namespace Booking.Infrastructure
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<DataSeeder>();
+
+            services.Configure<EmailSettings>(configuration.GetSection(nameof(EmailSettings)));
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(connectionString!));
             services.AddScoped<IListingQueries>(sp => new ListingQueries(connectionString!));

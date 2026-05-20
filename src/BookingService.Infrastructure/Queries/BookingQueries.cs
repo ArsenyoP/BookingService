@@ -187,6 +187,44 @@ namespace Booking.Infrastructure.Queries
             return result;
         }
 
+        public async Task<BookingConfirmationEmailDto?> GetConfirmationEmailDataAsync(
+            Guid bookingId,
+            CancellationToken ct = default)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            const string sql = @"
+                SELECT
+                    u.Email AS GuestEmail,
+                    u.FirstName,
+                    u.LastName,
+                    r.Title AS RoomTitle,
+                    b.StartDate,
+                    b.EndDate,
+                    b.TotalPrice
+                FROM Bookingss b
+                INNER JOIN Rooms r ON b.RoomId = r.Id
+                INNER JOIN Users u ON b.GuestId = u.Id
+                WHERE b.Id = @BookingId";
+
+            var command = new CommandDefinition(sql, new { BookingId = bookingId }, cancellationToken: ct);
+
+            var row = await connection.QueryFirstOrDefaultAsync<BookingConfirmationEmailRow>(command);
+
+            if (row is null)
+            {
+                return null;
+            }
+
+            return new BookingConfirmationEmailDto(
+                row.GuestEmail,
+                $"{row.FirstName} {row.LastName}".Trim(),
+                row.RoomTitle,
+                row.StartDate,
+                row.EndDate,
+                row.TotalPrice);
+        }
+
         public async Task<bool> IsRoomAvailableAsync(Guid roomId, DateOnly start, DateOnly end, CancellationToken ct = default)
         {
             var connection = new SqlConnection(connectionString);
@@ -213,6 +251,17 @@ namespace Booking.Infrastructure.Queries
 
             var result = await connection.ExecuteScalarAsync<bool>(command);
             return result;
+        }
+
+        private sealed class BookingConfirmationEmailRow
+        {
+            public string GuestEmail { get; init; } = string.Empty;
+            public string FirstName { get; init; } = string.Empty;
+            public string LastName { get; init; } = string.Empty;
+            public string RoomTitle { get; init; } = string.Empty;
+            public DateTime StartDate { get; init; }
+            public DateTime EndDate { get; init; }
+            public decimal TotalPrice { get; init; }
         }
     }
 }

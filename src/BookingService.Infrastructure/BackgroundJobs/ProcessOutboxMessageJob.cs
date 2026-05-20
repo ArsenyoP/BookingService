@@ -24,7 +24,10 @@ namespace Booking.Infrastructure.BackgroundJobs
             {
                 try
                 {
-                    var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content);
+                    var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content, new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.All
+                    });
 
                     if (domainEvent is null)
                     {
