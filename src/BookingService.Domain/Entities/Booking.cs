@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Common;
+using Booking.Domain.DomainEvents;
 using Booking.Domain.Enums;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces;
@@ -6,7 +7,7 @@ using Booking.Domain.ValueObjects;
 
 namespace Booking.Domain.Entities
 {
-    public class Bookings : Entity
+    public class Bookings : AggregateRoot
     {
         public Guid RoomId { get; private set; }
         private Room Room { get; set; }
@@ -66,12 +67,13 @@ namespace Booking.Domain.Entities
             var booking = new Bookings(room.Id, guest.Id, period, numberOfAdults, numberOfChildren, room.PricePerNight);
             booking.Status = BookingStatus.Confirmed;
 
+            booking.RaiseDomainEvent(new BookingCreatedDomainEvent(booking.Id));
+
             return Result<Bookings>.Success(booking);
         }
 
         public Result<RefundValue> Cancel(DateTime nowUtc, IRefundPolicy refundPolicy)
         {
-            //TODO: Fix race condition 
             if (Period.StartDate <= DateOnly.FromDateTime(nowUtc))
             {
                 return Result<RefundValue>.Failure(BookingErrors.CannotCancelStartedBooking);

@@ -4,7 +4,7 @@ using Booking.Domain.Errors;
 
 namespace Booking.Domain.Entities
 {
-    public class Review : Entity
+    public class Review : AggregateRoot
     {
         public string Text { get; private set; }
         public int Score { get; private set; }

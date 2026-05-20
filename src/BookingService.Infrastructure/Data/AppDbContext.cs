@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Entities;
+using Booking.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,8 @@ namespace Booking.Infrastructure.Data
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Review> Review { get; set; }
+
+        public DbSet<OutboxMessage> OutboxMessage { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

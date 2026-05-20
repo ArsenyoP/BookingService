@@ -5,7 +5,9 @@ using Booking.Application.Queries;
 using Booking.Domain.Entities;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.Interfaces.Services;
+using Booking.Infrastructure.BackgroundJobs;
 using Booking.Infrastructure.Data;
+using Booking.Infrastructure.Interceptors;
 using Booking.Infrastructure.Queries;
 using Booking.Infrastructure.Repositories;
 using Booking.Infrastructure.Seeding;
@@ -18,6 +20,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
+using Web.API.Models.Settings;
 
 namespace Booking.Infrastructure
 {
@@ -37,13 +41,40 @@ namespace Booking.Infrastructure
                 connectionString = configuration.GetConnectionString("CloudConnection")!;
             }
 
-            services.AddDbContext<AppDbContext>(options =>
-             options.UseSqlServer(connectionString, sqlOptions =>
-             {
-                 sqlOptions.EnableRetryOnFailure(maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(10),
-                    errorNumbersToAdd: null);
-             }));
+            services.AddSingleton<ConvertDomainEventToOutboxMessageInterceptor>();
+
+            services.AddDbContext<AppDbContext>((sp, options) =>
+            {
+                options.UseSqlServer(connectionString, sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null);
+                });
+
+                var interceptor = sp.GetRequiredService<ConvertDomainEventToOutboxMessageInterceptor>();
+                options.AddInterceptors(interceptor);
+            });
+
+            services.AddQuartz(configure =>
+            {
+                var jobKey = new JobKey(nameof(ProcessOutboxMessageJob));
+
+                configure
+                    .AddJob<ProcessOutboxMessageJob>(jobKey)
+                    .AddTrigger(
+                        trigger =>
+                            trigger.ForJob(jobKey)
+                                .WithSimpleSchedule(
+                                    schedule =>
+                                        schedule.WithIntervalInSeconds(10)
+                                            .RepeatForever()));
+
+            });
+
+            services.AddQuartzHostedService();
+
 
             services.AddIdentityCore<User>(options =>
             {
@@ -101,12 +132,14 @@ namespace Booking.Infrastructure
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<DataSeeder>();
 
+            services.Configure<EmailSettings>(configuration.GetSection(nameof(EmailSettings)));
+            services.AddScoped<IEmailService, EmailService>();
+
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(connectionString!));
             services.AddScoped<IListingQueries>(sp => new ListingQueries(connectionString!));
             services.AddScoped<IBookingQueries>(sp => new BookingQueries(connectionString!));
             services.AddScoped<IAmenityQueries>(sp => new AmenityQueries(connectionString!));
             services.AddScoped<IReviewQueries>(sp => new ReviewQueries(connectionString!));
-
 
 
 

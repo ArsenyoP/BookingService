@@ -4,7 +4,7 @@ using Booking.Domain.Errors;
 
 namespace Booking.Domain.Entities
 {
-    public class Amenity : Entity
+    public class Amenity : AggregateRoot
     {
         public string Name { get; private set; } = string.Empty;
         public AmenityCategory Category { get; private set; }
@@ -21,7 +21,10 @@ namespace Booking.Domain.Entities
         public static Result<Amenity> Create(string name, AmenityCategory category)
         {
             if (string.IsNullOrWhiteSpace(name)) return Result<Amenity>.Failure(AmenityErrors.EmptyName);
-            return Result<Amenity>.Success(new Amenity(name, category));
+
+            var amenity = new Amenity(name, category);
+
+            return Result<Amenity>.Success(amenity);
         }
     }
 }
