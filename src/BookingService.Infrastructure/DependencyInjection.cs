@@ -3,8 +3,10 @@ using Booking.Application.Interfaces.IQueries;
 using Booking.Application.Interfaces.Services;
 using Booking.Application.Queries;
 using Booking.Domain.Entities;
+using Booking.Domain.Interfaces;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.Interfaces.Services;
+using Booking.Domain.Services;
 using Booking.Infrastructure.BackgroundJobs;
 using Booking.Infrastructure.Data;
 using Booking.Infrastructure.Interceptors;
@@ -141,7 +143,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IAmenityQueries>(sp => new AmenityQueries(connectionString!));
             services.AddScoped<IReviewQueries>(sp => new ReviewQueries(connectionString!));
 
-
+            services.AddScoped<IRefundPolicy, RefundPolicy>();
 
 
             return services;

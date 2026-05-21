@@ -95,7 +95,9 @@ namespace Booking.Domain.Entities
 
 
             RefundValue refundValue = refundPolicy.CalculateRefund(this, nowUtc);
+
             Status = BookingStatus.Cancelled;
+            ConfirmationToken = null;
 
             return Result<RefundValue>.Success(refundValue);
         }

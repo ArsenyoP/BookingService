@@ -1,5 +1,6 @@
 ﻿using Booking.Application.DTOs.Bookings;
 using Booking.Application.UseCases.Booking.DeleteBooking;
+using Booking.Application.UseCases.Bookings.CancelBooking;
 using Booking.Application.UseCases.Bookings.ConfirmBooking;
 using Booking.Application.UseCases.Bookings.CreateBooking;
 using Booking.Application.UseCases.Bookings.GetAllBookings;
@@ -98,5 +99,16 @@ namespace Booking.API.Controllers
             return result.IsSuccess ? Ok() : BadRequest();
         }
 
+        [Authorize]
+        [HttpPost("cancel/{bookingId}")]
+        public async Task<IActionResult> Cancel([FromRoute] Guid bookingId, CancellationToken ct)
+        {
+            var userId = User.GetUserID();
+            var command = new CancelBookingCommand(bookingId, userId);
+
+            var result = await _sender.Send(command, ct);
+
+            return result.IsSuccess ? Ok() : BadRequest();
+        }
     }
 }
