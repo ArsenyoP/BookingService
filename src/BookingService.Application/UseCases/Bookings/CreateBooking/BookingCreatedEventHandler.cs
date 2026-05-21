@@ -1,10 +1,10 @@
-﻿using System.Globalization;
-using Booking.Application.Interfaces.IQueries;
+﻿using Booking.Application.Interfaces.IQueries;
 using Booking.Application.Interfaces.Services;
 using Booking.Domain.DomainEvents;
 using Booking.Domain.Errors;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace Booking.Application.UseCases.Bookings.CreateBooking
 {
@@ -44,6 +44,7 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
                 emailData.RoomTitle,
                 period,
                 totalPrice,
+                emailData.ConfirmationToken,
                 cancellationToken);
 
             logger.LogInformation(
