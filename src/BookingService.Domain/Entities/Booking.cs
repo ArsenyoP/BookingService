@@ -69,7 +69,7 @@ namespace Booking.Domain.Entities
                 return Result<Bookings>.Failure(UserErrors.AccountInactive);
 
             var booking = new Bookings(room.Id, guest.Id, period, numberOfAdults, numberOfChildren, room.PricePerNight);
-            booking.Status = BookingStatus.Confirmed;
+            booking.Status = BookingStatus.Pending;
 
             booking.RaiseDomainEvent(new BookingCreatedDomainEvent(booking.Id));
 

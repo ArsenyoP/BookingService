@@ -10,6 +10,7 @@
             string roomTitle,
             string period,
             string totalPrice,
+            string confirmationToken,
             CancellationToken ct = default);
     }
 }

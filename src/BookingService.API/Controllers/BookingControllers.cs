@@ -1,5 +1,6 @@
 ﻿using Booking.Application.DTOs.Bookings;
 using Booking.Application.UseCases.Booking.DeleteBooking;
+using Booking.Application.UseCases.Bookings.ConfirmBooking;
 using Booking.Application.UseCases.Bookings.CreateBooking;
 using Booking.Application.UseCases.Bookings.GetAllBookings;
 using Booking.Application.UseCases.Bookings.GetById;
@@ -85,6 +86,16 @@ namespace Booking.API.Controllers
             return result.IsSuccess
                  ? Ok(result.Value)
                  : BadRequest(result.Error);
+        }
+
+        [HttpGet("confirm/{token}")]
+        public async Task<IActionResult> ConfirmBooking([FromRoute] string token, CancellationToken ct)
+        {
+            var command = new ConfirmBookingCommand(token);
+
+            var result = await _sender.Send(command, ct);
+
+            return result.IsSuccess ? Ok() : BadRequest();
         }
 
     }

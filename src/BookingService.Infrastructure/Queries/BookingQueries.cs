@@ -201,7 +201,8 @@ namespace Booking.Infrastructure.Queries
                     r.Title AS RoomTitle,
                     b.StartDate,
                     b.EndDate,
-                    b.TotalPrice
+                    b.TotalPrice,
+                    b.ConfirmationToken
                 FROM Bookingss b
                 INNER JOIN Rooms r ON b.RoomId = r.Id
                 INNER JOIN Users u ON b.GuestId = u.Id
@@ -222,6 +223,7 @@ namespace Booking.Infrastructure.Queries
                 row.RoomTitle,
                 row.StartDate,
                 row.EndDate,
+                row.ConfirmationToken,
                 row.TotalPrice);
         }
 
@@ -253,12 +255,14 @@ namespace Booking.Infrastructure.Queries
             return result;
         }
 
+
         private sealed class BookingConfirmationEmailRow
         {
             public string GuestEmail { get; init; } = string.Empty;
             public string FirstName { get; init; } = string.Empty;
             public string LastName { get; init; } = string.Empty;
             public string RoomTitle { get; init; } = string.Empty;
+            public string ConfirmationToken { get; init; } = string.Empty;
             public DateTime StartDate { get; init; }
             public DateTime EndDate { get; init; }
             public decimal TotalPrice { get; init; }

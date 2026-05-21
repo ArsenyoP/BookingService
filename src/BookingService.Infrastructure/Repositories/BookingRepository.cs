@@ -1,8 +1,8 @@
 ﻿using Booking.Domain.Entities;
+using Booking.Domain.Enums;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Booking.Domain.Enums;
 
 namespace Booking.Infrastructure.Repositories
 {
@@ -18,6 +18,14 @@ namespace Booking.Infrastructure.Repositories
         {
             ArgumentNullException.ThrowIfNull(booking);
             _dbContext.Bookings.Remove(booking);
+        }
+
+        public async Task<Bookings?> GetBookingEntityByConfirmationToken(string confirmationToken, CancellationToken ct = default)
+        {
+            var booking = await _dbContext.Bookings.Where(x => x.ConfirmationToken == confirmationToken)
+                .FirstOrDefaultAsync<Bookings>();
+
+            return booking;
         }
 
         public async Task<bool> IsRoomAvailableAsync(Guid roomId, DateOnly start, DateOnly end, CancellationToken ct = default)

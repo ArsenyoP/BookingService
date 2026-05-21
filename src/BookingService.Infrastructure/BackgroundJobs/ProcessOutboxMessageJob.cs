@@ -16,8 +16,8 @@ namespace Booking.Infrastructure.BackgroundJobs
         {
             var messages = await _dbContext.Set<OutboxMessage>()
                 .Where(x => x.ProcessedOnUtc == null)
-                .Take(20)
                 .OrderBy(x => x.OccurredOnUtc)
+                .Take(20)
                 .ToListAsync(context.CancellationToken);
 
             foreach (var message in messages)

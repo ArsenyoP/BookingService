@@ -20,6 +20,7 @@ namespace Booking.Infrastructure.Services
             string roomTitle,
             string period,
             string totalPrice,
+            string confirmationToken,
             CancellationToken ct = default)
         {
             string body = await BuildBookingConfirmationBodyAsync(
@@ -27,6 +28,7 @@ namespace Booking.Infrastructure.Services
                 roomTitle,
                 period,
                 totalPrice,
+                confirmationToken,
                 ct);
 
             await SendAsync(toEmail, "Your booking is confirmed", body, ct);
@@ -58,6 +60,7 @@ namespace Booking.Infrastructure.Services
             string roomTitle,
             string period,
             string totalPrice,
+            string confirmationToken,
             CancellationToken ct = default)
         {
             IReadOnlyDictionary<string, string> placeholders = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -66,6 +69,7 @@ namespace Booking.Infrastructure.Services
                 ["RoomTitle"] = roomTitle,
                 ["Period"] = period,
                 ["TotalPrice"] = totalPrice,
+                ["ConfirmUrl"] = $"http://localhost:5118/api/bookings/confirm/{confirmationToken}"
             };
 
             return await LoadAndRenderTemplateAsync(BookingConfirmationFileName, placeholders, ct);
