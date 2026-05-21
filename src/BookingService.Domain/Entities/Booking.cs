@@ -76,6 +76,13 @@ namespace Booking.Domain.Entities
             return Result<Bookings>.Success(booking);
         }
 
+        public Result Confirm()
+        {
+            ConfirmationToken = null;
+            Status = BookingStatus.Confirmed;
+            return Result.Success();
+        }
+
         public Result<RefundValue> Cancel(DateTime nowUtc, IRefundPolicy refundPolicy)
         {
             if (Period.StartDate <= DateOnly.FromDateTime(nowUtc))
@@ -85,8 +92,6 @@ namespace Booking.Domain.Entities
 
             if (Status != BookingStatus.Confirmed && Status != BookingStatus.Pending)
                 return Result<RefundValue>.Failure(BookingErrors.CannotCancel);
-
-
 
 
             RefundValue refundValue = refundPolicy.CalculateRefund(this, nowUtc);
