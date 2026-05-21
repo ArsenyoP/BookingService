@@ -30,6 +30,8 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
             builder.Property(x => x.ChildrenCount)
             .IsRequired();
 
+            builder.Property(x => x.ConfirmationToken);
+
             builder.OwnsOne(x => x.Period, periodBuilder =>
             {
                 periodBuilder.Property(p => p.StartDate)

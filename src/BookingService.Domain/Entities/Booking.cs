@@ -4,6 +4,7 @@ using Booking.Domain.Enums;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces;
 using Booking.Domain.ValueObjects;
+using System.Security.Cryptography;
 
 namespace Booking.Domain.Entities
 {
@@ -26,6 +27,8 @@ namespace Booking.Domain.Entities
         public int ChildrenCount { get; private set; }
         public BookingStatus Status { get; private set; }
 
+        public string? ConfirmationToken { get; private set; }
+
         private Bookings() { }
 
         private Bookings(Guid roomId, Guid guestId, DateRange period, int adults, int children, decimal pricePerNight)
@@ -44,6 +47,7 @@ namespace Booking.Domain.Entities
             ChildrenCount = children;
 
             Status = BookingStatus.Pending;
+            ConfirmationToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
         }
 
 
