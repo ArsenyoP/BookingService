@@ -28,6 +28,13 @@ namespace Booking.Infrastructure.Repositories
             return booking;
         }
 
+        public async Task<Bookings?> GetById(Guid bookingId, CancellationToken ct = default)
+        {
+            var result = await _dbContext.Bookings.Where(x => x.Id == bookingId).FirstOrDefaultAsync<Bookings>();
+
+            return result;
+        }
+
         public async Task<bool> IsRoomAvailableAsync(Guid roomId, DateOnly start, DateOnly end, CancellationToken ct = default)
         {
             var result = await _dbContext.Bookings.AnyAsync(x =>
