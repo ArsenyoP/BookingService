@@ -11,6 +11,7 @@
             string period,
             string totalPrice,
             string confirmationToken,
+            string ListingTitle,
             CancellationToken ct = default);
     }
 }

@@ -18,6 +18,7 @@ Rewievs module - ✅
 Outbox Pattern - ✅
 Email Notifications - ✅
 Seeding for Reviews - ✅
+Cancellation booking - ✅
 
 
 Add external API for changing currency
@@ -27,6 +28,5 @@ Tests
 Add telemetry
 Add payment
 Automapper
-Cancellation booking
 
 

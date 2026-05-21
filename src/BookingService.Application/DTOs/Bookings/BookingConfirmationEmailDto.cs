@@ -7,5 +7,6 @@ namespace Booking.Application.DTOs.Bookings
         DateTime StartDate,
         DateTime EndDate,
         string ConfirmationToken,
+        string ListingTitle,
         decimal TotalPrice);
 }

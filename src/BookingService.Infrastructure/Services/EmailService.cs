@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System.Text;
+using System.Web;
 using Web.API.Models.Settings;
 
 namespace Booking.Infrastructure.Services
@@ -21,6 +22,7 @@ namespace Booking.Infrastructure.Services
             string period,
             string totalPrice,
             string confirmationToken,
+            string ListingTitle,
             CancellationToken ct = default)
         {
             string body = await BuildBookingConfirmationBodyAsync(
@@ -29,6 +31,7 @@ namespace Booking.Infrastructure.Services
                 period,
                 totalPrice,
                 confirmationToken,
+                ListingTitle,
                 ct);
 
             await SendAsync(toEmail, "Your booking is confirmed", body, ct);
@@ -61,6 +64,7 @@ namespace Booking.Infrastructure.Services
             string period,
             string totalPrice,
             string confirmationToken,
+            string ListingTitle,
             CancellationToken ct = default)
         {
             IReadOnlyDictionary<string, string> placeholders = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -68,8 +72,9 @@ namespace Booking.Infrastructure.Services
                 ["GuestName"] = guestName,
                 ["RoomTitle"] = roomTitle,
                 ["Period"] = period,
+                ["ListingTitle"] = ListingTitle,
                 ["TotalPrice"] = totalPrice,
-                ["ConfirmUrl"] = $"http://localhost:5118/api/bookings/confirm/{confirmationToken}"
+                ["ConfirmUrl"] = $"http://localhost:5118/api/bookings/confirm?token={HttpUtility.UrlEncode(confirmationToken)}"
             };
 
             return await LoadAndRenderTemplateAsync(BookingConfirmationFileName, placeholders, ct);

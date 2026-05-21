@@ -45,6 +45,7 @@ namespace Booking.Application.UseCases.Bookings.CreateBooking
                 period,
                 totalPrice,
                 emailData.ConfirmationToken,
+                emailData.ListingTitle,
                 cancellationToken);
 
             logger.LogInformation(

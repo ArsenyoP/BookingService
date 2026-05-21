@@ -202,9 +202,11 @@ namespace Booking.Infrastructure.Queries
                     b.StartDate,
                     b.EndDate,
                     b.TotalPrice,
+                    l.Title AS ListingTitle,
                     b.ConfirmationToken
                 FROM Bookingss b
                 INNER JOIN Rooms r ON b.RoomId = r.Id
+                INNER JOIN Listings l ON r.ListingId = l.Id
                 INNER JOIN Users u ON b.GuestId = u.Id
                 WHERE b.Id = @BookingId";
 
@@ -224,6 +226,7 @@ namespace Booking.Infrastructure.Queries
                 row.StartDate,
                 row.EndDate,
                 row.ConfirmationToken,
+                row.ListingTitle,
                 row.TotalPrice);
         }
 
@@ -262,6 +265,7 @@ namespace Booking.Infrastructure.Queries
             public string FirstName { get; init; } = string.Empty;
             public string LastName { get; init; } = string.Empty;
             public string RoomTitle { get; init; } = string.Empty;
+            public string ListingTitle { get; init; } = string.Empty;
             public string ConfirmationToken { get; init; } = string.Empty;
             public DateTime StartDate { get; init; }
             public DateTime EndDate { get; init; }

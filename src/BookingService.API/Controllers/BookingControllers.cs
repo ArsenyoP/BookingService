@@ -89,8 +89,8 @@ namespace Booking.API.Controllers
                  : BadRequest(result.Error);
         }
 
-        [HttpGet("confirm/{token}")]
-        public async Task<IActionResult> ConfirmBooking([FromRoute] string token, CancellationToken ct)
+        [HttpGet("confirm")]
+        public async Task<IActionResult> ConfirmBooking([FromQuery] string token, CancellationToken ct)
         {
             var command = new ConfirmBookingCommand(token);
 
