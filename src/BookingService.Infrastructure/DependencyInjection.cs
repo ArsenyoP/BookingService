@@ -129,6 +129,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IListingRepository, ListingRepository>();
             services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
