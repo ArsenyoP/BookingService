@@ -11,9 +11,7 @@ namespace Booking.Infrastructure.Data.EntitiesConfigurations
             builder.HasKey(x => x.Id);
             builder.ToTable("RefreshTokens");
 
-            builder.Property(x => x.Token)
-                .HasMaxLength(32)
-                .IsFixedLength(true);
+            builder.Property(x => x.Token);
 
             builder.HasOne(r => r.User).WithMany().HasForeignKey(r => r.UserId);
 
