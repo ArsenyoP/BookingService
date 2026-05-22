@@ -9,5 +9,17 @@ namespace Booking.Domain.Entities
         public DateTime ExpiresOnUtc { get; private set; }
 
         public User User { get; set; }
+
+        public RefreshToken(
+            Guid id,
+            string token,
+            Guid userId,
+            DateTime expiresOnUtc)
+        {
+            Id = id;
+            Token = token;
+            UserId = userId;
+            ExpiresOnUtc = expiresOnUtc;
+        }
     }
 }
