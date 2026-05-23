@@ -13,6 +13,15 @@ namespace Booking.Infrastructure.Repositories
             _dbContext.Add(refreshToken);
         }
 
+        public async Task<bool> CleanExpiredTokens(CancellationToken ct = default)
+        {
+            await _dbContext.RefreshToken
+                .Where(x => x.ExpiresOnUtc <= DateTime.UtcNow)
+                .ExecuteDeleteAsync();
+
+            return true;
+        }
+
         public void Delete(RefreshToken refreshToken)
         {
             ArgumentNullException.ThrowIfNull(refreshToken);

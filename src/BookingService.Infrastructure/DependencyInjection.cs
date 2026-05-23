@@ -67,11 +67,23 @@ namespace Booking.Infrastructure
                     .AddJob<ProcessOutboxMessageJob>(jobKey)
                     .AddTrigger(
                         trigger =>
-                            trigger.ForJob(jobKey)
-                                .WithSimpleSchedule(
-                                    schedule =>
-                                        schedule.WithIntervalInSeconds(10)
-                                            .RepeatForever()));
+                        trigger.ForJob(jobKey)
+                        .WithSimpleSchedule(
+                        schedule =>
+                        schedule.WithIntervalInSeconds(10)
+                        .RepeatForever()));
+
+                var cleanUpjobKey = new JobKey(nameof(CleanExpiredRefreshTokenJob));
+                configure
+                    .AddJob<CleanExpiredRefreshTokenJob>(cleanUpjobKey)
+                    .AddTrigger(
+                        trigger =>
+                        trigger.ForJob(cleanUpjobKey)
+                        .WithSimpleSchedule(
+                            schedule =>
+                            schedule.WithIntervalInHours(1)
+                        .RepeatForever()));
+
 
             });
 
