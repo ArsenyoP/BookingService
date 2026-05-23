@@ -2,5 +2,8 @@
 
 namespace Booking.Domain.Interfaces.IRepositories
 {
-    public interface IRefreshTokenRepository : IBaseRepository<RefreshToken>;
+    public interface IRefreshTokenRepository : IBaseRepository<RefreshToken>
+    {
+        public Task<RefreshToken?> GetById(string refreshToken);
+    }
 }

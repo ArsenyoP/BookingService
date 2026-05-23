@@ -1,6 +1,7 @@
 ﻿using Booking.Domain.Entities;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Repositories
 {
@@ -16,6 +17,15 @@ namespace Booking.Infrastructure.Repositories
         {
             ArgumentNullException.ThrowIfNull(refreshToken);
             _dbContext.Remove(refreshToken);
+        }
+
+        public async Task<RefreshToken?> GetById(string refreshToken)
+        {
+            var token = await _dbContext.RefreshToken
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Token == refreshToken);
+
+            return token;
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Booking.Infrastructure.Data
         public DbSet<Review> Review { get; set; }
 
         public DbSet<OutboxMessage> OutboxMessage { get; set; }
+        public DbSet<RefreshToken> RefreshToken { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
