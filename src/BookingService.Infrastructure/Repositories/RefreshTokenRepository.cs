@@ -27,5 +27,14 @@ namespace Booking.Infrastructure.Repositories
 
             return token;
         }
+
+        public async Task<bool> InvalidateUsersToken(Guid userId)
+        {
+            await _dbContext.RefreshToken
+                .Where(x => x.UserId == userId)
+                .ExecuteDeleteAsync();
+
+            return true;
+        }
     }
 }
