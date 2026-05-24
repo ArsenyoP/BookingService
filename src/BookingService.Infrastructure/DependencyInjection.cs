@@ -132,6 +132,10 @@ namespace Booking.Infrastructure
                 options.InstanceName = "Output_Cache_";
             });
 
+            services.AddHealthChecks()
+                .AddRedis(configuration["Redis:Connection"]!)
+                .AddSqlServer(configuration.GetConnectionString("LocalConnections")!);
+
 
             services.AddScoped<ITokenService, TokenService>();
 

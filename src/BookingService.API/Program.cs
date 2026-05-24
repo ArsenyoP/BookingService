@@ -2,6 +2,7 @@ using Booking.Application;
 using Booking.Infrastructure;
 using Booking.Infrastructure.ExtensionMethods;
 using Booking.Infrastructure.Seeding;
+using HealthChecks.UI.Client;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -51,6 +52,11 @@ namespace Booking.API
                 var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
                 await seeder.SeedAsync();
             }
+
+            app.MapHealthChecks("health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+            {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI();

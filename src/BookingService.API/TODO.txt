@@ -19,9 +19,9 @@ Outbox Pattern - ✅
 Email Notifications - ✅
 Seeding for Reviews - ✅
 Cancellation booking - ✅
+Refresh token - ✅
 
 
-Refresh token
 Docker
 API versioning
 CI/CD
@@ -32,10 +32,15 @@ Move to postman
 Tests
 Add telemetry
 Add payment
-Automapper
 
 
 Front:
 Pagination metadata
+
+General:
+gRPC
+MassTransit
+Slice architecture 
+Message in telegram using service in python if unhealth
 
 
