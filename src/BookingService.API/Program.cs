@@ -1,8 +1,10 @@
 using Booking.Application;
 using Booking.Infrastructure;
+using Booking.Infrastructure.Data;
 using Booking.Infrastructure.ExtensionMethods;
 using Booking.Infrastructure.Seeding;
 using HealthChecks.UI.Client;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -48,9 +50,20 @@ namespace Booking.API
 
             if (app.Environment.IsDevelopment())
             {
-                using var scope = app.Services.CreateScope();
-                var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
-                await seeder.SeedAsync();
+                if (app.Environment.IsDevelopment())
+                {
+                    using var scope = app.Services.CreateScope();
+
+                    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                    Log.Information("Applying pending database migrations...");
+                    await dbContext.Database.MigrateAsync();
+                    Log.Information("Database migrations applied successfully.");
+
+                    // 2. Òâ³é ³ñíóþ÷èé ñ³äèíã äàíèõ
+                    var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+                    await seeder.SeedAsync();
+                }
             }
 
             app.MapHealthChecks("health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
@@ -64,7 +77,7 @@ namespace Booking.API
             app.UseExceptionHandler();
             app.UseSerilogRequestLogging();
             app.UseRateLimiter();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseOutputCache();
             app.UseAuthentication();
             app.UseAuthorization();
