@@ -15,9 +15,9 @@ services:
       ConnectionStrings__LocalConnections: "Server=sqlserver,1433;Database=BookingDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True;"
       ASPNETCORE_Kestrel__Endpoints__Http__Url: "http://+:8080"
       Redis__Connection: "redis:6379"
-      JWT__Issuer: "http://localhost:8080"
-      JWT__Audience: "http://localhost:8080"
-      JWT__SigningKey: "bnf8u3y4gb45687bf8y34gw4b87oewgb4897ofjh3789f4dbhnw738034jmdct9348htjfgjakd973gfhaoml9zfhbvn4o87q"
+      Jwt__Issuer: "http://localhost:8080"
+      Jwt__Audience: "http://localhost:8080"
+      Jwt__SigningKey: "bnf8u3y4gb45687bf8y34gw4b87oewgb4897ofjh3789f4dbhnw738034jmdct9348htjfgjakd973gfhaoml9zfhbvn4o87q"
     ports:
       - "8080:8080"
 
