@@ -5,9 +5,9 @@ using Booking.Domain.Common;
 
 namespace Booking.Application.UseCases.Users.RegisterUser
 {
-    public sealed class RegisterUserHandler(IAuthService _authService) : ICommandHandler<RegisterUserCommand, UserDto>
+    public sealed class RegisterUserHandler(IAuthService _authService) : ICommandHandler<RegisterUserCommand, AuthResult>
     {
-        public async Task<Result<UserDto>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<AuthResult>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var registerDto = request.registerDto;
 

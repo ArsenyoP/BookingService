@@ -5,9 +5,9 @@ using Booking.Domain.Common;
 
 namespace Booking.Application.UseCases.Users.LoginUser
 {
-    public sealed class LoginUserHandler(IAuthService _authService) : ICommandHandler<LoginUserCommand, UserDto>
+    public sealed class LoginUserHandler(IAuthService _authService) : ICommandHandler<LoginUserCommand, AuthResult>
     {
-        public async Task<Result<UserDto>> Handle(LoginUserCommand request, CancellationToken ct)
+        public async Task<Result<AuthResult>> Handle(LoginUserCommand request, CancellationToken ct)
         {
             var result = await _authService.LoginUser(request.LoginDto, ct);
             return result;

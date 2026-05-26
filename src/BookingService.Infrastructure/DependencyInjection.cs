@@ -67,11 +67,23 @@ namespace Booking.Infrastructure
                     .AddJob<ProcessOutboxMessageJob>(jobKey)
                     .AddTrigger(
                         trigger =>
-                            trigger.ForJob(jobKey)
-                                .WithSimpleSchedule(
-                                    schedule =>
-                                        schedule.WithIntervalInSeconds(10)
-                                            .RepeatForever()));
+                        trigger.ForJob(jobKey)
+                        .WithSimpleSchedule(
+                        schedule =>
+                        schedule.WithIntervalInSeconds(10)
+                        .RepeatForever()));
+
+                var cleanUpjobKey = new JobKey(nameof(CleanExpiredRefreshTokenJob));
+                configure
+                    .AddJob<CleanExpiredRefreshTokenJob>(cleanUpjobKey)
+                    .AddTrigger(
+                        trigger =>
+                        trigger.ForJob(cleanUpjobKey)
+                        .WithSimpleSchedule(
+                            schedule =>
+                            schedule.WithIntervalInHours(1)
+                        .RepeatForever()));
+
 
             });
 
@@ -120,6 +132,10 @@ namespace Booking.Infrastructure
                 options.InstanceName = "Output_Cache_";
             });
 
+            services.AddHealthChecks()
+                .AddRedis(configuration["Redis:Connection"]!)
+                .AddSqlServer(configuration.GetConnectionString("LocalConnections")!);
+
 
             services.AddScoped<ITokenService, TokenService>();
 
@@ -129,6 +145,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IListingRepository, ListingRepository>();
             services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
