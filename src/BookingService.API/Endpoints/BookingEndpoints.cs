@@ -34,7 +34,9 @@ namespace Booking.API.Endpoints
                  .RequireAuthorization()
                  .RequireRateLimiting("write-limiter");
 
-            group.MapDelete("/{id:guid}", Delete);
+            group.MapDelete("/{id:guid}", Delete)
+                .RequireAuthorization();
+
 
             group.MapPost("/cancel/{bookingId:guid}", Cancel)
                  .RequireAuthorization();
