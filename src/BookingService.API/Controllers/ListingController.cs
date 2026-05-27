@@ -1,53 +1,53 @@
-﻿using Booking.Application.Helpers.Room;
-using Booking.Application.UseCases.Listing.CreateListing;
-using Booking.Application.UseCases.Listing.DeleteListing;
-using Booking.Application.UseCases.Listing.GetAllListings;
-using Booking.Application.UseCases.Listing.GetById;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
+﻿//using Booking.Application.Helpers.Room;
+//using Booking.Application.UseCases.Listing.CreateListing;
+//using Booking.Application.UseCases.Listing.DeleteListing;
+//using Booking.Application.UseCases.Listing.GetAllListings;
+//using Booking.Application.UseCases.Listing.GetById;
+//using MediatR;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.RateLimiting;
 
-namespace Booking.API.Controllers
-{
-    [ApiController]
-    [EnableRateLimiting("fixed")]
-    [Route("api/listing")]
-    public class ListingController(ISender _sender) : ControllerBase
-    {
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] ListingQueryObject queryObject, CancellationToken ct = default)
-        {
-            var result = await _sender.Send(new GetAllListingsQuery(queryObject), ct);
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
-        }
+//namespace Booking.API.Controllers
+//{
+//    [ApiController]
+//    [EnableRateLimiting("fixed")]
+//    [Route("api/listing")]
+//    public class ListingController(ISender _sender) : ControllerBase
+//    {
+//        [HttpGet]
+//        public async Task<IActionResult> GetAll([FromQuery] ListingQueryObject queryObject, CancellationToken ct = default)
+//        {
+//            var result = await _sender.Send(new GetAllListingsQuery(queryObject), ct);
+//            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+//        }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
-        {
-            var result = await _sender.Send(new GetByIdQuery(id), ct);
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
-        }
+//        [HttpGet("{id:guid}")]
+//        public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
+//        {
+//            var result = await _sender.Send(new GetByIdQuery(id), ct);
+//            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+//        }
 
-        [Authorize]
-        [EnableRateLimiting("write-limiter")]
-        [HttpPost]
-        public async Task<IActionResult> CreateListing([FromBody] CreateListingCommand command, CancellationToken ct)
-        {
-            var result = await _sender.Send(command, ct);
-            return result.IsSuccess ? Created($"api/listing/{result.Value}", result.Value) : BadRequest(result.Error);
-        }
+//        [Authorize]
+//        [EnableRateLimiting("write-limiter")]
+//        [HttpPost]
+//        public async Task<IActionResult> CreateListing([FromBody] CreateListingCommand command, CancellationToken ct)
+//        {
+//            var result = await _sender.Send(command, ct);
+//            return result.IsSuccess ? Created($"api/listing/{result.Value}", result.Value) : BadRequest(result.Error);
+//        }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteListing(Guid id, CancellationToken ct)
-        {
-            var command = new DeleteListingCommand(id);
+//        [HttpDelete("{id:guid}")]
+//        public async Task<IActionResult> DeleteListing(Guid id, CancellationToken ct)
+//        {
+//            var command = new DeleteListingCommand(id);
 
-            var result = await _sender.Send(command, ct);
+//            var result = await _sender.Send(command, ct);
 
-            return result.IsSuccess
-                ? Ok(result.Value)
-                : BadRequest(result.Error);
-        }
-    }
-}
+//            return result.IsSuccess
+//                ? Ok(result.Value)
+//                : BadRequest(result.Error);
+//        }
+//    }
+//}

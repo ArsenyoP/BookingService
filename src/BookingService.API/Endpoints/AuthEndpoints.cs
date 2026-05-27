@@ -19,7 +19,6 @@ namespace Booking.API.Endpoints
             group.MapPost("/login/refreshToken", LoginWithRefreshToken);
         }
 
-        // --- Методи-обробники (Handlers) ---
 
         private static async Task<IResult> Register(
             [FromBody] RegisterUserCommand command,
