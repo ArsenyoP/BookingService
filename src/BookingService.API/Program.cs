@@ -84,6 +84,8 @@ namespace Booking.API
             app.UseAuthorization();
             //app.MapControllers();
 
+            app.MapReviewEndpoints();
+            app.MapListingEndpoints();
             app.MapAuthEndpoints();
             app.MapAmenityEndpoints();
             app.MapBookingEndpoints();
