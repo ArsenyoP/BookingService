@@ -20,9 +20,9 @@ Email Notifications - ✅
 Seeding for Reviews - ✅
 Cancellation booking - ✅
 Refresh token - ✅
+Docker - ✅
 
 
-Docker
 API versioning
 CI/CD
 Minimal API

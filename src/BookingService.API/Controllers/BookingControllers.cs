@@ -1,114 +1,114 @@
-﻿using Booking.Application.DTOs.Bookings;
-using Booking.Application.UseCases.Booking.DeleteBooking;
-using Booking.Application.UseCases.Bookings.CancelBooking;
-using Booking.Application.UseCases.Bookings.ConfirmBooking;
-using Booking.Application.UseCases.Bookings.CreateBooking;
-using Booking.Application.UseCases.Bookings.GetAllBookings;
-using Booking.Application.UseCases.Bookings.GetById;
-using Booking.Application.UseCases.Bookings.GetByRoomId;
-using Booking.Application.UseCases.Bookings.GetByUserId;
-using Booking.Application.UseCases.Bookings.IsRoomAvailable;
-using Booking.Infrastructure.ExtensionMethods;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
+﻿//using Booking.Application.DTOs.Bookings;
+//using Booking.Application.UseCases.Booking.DeleteBooking;
+//using Booking.Application.UseCases.Bookings.CancelBooking;
+//using Booking.Application.UseCases.Bookings.ConfirmBooking;
+//using Booking.Application.UseCases.Bookings.CreateBooking;
+//using Booking.Application.UseCases.Bookings.GetAllBookings;
+//using Booking.Application.UseCases.Bookings.GetById;
+//using Booking.Application.UseCases.Bookings.GetByRoomId;
+//using Booking.Application.UseCases.Bookings.GetByUserId;
+//using Booking.Application.UseCases.Bookings.IsRoomAvailable;
+//using Booking.Infrastructure.ExtensionMethods;
+//using MediatR;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.RateLimiting;
 
-namespace Booking.API.Controllers
-{
-    [EnableRateLimiting("fixed")]
-    [ApiController]
-    [Route("api/bookings")]
-    public class BookingControllers(ISender _sender) : ControllerBase
-    {
+//namespace Booking.API.Controllers
+//{
+//    [EnableRateLimiting("fixed")]
+//    [ApiController]
+//    [Route("api/bookings")]
+//    public class BookingControllers(ISender _sender) : ControllerBase
+//    {
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
-        {
-            var result = await _sender.Send(new GetAllBookingsQuery(page, pageSize), ct);
+//        [HttpGet]
+//        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+//        {
+//            var result = await _sender.Send(new GetAllBookingsQuery(page, pageSize), ct);
 
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
-        }
+//            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+//        }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
-        {
-            var result = await _sender.Send(new GetByIdQuery(id), ct);
+//        [HttpGet("{id:guid}")]
+//        public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
+//        {
+//            var result = await _sender.Send(new GetByIdQuery(id), ct);
 
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
-        }
+//            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+//        }
 
-        [HttpGet("room/{id:guid}")]
-        public async Task<IActionResult> GetByRoomId(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
-        {
-            var result = await _sender.Send(new GetByRoomIdQuery(id, page, pageSize), ct);
+//        [HttpGet("room/{id:guid}")]
+//        public async Task<IActionResult> GetByRoomId(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+//        {
+//            var result = await _sender.Send(new GetByRoomIdQuery(id, page, pageSize), ct);
 
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
-        }
+//            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+//        }
 
-        [HttpGet("user/{id:guid}")]
-        public async Task<IActionResult> GetByUserId(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
-        {
-            var result = await _sender.Send(new GetByUserIdQuery(id, page, pageSize), ct);
+//        [HttpGet("user/{id:guid}")]
+//        public async Task<IActionResult> GetByUserId(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+//        {
+//            var result = await _sender.Send(new GetByUserIdQuery(id, page, pageSize), ct);
 
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
-        }
+//            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+//        }
 
-        [HttpGet("roomBool/{id:guid}")]
-        public async Task<IActionResult> IsRoomAvailable(Guid id, [FromQuery] DateOnly start, [FromQuery] DateOnly end, CancellationToken ct = default)
-        {
-            var result = await _sender.Send(new IsRoomAvailableQuery(id, start, end), ct);
+//        [HttpGet("roomBool/{id:guid}")]
+//        public async Task<IActionResult> IsRoomAvailable(Guid id, [FromQuery] DateOnly start, [FromQuery] DateOnly end, CancellationToken ct = default)
+//        {
+//            var result = await _sender.Send(new IsRoomAvailableQuery(id, start, end), ct);
 
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
-        }
+//            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+//        }
 
-        [Authorize]
-        [HttpPost]
-        [EnableRateLimiting("write-limiter")]
-        public async Task<IActionResult> Create([FromBody] CreateBookingDto createDto, CancellationToken ct)
-        {
-            var userId = User.GetUserID();
+//        [Authorize]
+//        [HttpPost]
+//        [EnableRateLimiting("write-limiter")]
+//        public async Task<IActionResult> Create([FromBody] CreateBookingDto createDto, CancellationToken ct)
+//        {
+//            var userId = User.GetUserID();
 
-            var command = new CreateBookingCommand(createDto, Guid.Parse(userId));
+//            var command = new CreateBookingCommand(createDto, Guid.Parse(userId));
 
-            var result = await _sender.Send(command, ct);
+//            var result = await _sender.Send(command, ct);
 
-            return result.IsSuccess
-                ? Created($"/api/bookings/{result.Value}", result.Value)
-                : BadRequest(result.Error);
-        }
+//            return result.IsSuccess
+//                ? Created($"/api/bookings/{result.Value}", result.Value)
+//                : BadRequest(result.Error);
+//        }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
-        {
-            var command = new DeleteBookingCommand(id);
+//        [HttpDelete("{id:guid}")]
+//        public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+//        {
+//            var command = new DeleteBookingCommand(id);
 
-            var result = await _sender.Send(command, ct);
-            return result.IsSuccess
-                 ? Ok(result.Value)
-                 : BadRequest(result.Error);
-        }
+//            var result = await _sender.Send(command, ct);
+//            return result.IsSuccess
+//                 ? Ok(result.Value)
+//                 : BadRequest(result.Error);
+//        }
 
-        [HttpGet("confirm")]
-        public async Task<IActionResult> ConfirmBooking([FromQuery] string token, CancellationToken ct)
-        {
-            var command = new ConfirmBookingCommand(token);
+//        [HttpGet("confirm")]
+//        public async Task<IActionResult> ConfirmBooking([FromQuery] string token, CancellationToken ct)
+//        {
+//            var command = new ConfirmBookingCommand(token);
 
-            var result = await _sender.Send(command, ct);
+//            var result = await _sender.Send(command, ct);
 
-            return result.IsSuccess ? Ok() : BadRequest();
-        }
+//            return result.IsSuccess ? Ok() : BadRequest();
+//        }
 
-        [Authorize]
-        [HttpPost("cancel/{bookingId}")]
-        public async Task<IActionResult> Cancel([FromRoute] Guid bookingId, CancellationToken ct)
-        {
-            var userId = User.GetUserID();
-            var command = new CancelBookingCommand(bookingId, userId);
+//        [Authorize]
+//        [HttpPost("cancel/{bookingId}")]
+//        public async Task<IActionResult> Cancel([FromRoute] Guid bookingId, CancellationToken ct)
+//        {
+//            var userId = User.GetUserID();
+//            var command = new CancelBookingCommand(bookingId, userId);
 
-            var result = await _sender.Send(command, ct);
+//            var result = await _sender.Send(command, ct);
 
-            return result.IsSuccess ? Ok() : BadRequest();
-        }
-    }
-}
+//            return result.IsSuccess ? Ok() : BadRequest();
+//        }
+//    }
+//}

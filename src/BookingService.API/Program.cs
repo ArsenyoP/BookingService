@@ -1,3 +1,4 @@
+using Booking.API.Endpoints;
 using Booking.Application;
 using Booking.Infrastructure;
 using Booking.Infrastructure.Data;
@@ -81,7 +82,9 @@ namespace Booking.API
             app.UseOutputCache();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.MapControllers();
+            //app.MapControllers();
+
+            app.MapBookingEndpoints();
             app.Run();
         }
     }
