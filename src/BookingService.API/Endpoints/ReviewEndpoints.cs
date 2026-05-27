@@ -30,7 +30,7 @@ namespace Booking.API.Endpoints
 
             group.MapGet("/details/{id:guid}", GetById);
             group.MapGet("/user/{userId:guid}", GetByUserId);
-            group.MapHttpDelete("/delete/{targetId:guid}", Delete).RequireAuthorization();
+            group.MapDelete("/delete/{targetId:guid}", Delete).RequireAuthorization();
         }
 
         // --- Методи-обробники (Handlers) ---
