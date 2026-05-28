@@ -6,7 +6,9 @@
         int? MinAdults = null,
         int? MinChildren = null,
         string Type = "",
-        List<string>? AmenityNames = null,
+
+        string[]? AmenityNames = null,
+
         int Page = 1,
         int PageSize = 10
         );

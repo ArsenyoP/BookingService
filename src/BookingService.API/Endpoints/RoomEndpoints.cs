@@ -30,7 +30,7 @@ namespace Booking.API.Endpoints
         // --- Методи-обробники (Handlers) ---
 
         private static async Task<IResult> GetAll(
-            [FromQuery] RoomQueryObject queryObject,
+            [AsParameters] RoomQueryObject queryObject,
             ISender _sender,
             CancellationToken ct = default)
         {
