@@ -44,8 +44,8 @@ namespace Booking.Infrastructure.Queries
                 parameters.Add("Type", filter.Type);
             }
 
-            var namesCount = filter.AmenityNames?.Count ?? 0;
-            var names = filter.AmenityNames ?? new List<string>();
+            var names = filter.AmenityNames?.ToList() ?? new List<string>();
+            var namesCount = names.Count;
 
             if (namesCount > 0)
             {

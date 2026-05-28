@@ -28,7 +28,7 @@ namespace Booking.API.Endpoints
 
 
         private static async Task<IResult> GetAll(
-            ListingQueryObject queryObject,
+            [AsParameters] ListingQueryObject queryObject,
             ISender _sender,
             CancellationToken ct = default)
         {
