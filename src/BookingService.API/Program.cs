@@ -61,7 +61,6 @@ namespace Booking.API
                     await dbContext.Database.MigrateAsync();
                     Log.Information("Database migrations applied successfully.");
 
-                    // 2. Òâ³é ³ñíóþ÷èé ñ³äèíã äàíèõ
                     var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
                     await seeder.SeedAsync();
                 }
@@ -84,6 +83,7 @@ namespace Booking.API
             app.UseAuthorization();
             //app.MapControllers();
 
+            app.MapWeatherEndpoints();
             app.MapRoomEndpoints();
             app.MapReviewEndpoints();
             app.MapListingEndpoints();
