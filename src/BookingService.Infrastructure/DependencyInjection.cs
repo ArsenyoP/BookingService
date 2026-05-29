@@ -151,6 +151,8 @@ namespace Booking.Infrastructure
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<DataSeeder>();
 
+            services.AddHttpClient<IOpenWeatherService, OpenWeatherService>();
+
             services.Configure<EmailSettings>(configuration.GetSection(nameof(EmailSettings)));
             services.AddScoped<IEmailService, EmailService>();
 

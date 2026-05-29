@@ -14,10 +14,28 @@ namespace Booking.Infrastructure.Services
             return result;
         }
 
-        public async Task<OpenWeatherDto[]?> GetWeatherByCoordinatesAsync(string latitude, string longitude, string apiKey, CancellationToken ct = default)
+        public async Task<WeatherResultDto?> GetWeatherByCoordinatesAsync(double latitude, double longitude, string apiKey, CancellationToken ct = default)
         {
             var baseUrl = "http://api.openweathermap.org";
-            var result = await _httpClient.GetFromJsonAsync<OpenWeatherDto[]>($"{baseUrl}/data/2.5/weather?lat={latitude}&lon={longitude}&appid={apiKey}");
+
+            var url = $"{baseUrl}/data/2.5/weather?lat={latitude}&lon={longitude}&appid={apiKey}&units=metric&lang=uk";
+
+            var response = await _httpClient.GetFromJsonAsync<OpenWeatherResponse>(url, ct);
+
+            if (response is null) return null;
+
+            var weatherInfo = response.Weather.FirstOrDefault();
+
+            var result = new WeatherResultDto
+            {
+                CityName = response.CityName,
+                Temperature = response.Main.Temp,
+                CloudinessPercent = response.Clouds.All,
+                WindSpeed = response.Wind.Speed,
+                Main = weatherInfo?.Main ?? string.Empty,
+                Description = weatherInfo?.Description ?? string.Empty
+            };
+
             return result;
         }
     }
