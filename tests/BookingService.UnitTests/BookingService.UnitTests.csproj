@@ -15,6 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\BookingService.API\Booking.API.csproj" />
+    <ProjectReference Include="..\..\src\BookingService.Application\Booking.Application.csproj" />
+    <ProjectReference Include="..\..\src\BookingService.Domain\Booking.Domain.csproj" />
+    <ProjectReference Include="..\..\src\BookingService.Infrastructure\Booking.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
