@@ -1,6 +1,9 @@
 ﻿using Booking.Domain.DomainEvents;
 using Booking.Domain.Entities;
+using Booking.Domain.Interfaces;
+using Booking.Domain.ValueObjects;
 using FluentAssertions;
+using Moq;
 
 namespace BookingService.UnitTests.DomainTests.BookingTests
 {
@@ -118,6 +121,82 @@ namespace BookingService.UnitTests.DomainTests.BookingTests
             var events = result.Value.GetDomainEvents().ToList();
 
             events.Should().ContainSingle(x => x is BookingCreatedDomainEvent);
+        }
+
+        [Fact]
+        public void Confirm_ValidData_StatusConfirmed()
+        {
+            var booking = Helpers.CreateTestBooking();
+
+            booking.Confirm();
+
+            booking.Status.Should().Be(Booking.Domain.Enums.BookingStatus.Confirmed);
+        }
+
+        [Fact]
+        public void Cancel_ValidData_ShouldReturnSuccessAndSetStatusToCancelled()
+        {
+            var booking = Helpers.CreateTestBooking();
+            var utcNow = DateTime.UtcNow;
+            var refundValue = new RefundValue(
+                PercentToRefund: 100,
+                TotalBookingPrice: 2000
+            );
+
+            var refundPolicyMock = new Mock<IRefundPolicy>();
+            refundPolicyMock.Setup(x => x.CalculateRefund(booking, utcNow))
+                .Returns(refundValue);
+
+            var result = booking.Cancel(utcNow, refundPolicyMock.Object);
+
+            booking.ConfirmationToken.Should().BeNull();
+            booking.Status.Should().Be(Booking.Domain.Enums.BookingStatus.Cancelled);
+        }
+
+        [Fact]
+        public void Cancel_NowInFuture_ShouldReturnIsSuccessFalseAndCodeCannotCancelStartedBooking()
+        {
+            var booking = Helpers.CreateTestBooking();
+            var utcNow = DateTime.UtcNow.AddYears(100);
+            var refundValue = new RefundValue(
+                PercentToRefund: 100,
+                TotalBookingPrice: 2000
+            );
+
+            var refundPolicyMock = new Mock<IRefundPolicy>();
+            refundPolicyMock.Setup(x => x.CalculateRefund(booking, utcNow))
+                .Returns(refundValue);
+
+            var result = booking.Cancel(utcNow, refundPolicyMock.Object);
+
+            result.IsSuccess.Should().Be(false);
+            result.Error.Code.Should().Be("Booking.CannotCancelStartedBooking");
+            booking.ConfirmationToken.Should().NotBeNull();
+            result.Value.Should().BeNull();
+        }
+
+        [Fact]
+        public void Cancel_InvalidStatus_ShouldReturnIsSuccessFalseAndCodeCannotCancel()
+        {
+            var booking = Helpers.CreateTestBooking();
+            var utcNow = DateTime.UtcNow;
+            var refundValue = new RefundValue(
+                PercentToRefund: 100,
+                TotalBookingPrice: 2000
+            );
+
+            booking.Completed();
+
+            var refundPolicyMock = new Mock<IRefundPolicy>();
+            refundPolicyMock.Setup(x => x.CalculateRefund(booking, utcNow))
+                .Returns(refundValue);
+
+            var result = booking.Cancel(utcNow, refundPolicyMock.Object);
+
+            result.IsSuccess.Should().Be(false);
+            result.Error.Code.Should().Be("Booking.CannotCancel");
+            booking.ConfirmationToken.Should().BeNull();
+            result.Value.Should().BeNull();
         }
     }
 }
