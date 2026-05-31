@@ -53,5 +53,9 @@ namespace BookingService.UnitTests.DomainTests
 
             return Bookings.Create(dateRange, 2, 1, room, user).Value!;
         }
+        public static Address CreateTestAddress()
+        {
+            return Address.Create("Ukraine", "Ternopil", "Main Street", "10", 9).Value!;
+        }
     }
 }
