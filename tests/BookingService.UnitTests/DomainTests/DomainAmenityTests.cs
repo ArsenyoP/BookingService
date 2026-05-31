@@ -2,7 +2,7 @@
 using Booking.Domain.Enums;
 using FluentAssertions;
 
-namespace BookingService.UnitTests.DomainTests.BookingTests
+namespace BookingService.UnitTests.DomainTests
 {
     public class DomainAmenityTests
     {

@@ -68,5 +68,10 @@ namespace BookingService.UnitTests.DomainTests
         {
             return Amenity.Create(name, AmenityCategory.Entertainment).Value!;
         }
+
+        public static Review CreateTestReview(int score = 5, string text = "Excellent service and comfortable room.")
+        {
+            return Review.Create(Guid.NewGuid(), Guid.NewGuid(), ReviewsTargetType.Room, score, text).Value!;
+        }
     }
 }

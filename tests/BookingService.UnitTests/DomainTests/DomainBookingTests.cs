@@ -5,7 +5,7 @@ using Booking.Domain.ValueObjects;
 using FluentAssertions;
 using Moq;
 
-namespace BookingService.UnitTests.DomainTests.BookingTests
+namespace BookingService.UnitTests.DomainTests
 {
     public class DomainBookingTests
     {
