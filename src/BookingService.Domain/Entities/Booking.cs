@@ -83,6 +83,13 @@ namespace Booking.Domain.Entities
             return Result.Success();
         }
 
+        public Result Completed()
+        {
+            ConfirmationToken = null;
+            Status = BookingStatus.Completed;
+            return Result.Success();
+        }
+
         public Result<RefundValue> Cancel(DateTime nowUtc, IRefundPolicy refundPolicy)
         {
             if (Period.StartDate <= DateOnly.FromDateTime(nowUtc))
