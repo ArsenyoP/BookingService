@@ -44,5 +44,14 @@ namespace BookingService.UnitTests.DomainTests
             var result = DateRange.Create(startDate, endDate).Value!;
             return result;
         }
+
+        public static Bookings CreateTestBooking()
+        {
+            var room = CreateTestRoom();
+            var user = CreateTestUser();
+            var dateRange = CreateTestDateRange();
+
+            return Bookings.Create(dateRange, 2, 1, room, user).Value!;
+        }
     }
 }
