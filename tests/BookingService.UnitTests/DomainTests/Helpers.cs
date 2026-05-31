@@ -1,13 +1,14 @@
 ﻿using Booking.Domain.Entities;
 using Booking.Domain.Enums;
+using Booking.Domain.ValueObjects;
 
-namespace BookingService.UnitTests.DomainTests.BookingTests
+namespace BookingService.UnitTests.DomainTests
 {
-    public class Helpers
+    public static class Helpers
     {
-        public User CreateUser()
+        public static User CreateTestUser()
         {
-            DateOnly birthdayDate = new DateOnly(2, 10, 2000);
+            DateOnly birthdayDate = new DateOnly(2000, 10, 10);
 
             var userResult = User.Create(
                 "TestFirstName",
@@ -19,7 +20,7 @@ namespace BookingService.UnitTests.DomainTests.BookingTests
             return userResult.Value!;
         }
 
-        public Room CreateRoom()
+        public static Room CreateTestRoom()
         {
             Guid listingId = Guid.Parse("c0de5ddc-6db8-4fcd-a2ff-f60dc446d1ed");
 
@@ -33,6 +34,15 @@ namespace BookingService.UnitTests.DomainTests.BookingTests
                 listingId);
 
             return roomResult.Value!;
+        }
+
+        public static DateRange CreateTestDateRange()
+        {
+            DateOnly startDate = new DateOnly(2026, 10, 10);
+            DateOnly endDate = new DateOnly(2026, 10, 12);
+
+            var result = DateRange.Create(startDate, endDate).Value!;
+            return result;
         }
     }
 }
