@@ -65,5 +65,81 @@ namespace BookingService.UnitTests.DomainTests.BookingTests
             result.Error.Code.Should().Be("Listing.AddressRequired");
             result.Value.Should().BeNull();
         }
+
+        [Fact]
+        public void AddAmenity_NewAmenity_IsSuccessTrue()
+        {
+            var listing = Helpers.CreateTestListing();
+            var amenity = Helpers.CreateTestAmenity("Wi-Fi");
+
+            var result = listing.AddAmenity(amenity);
+
+            result.IsSuccess.Should().BeTrue();
+            listing.Amenities.Should().ContainSingle(x => x.Id == amenity.Id);
+        }
+
+        [Fact]
+        public void AddAmenity_AlreadyAddedAmenity_IsSuccessFalse()
+        {
+            var listing = Helpers.CreateTestListing();
+            var amenity = Helpers.CreateTestAmenity("Wi-Fi");
+            listing.AddAmenity(amenity);
+
+            var result = listing.AddAmenity(amenity);
+
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Code.Should().Be("Listing.AmenityAlreadyAdded");
+            listing.Amenities.Should().ContainSingle(x => x.Id == amenity.Id);
+        }
+
+        [Fact]
+        public void RemoveAmenity_ExistingAmenity_IsSuccessTrue()
+        {
+            var listing = Helpers.CreateTestListing();
+            var amenity = Helpers.CreateTestAmenity("Wi-Fi");
+            listing.AddAmenity(amenity);
+
+            var result = listing.RemoveAmenity(amenity);
+
+            result.IsSuccess.Should().BeTrue();
+            listing.Amenities.Should().NotContain(x => x.Id == amenity.Id);
+        }
+
+        [Fact]
+        public void RemoveAmenity_NonExistingAmenity_IsSuccessFalse()
+        {
+            var listing = Helpers.CreateTestListing();
+            var amenity = Helpers.CreateTestAmenity("Wi-Fi");
+
+            var result = listing.RemoveAmenity(amenity);
+
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Code.Should().Be("Room.DoesntContainAmenity");
+        }
+
+        [Fact]
+        public void UpdateRating_FirstReview_CalculatesCorrectAverage()
+        {
+            var listing = Helpers.CreateTestListing();
+
+            var result = listing.UpdateRating(5);
+
+            result.IsSuccess.Should().BeTrue();
+            listing.AverageRating.Should().Be(5);
+            listing.ReviewsCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void UpdateRating_MultipleReviews_CalculatesCorrectAverage()
+        {
+            var listing = Helpers.CreateTestListing();
+            listing.UpdateRating(5);
+
+            var result = listing.UpdateRating(3);
+
+            result.IsSuccess.Should().BeTrue();
+            listing.AverageRating.Should().Be(4);
+            listing.ReviewsCount.Should().Be(2);
+        }
     }
 }
