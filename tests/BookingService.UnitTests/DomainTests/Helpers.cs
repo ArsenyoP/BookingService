@@ -57,5 +57,16 @@ namespace BookingService.UnitTests.DomainTests
         {
             return Address.Create("Ukraine", "Ternopil", "Main Street", "10", 9).Value!;
         }
+
+        public static Listing CreateTestListing()
+        {
+            var address = Address.Create("Ukraine", "Ternopil", "Main Street", "10", 9).Value!;
+            return Listing.Create("Cozy Apartment", "Nice place to stay", address, ListingType.Apartment).Value!;
+        }
+
+        public static Amenity CreateTestAmenity(string name)
+        {
+            return Amenity.Create(name, AmenityCategory.Entertainment).Value!;
+        }
     }
 }
