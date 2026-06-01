@@ -6,9 +6,11 @@ namespace BookingService.UnitTests.DomainTests
 {
     public static class Helpers
     {
-        public static User CreateTestUser()
+        public static User CreateTestUser(Guid? userId = null)
         {
             DateOnly birthdayDate = new DateOnly(2000, 10, 10);
+
+            Guid finalUserId = userId ?? Guid.Parse("c23a9673-90a1-42a5-a6f4-dd7ed7055496");
 
             var userResult = User.Create(
                 "TestFirstName",
@@ -17,6 +19,7 @@ namespace BookingService.UnitTests.DomainTests
                 "testemail@gmail.com",
                 "TestUsername");
 
+            userResult.Value.Id = finalUserId;
             return userResult.Value!;
         }
 
@@ -45,10 +48,12 @@ namespace BookingService.UnitTests.DomainTests
             return result;
         }
 
-        public static Bookings CreateTestBooking()
+        public static Bookings CreateTestBooking(Guid? userId = null)
         {
+            Guid finalUserId = userId ?? Guid.Parse("c23a9673-90a1-42a5-a6f4-dd7ed7055496");
+
             var room = CreateTestRoom();
-            var user = CreateTestUser();
+            var user = CreateTestUser(finalUserId);
             var dateRange = CreateTestDateRange();
 
             return Bookings.Create(dateRange, 2, 1, room, user).Value!;
