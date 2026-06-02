@@ -6,7 +6,7 @@ using Booking.Domain.Common;
 
 namespace Booking.Application.UseCases.Bookings.GetAllBookings
 {
-    internal class GetAllBookingsHandler(IBookingQueries _bookingQueries) : IQueryHandler<GetAllBookingsQuery, IReadOnlyList<BookingResponseDto>>
+    public class GetAllBookingsHandler(IBookingQueries _bookingQueries) : IQueryHandler<GetAllBookingsQuery, IReadOnlyList<BookingResponseDto>>
     {
 
         public async Task<Result<IReadOnlyList<BookingResponseDto>>> Handle(GetAllBookingsQuery request, CancellationToken ct)
