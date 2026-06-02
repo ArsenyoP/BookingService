@@ -12,7 +12,7 @@ using BookingEntity = Booking.Domain.Entities.Bookings;
 
 namespace Booking.Application.UseCases.Bookings.CreateBooking
 {
-    internal sealed class CreateBookingHandler(
+    public sealed class CreateBookingHandler(
         IBookingRepository _bookingRepository,
         IRoomQueries _roomQueries,
         UserManager<User> _userManager,
