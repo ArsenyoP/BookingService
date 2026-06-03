@@ -24,12 +24,13 @@ Docker - ✅
 Minimal API - ✅
 Added external API for weather - ✅
 
-API versioning
 CI/CD
+Move seeding to separate endpoint
 Rate limiting: use Redis to store the number of requests from each IP
 Tests
 Add telemetry
 Add payment
+API versioning
 
 
 Front:

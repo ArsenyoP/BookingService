@@ -32,6 +32,17 @@ namespace Booking.Infrastructure.Data
                 addressBuilder.Property(a => a.Country).HasMaxLength(50).IsRequired();
                 addressBuilder.Property(a => a.City).HasMaxLength(50).IsRequired();
                 addressBuilder.Property(a => a.Street).HasMaxLength(100).IsRequired();
+                addressBuilder.Property(a => a.HouseNumber).HasMaxLength(10).IsRequired();
+                addressBuilder.Property(a => a.Floor).IsRequired();
+
+                addressBuilder.HasIndex(a => new
+                {
+                    a.Country,
+                    a.City,
+                    a.Street,
+                    a.HouseNumber
+                })
+                    .IsUnique();
             });
 
 
