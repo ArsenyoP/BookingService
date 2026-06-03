@@ -1,12 +1,10 @@
+using Booking.Application.DTOs.Bookings;
 using Booking.Application.Interfaces;
-using Booking.Application.Interfaces.IQueries;
 using Booking.Application.UseCases.Bookings.CreateBooking;
-using Booking.Application.Queries;
 using Booking.Domain.Common;
 using Booking.Domain.Entities;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces.IRepositories;
-using Booking.Application.DTOs.Bookings;
 using BookingService.UnitTests.DomainTests;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +17,7 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
     public class CreateBookingHandlerTests
     {
         private readonly Mock<IBookingRepository> _bookingRepositoryMock;
-        private readonly Mock<IRoomQueries> _roomQueriesMock;
+        private readonly Mock<IRoomRepository> _roomRepositoryMock;
         private readonly Mock<UserManager<User>> _userManagerMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly CreateBookingHandler _handler;
@@ -27,7 +25,7 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
         public CreateBookingHandlerTests()
         {
             _bookingRepositoryMock = new Mock<IBookingRepository>();
-            _roomQueriesMock = new Mock<IRoomQueries>();
+            _roomRepositoryMock = new Mock<IRoomRepository>();
             _userManagerMock = CreateUserManagerMock();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
@@ -39,7 +37,7 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
 
             _handler = new CreateBookingHandler(
                 _bookingRepositoryMock.Object,
-                _roomQueriesMock.Object,
+                _roomRepositoryMock.Object,
                 _userManagerMock.Object,
                 _unitOfWorkMock.Object);
         }
@@ -53,7 +51,7 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
 
             result.IsSuccess.Should().BeFalse();
             result.Error.Code.Should().Be("Booking.InvalidEnd");
-            _roomQueriesMock.Verify(x => x.GetEntityByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
+            _roomRepositoryMock.Verify(x => x.GetByIdWithAmenities(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
             _userManagerMock.Verify(x => x.FindByIdAsync(It.IsAny<string>()), Times.Never);
             _bookingRepositoryMock.Verify(x => x.IsRoomAvailableAsync(It.IsAny<Guid>(), It.IsAny<DateOnly>(), It.IsAny<DateOnly>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -63,8 +61,8 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
         {
             var command = CreateCommand();
 
-            _roomQueriesMock
-                .Setup(x => x.GetEntityByIdAsync(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
+            _roomRepositoryMock
+                .Setup(x => x.GetByIdWithAmenities(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Room)null!);
 
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -81,8 +79,8 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
             var command = CreateCommand();
             var room = Helpers.CreateTestRoom();
 
-            _roomQueriesMock
-                .Setup(x => x.GetEntityByIdAsync(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
+            _roomRepositoryMock
+                .Setup(x => x.GetByIdWithAmenities(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(room);
 
             _userManagerMock
@@ -104,8 +102,8 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
             var room = Helpers.CreateTestRoom();
             var guest = Helpers.CreateTestUser(command.GuestId);
 
-            _roomQueriesMock
-                .Setup(x => x.GetEntityByIdAsync(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
+            _roomRepositoryMock
+                .Setup(x => x.GetByIdWithAmenities(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(room);
 
             _userManagerMock
@@ -131,8 +129,8 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
             var guest = Helpers.CreateTestUser(command.GuestId);
             guest.IsActive = false;
 
-            _roomQueriesMock
-                .Setup(x => x.GetEntityByIdAsync(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
+            _roomRepositoryMock
+                .Setup(x => x.GetByIdWithAmenities(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(room);
 
             _userManagerMock
@@ -157,8 +155,8 @@ namespace BookingService.UnitTests.ApplicationTests.BookingApplicationTests
             var room = Helpers.CreateTestRoom();
             var guest = Helpers.CreateTestUser(command.GuestId);
 
-            _roomQueriesMock
-                .Setup(x => x.GetEntityByIdAsync(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
+            _roomRepositoryMock
+                .Setup(x => x.GetByIdWithAmenities(command.CreateDto.RoomId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(room);
 
             _userManagerMock
