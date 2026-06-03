@@ -3,8 +3,11 @@ using Booking.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Respawn;
+using System.Data.Common;
 using Testcontainers.MsSql;
 
 namespace BookingService.IntegrationTests;
@@ -12,10 +15,12 @@ namespace BookingService.IntegrationTests;
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer;
+    private DbConnection _dbConnection = default!;
+    private Respawner _respawner = default!;
+    private string _connectionString = default!;  // <-- збережи рядок підключення
 
     public IntegrationTestWebAppFactory()
     {
-        // Створюємо та жорстко запускаємо контейнер в конструкторі
         _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
             .Build();
 
@@ -26,41 +31,48 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     {
         builder.ConfigureTestServices(services =>
         {
-            // 1. НАДІЙНО ВИДАЛЯЄМО ВСІ СТАРІ РЕЄСТРАЦІЇ (включаючи звичайний DbContext та DbContextPool)
             var descriptors = services.Where(d =>
                 d.ServiceType == typeof(DbContextOptions<AppDbContext>) ||
                 d.ServiceType == typeof(AppDbContext) ||
                 d.ServiceType.Name.Contains("DbContextPool")).ToList();
 
             foreach (var descriptor in descriptors)
-            {
                 services.Remove(descriptor);
-            }
 
-            // 2. ПІДМІНЯЄМО НАЗВУ БАЗИ ДАНИХ З master НА ТЕСТОВУ
-            // Це змусить EF Core створити нову чисту базу разом з таблицями
-            var connectionString = _dbContainer.GetConnectionString()
+            _connectionString = _dbContainer.GetConnectionString()
                 .Replace("Database=master", "Database=BookingTestDb");
 
             services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseSqlServer(connectionString);
-            });
+                options.UseSqlServer(_connectionString));
         });
     }
 
     public async Task InitializeAsync()
     {
-        // 3. Створюємо scope і викликаємо створення структури
+        // Тільки для застосування міграцій/схеми
         using var scope = Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        // Оскільки BookingTestDb ще не існує, цей метод створить її та НАКОТИТЬ УСІ ТАБЛИЦІ
         await dbContext.Database.EnsureCreatedAsync();
+
+        // Пряме з'єднання — не залежить від DbContext або scope
+        _dbConnection = new SqlConnection(_connectionString);
+        await _dbConnection.OpenAsync();
+
+        _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
+        {
+            DbAdapter = DbAdapter.SqlServer,
+            TablesToIgnore = ["__EFMigrationsHistory", "AspNetRoles"]
+        });
+    }
+
+    public async Task ResetDatabaseAsync()
+    {
+        await _respawner.ResetAsync(_dbConnection);
     }
 
     public new async Task DisposeAsync()
     {
+        await _dbConnection.DisposeAsync();
         await _dbContainer.StopAsync();
     }
 }
