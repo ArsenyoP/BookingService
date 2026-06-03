@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C55FA376
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingService.UnitTests", "tests\BookingService.UnitTests\BookingService.UnitTests.csproj", "{B17800C3-4599-485E-9B0A-9BE013FEE1AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingService.IntegrationTests", "tests\BookingService.IntergationTests\BookingService.IntegrationTests\BookingService.IntegrationTests.csproj", "{3AE503F2-25CF-46B0-B6A4-A160CE275296}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{B17800C3-4599-485E-9B0A-9BE013FEE1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B17800C3-4599-485E-9B0A-9BE013FEE1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B17800C3-4599-485E-9B0A-9BE013FEE1AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AE503F2-25CF-46B0-B6A4-A160CE275296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AE503F2-25CF-46B0-B6A4-A160CE275296}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AE503F2-25CF-46B0-B6A4-A160CE275296}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AE503F2-25CF-46B0-B6A4-A160CE275296}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{009A2DD2-311F-E185-EC0E-A5A22DFE8B1F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{45B4F70D-D37E-10AF-E61C-D41F57CAC0EA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B17800C3-4599-485E-9B0A-9BE013FEE1AE} = {C55FA376-172F-4B7B-9D31-341820467BC7}
+		{3AE503F2-25CF-46B0-B6A4-A160CE275296} = {C55FA376-172F-4B7B-9D31-341820467BC7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BA3B46E7-8CAF-4E75-B0DD-5EC74AA47C39}
