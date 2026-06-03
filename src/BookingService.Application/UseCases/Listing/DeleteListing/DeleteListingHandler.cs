@@ -14,7 +14,7 @@ namespace Booking.Application.UseCases.Listing.DeleteListing
     {
         public async Task<Result<Guid>> Handle(DeleteListingCommand request, CancellationToken ct)
         {
-            var listing = await _listingQueries.GetEntityByIdAsync(request.ListingId, ct);
+            var listing = await _listingRepository.GetByIdWithAmenities(request.ListingId, ct);
 
             if (listing is null)
             {
