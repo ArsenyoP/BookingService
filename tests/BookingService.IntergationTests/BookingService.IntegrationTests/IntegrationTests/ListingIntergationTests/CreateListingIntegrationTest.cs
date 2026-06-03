@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookingService.IntegrationTests.ListingIntergationTests
+namespace BookingService.IntegrationTests.IntegrationTests.ListingIntergationTests
 {
     public class CreateListingIntegrationTest : BaseIntegrationTest
     {

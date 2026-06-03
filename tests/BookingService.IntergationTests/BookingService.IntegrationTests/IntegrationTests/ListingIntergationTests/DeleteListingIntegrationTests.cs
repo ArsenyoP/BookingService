@@ -4,7 +4,7 @@ using Booking.Domain.Errors;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookingService.IntegrationTests.ListingIntergationTests
+namespace BookingService.IntegrationTests.IntegrationTests.ListingIntergationTests
 {
     public class DeleteListingIntegrationTests : BaseIntegrationTest
     {
