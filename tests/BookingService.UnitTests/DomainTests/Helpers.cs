@@ -4,7 +4,7 @@ using Booking.Domain.ValueObjects;
 
 namespace BookingService.UnitTests.DomainTests
 {
-    public static class Helpers
+    internal static class Helpers
     {
         public static User CreateTestUser(Guid? userId = null)
         {
