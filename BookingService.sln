@@ -19,6 +19,9 @@ EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C55FA376-172F-4B7B-9D31-341820467BC7}"
+	ProjectSection(SolutionItems) = preProject
+		tests\BookingService.UnitTests\DomainTests\Helpers.cs = tests\BookingService.UnitTests\DomainTests\Helpers.cs
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingService.UnitTests", "tests\BookingService.UnitTests\BookingService.UnitTests.csproj", "{B17800C3-4599-485E-9B0A-9BE013FEE1AE}"
 EndProject

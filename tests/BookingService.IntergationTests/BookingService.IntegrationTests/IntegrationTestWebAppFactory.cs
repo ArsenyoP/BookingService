@@ -44,6 +44,17 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(_connectionString));
+
+
+            //var queriesDescriptor = services.FirstOrDefault(d =>
+            //d.ServiceType == typeof(IListingQueries));
+
+            //if (queriesDescriptor != null)
+            //{
+            //    services.Remove(queriesDescriptor);
+            //}
+
+            //services.AddScoped<IListingQueries>(sp => new ListingQueries(_connectionString));
         });
     }
 
