@@ -1,20 +1,19 @@
 using Booking.Application.Abstractions;
-using Booking.Domain.Common;
-using Booking.Domain.Interfaces.IRepositories;
-using Booking.Domain.Errors;
 using Booking.Application.Interfaces;
-using Booking.Application.Interfaces.IQueries;
+using Booking.Domain.Common;
+using Booking.Domain.Errors;
+using Booking.Domain.Interfaces.IRepositories;
 using RoomEntity = Booking.Domain.Entities.Room;
 
 
 namespace Booking.Application.UseCases.Room.CreateRoom;
 
-public class CreateRoomHandler(IRoomRepository _roomRepository, IListingQueries _listingQueries,
+public class CreateRoomHandler(IRoomRepository _roomRepository, IListingRepository _listingRepository,
     IUnitOfWork _unitOfWork) : ICommandHandler<CreateRoomCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateRoomCommand request, CancellationToken ct)
     {
-        var listing = await _listingQueries.GetEntityByIdAsync(request.ListingId);
+        var listing = await _listingRepository.GetByIdWithAmenities(request.ListingId);
 
         if (listing is null)
         {
