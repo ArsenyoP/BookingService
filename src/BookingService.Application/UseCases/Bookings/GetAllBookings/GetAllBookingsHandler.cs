@@ -11,7 +11,6 @@ namespace Booking.Application.UseCases.Bookings.GetAllBookings
 
         public async Task<Result<IReadOnlyList<BookingResponseDto>>> Handle(GetAllBookingsQuery request, CancellationToken ct)
         {
-            //TODO: Add validation throught FluentValidation
             var page = request.Page < 1 ? 1 : request.Page;
             var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
 
