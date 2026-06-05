@@ -1,5 +1,6 @@
 ﻿using Booking.Application.DTOs.Bookings;
 using Booking.Application.DTOs.Users;
+using Booking.Application.UseCases.Bookings.ConfirmBooking;
 using Booking.Application.UseCases.Bookings.CreateBooking;
 using Booking.Application.UseCases.Listing.CreateListing;
 using Booking.Application.UseCases.Room.CreateRoom;
@@ -62,17 +63,17 @@ namespace BookingService.IntegrationTests
             return user!.Id;
         }
 
-        public async Task<Result<Guid>> CreateTestBooking(Guid? roomIdInput = null)
+        public async Task<Result<Guid>> CreateTestBooking(Guid? roomIdInput = null,
+            Guid? userIdInput = null, Guid? listingIdInput = null, bool isConfirmed = false)
         {
-            var listingId = await CreateTestListing();
-            if (roomIdInput is null)
-            {
-                roomIdInput = await CreateTestRoom(listingId);
-            }
+            listingIdInput ??= await CreateTestListing();
+            var listingId = listingIdInput.Value;
 
-            Guid roomId = (Guid)roomIdInput;
+            roomIdInput ??= await CreateTestRoom(listingId);
+            Guid roomId = roomIdInput.Value;
 
-            var userId = await CreateTestUser();
+            userIdInput ??= await CreateTestUser();
+            Guid userId = userIdInput.Value;
 
             var startDate = new DateOnly(2030, 12, 1);
             var endDate = new DateOnly(2030, 12, 20);
@@ -87,6 +88,15 @@ namespace BookingService.IntegrationTests
 
 
             var result = await Sender.Send(createBookingCommand);
+
+            if (isConfirmed && result.IsSuccess)
+            {
+                var booking = await DbContext.Bookings.Where(x => x.Id == result.Value).FirstOrDefaultAsync();
+
+                var confirmCommand = new ConfirmBookingCommand(booking!.ConfirmationToken!);
+                var confirmationResult = await Sender.Send(confirmCommand);
+            }
+
             return result;
         }
 
