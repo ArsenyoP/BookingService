@@ -1,17 +1,18 @@
 ﻿using Booking.Application.Abstractions;
 using Booking.Application.DTOs.Bookings;
-using Booking.Application.Queries;
+using Booking.Application.Interfaces.IQueries;
 using Booking.Domain.Common;
 using Booking.Domain.Errors;
-using Booking.Application.Interfaces.IQueries;
+using Booking.Domain.Interfaces.IRepositories;
 
 namespace Booking.Application.UseCases.Bookings.GetByRoomId
 {
-    public sealed class GetByRoomIdHandler(IBookingQueries _bookingQueries, IRoomQueries _roomQueries) : IQueryHandler<GetByRoomIdQuery, IReadOnlyList<BookingResponseDto>>
+    public sealed class GetByRoomIdHandler(IRoomRepository _roomRepository, IBookingQueries _bookingQueries)
+        : IQueryHandler<GetByRoomIdQuery, IReadOnlyList<BookingResponseDto>>
     {
         public async Task<Result<IReadOnlyList<BookingResponseDto>>> Handle(GetByRoomIdQuery request, CancellationToken ct)
         {
-            var isExists = await _roomQueries.GetByIdAsync(request.roomId) is not null;
+            var isExists = await _roomRepository.GetByIdWithAmenities(request.roomId) is not null;
 
             if (!isExists)
             {
