@@ -1,5 +1,7 @@
 ﻿using Booking.API;
+using Booking.Application.Interfaces.IQueries;
 using Booking.Infrastructure.Data;
+using Booking.Infrastructure.Queries;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -46,15 +48,15 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
                 options.UseSqlServer(_connectionString));
 
 
-            //var queriesDescriptor = services.FirstOrDefault(d =>
-            //d.ServiceType == typeof(IListingQueries));
+            var queriesDescriptor = services.FirstOrDefault(d =>
+                d.ServiceType == typeof(IBookingQueries));
 
-            //if (queriesDescriptor != null)
-            //{
-            //    services.Remove(queriesDescriptor);
-            //}
+            if (queriesDescriptor != null)
+            {
+                services.Remove(queriesDescriptor);
+            }
 
-            //services.AddScoped<IListingQueries>(sp => new ListingQueries(_connectionString));
+            services.AddScoped<IBookingQueries>(sp => new BookingQueries(_connectionString));
         });
     }
 

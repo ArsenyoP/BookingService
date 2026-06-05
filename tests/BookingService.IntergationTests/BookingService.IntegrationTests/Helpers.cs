@@ -89,5 +89,55 @@ namespace BookingService.IntegrationTests
             var result = await Sender.Send(createBookingCommand);
             return result;
         }
+
+        public async Task CreateBunchOfBookings()
+        {
+            var listingId1 = await CreateTestListing("2");
+            var listingId2 = await CreateTestListing("4");
+            var listingId3 = await CreateTestListing("5");
+
+            var roomId1 = await CreateTestRoom(listingId1);
+            var roomId2 = await CreateTestRoom(listingId2);
+            var roomId3 = await CreateTestRoom(listingId3);
+
+            var userId1 = await CreateTestUser();
+            var userId2 = await CreateTestUser();
+            var userId3 = await CreateTestUser();
+
+            var startDate1 = new DateOnly(2030, 12, 1);
+            var endDate1 = new DateOnly(2030, 12, 20);
+
+            var startDate2 = new DateOnly(2031, 12, 1);
+            var endDate2 = new DateOnly(2031, 12, 20);
+
+            var startDate3 = new DateOnly(2032, 12, 1);
+            var endDate3 = new DateOnly(2032, 12, 20);
+
+            var createBookingDto1 = new CreateBookingDto(roomId1,
+                startDate1,
+                endDate1,
+                1,
+                2);
+
+            var createBookingDto2 = new CreateBookingDto(roomId2,
+                startDate2,
+                endDate2,
+                1,
+                2);
+
+            var createBookingDto3 = new CreateBookingDto(roomId3,
+                startDate3,
+                endDate3,
+                1,
+                2);
+
+            var createBookingCommand1 = new CreateBookingCommand(createBookingDto1, userId1);
+            var createBookingCommand2 = new CreateBookingCommand(createBookingDto2, userId2);
+            var createBookingCommand3 = new CreateBookingCommand(createBookingDto3, userId3);
+
+            await Sender.Send(createBookingCommand1);
+            await Sender.Send(createBookingCommand2);
+            await Sender.Send(createBookingCommand3);
+        }
     }
 }
