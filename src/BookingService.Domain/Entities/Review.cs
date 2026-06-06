@@ -75,33 +75,16 @@ namespace Booking.Domain.Entities
             return Result<Review>.Success(review);
         }
 
-        public Result<Review> UpdateScore(int newScore)
+        public Result<Review> Update(int newScore, string newText)
         {
-            if (IsEdited) return Result<Review>.Failure(ReviewErrors.AlreadyEdited);
-
-            if (Score == newScore)
+            if (IsEdited)
             {
-                return Result<Review>.Success(this);
+                return Result<Review>.Failure(ReviewErrors.AlreadyEdited);
             }
 
             if (newScore < 1 || newScore > 5)
             {
                 return Result<Review>.Failure(ReviewErrors.InvalidScore);
-            }
-
-            Score = newScore;
-            IsEdited = true;
-
-            return Result<Review>.Success(this);
-        }
-
-        public Result<Review> UpdateText(string newText)
-        {
-            if (IsEdited) return Result<Review>.Failure(ReviewErrors.AlreadyEdited);
-
-            if (Text == newText)
-            {
-                return Result<Review>.Success(this);
             }
 
             if (newText.Length < 10)
@@ -114,6 +97,15 @@ namespace Booking.Domain.Entities
                 return Result<Review>.Failure(ReviewErrors.TextTooLong);
             }
 
+            bool isScoreChanged = Score != newScore;
+            bool isTextChanged = Text != newText;
+
+            if (!isScoreChanged && !isTextChanged)
+            {
+                return Result<Review>.Success(this);
+            }
+
+            Score = newScore;
             Text = newText;
             IsEdited = true;
 
