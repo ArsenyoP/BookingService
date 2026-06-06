@@ -35,29 +35,39 @@ namespace Booking.Application.UseCases.Reviews.UpdateReview
 
                 try
                 {
-                    if (request.UpdateDto.Score.HasValue && request.UpdateDto.Score.Value != review.Score)
+                    var targetScore = request.UpdateDto.Score ?? review.Score;
+                    var targetText = request.UpdateDto.Text ?? review.Text;
+
+                    var oldScore = review.Score;
+
+                    var updateResult = review.Update(targetScore, targetText);
+
+                    if (!updateResult.IsSuccess)
+                    {
+                        return Result<ReviewResponseDto>.Failure(updateResult.Error);
+                    }
+
+                    if (targetScore != oldScore)
                     {
                         await _reviewQueries.UpdatedReviewScoreOnTarget(
                             review.TargetId,
-                            request.UpdateDto.Score.Value,
-                            review.Score,
+                            targetScore,
+                            oldScore,
                             review.TargetType,
                             _unitOfWork.GetCurrentTransaction()!,
                             ct);
-
-                        review.UpdateScore(request.UpdateDto.Score.Value);
-
-                        reviewDto = reviewDto with { Score = request.UpdateDto.Score.Value, IsEdited = true };
                     }
 
-                    if (request.UpdateDto.Text != null)
-                    {
-                        review.UpdateText(request.UpdateDto.Text);
-                        reviewDto = reviewDto with { Text = request.UpdateDto.Text, IsEdited = true };
-                    }
 
                     await _unitOfWork.SaveChangesAsync(ct);
                     await _unitOfWork.CommitAsync(ct);
+
+                    reviewDto = reviewDto with
+                    {
+                        Score = review.Score,
+                        Text = review.Text,
+                        IsEdited = review.IsEdited
+                    };
 
                     return Result<ReviewResponseDto>.Success(reviewDto);
                 }
