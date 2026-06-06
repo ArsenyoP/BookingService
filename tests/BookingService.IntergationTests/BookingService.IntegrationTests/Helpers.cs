@@ -102,19 +102,25 @@ namespace BookingService.IntegrationTests
             return result;
         }
 
-        public async Task<Result<Guid>> CreateRoomReview(Guid? roomIdInput = null, Guid? userIdInput = null)
+        public async Task<Result<Guid>> CreateRoomReview(Guid? roomIdInput = null,
+            Guid? userIdInput = null, Guid? listingIdInput = null, Guid? bookingIdInput = null)
         {
             userIdInput ??= await CreateTestUser();
             var userId = userIdInput.Value;
 
-            var listingId = await CreateTestListing();
+            listingIdInput ??= await CreateTestListing();
+            var listingId = listingIdInput.Value;
 
             roomIdInput ??= await CreateTestRoom(listingId);
             var roomId = roomIdInput.Value;
 
+            var bookingCreatedId = await CreateTestBooking(roomId, userId, listingId, true);
+            bookingIdInput ??= bookingCreatedId.Value;
+            var bookingId = bookingIdInput.Value;
+
+
             var createDto = new CreateReviewDto(roomId, Booking.Domain.Enums.ReviewsTargetType.Room,
                 5, "Some text for test room review");
-
             var createReviewCoommand = new CreateReviewCommand(createDto, userId.ToString());
 
             var result = await Sender.Send(createReviewCoommand);
