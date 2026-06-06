@@ -25,6 +25,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     public IntegrationTestWebAppFactory()
     {
         _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
+            .WithPassword("Password123!")
             .Build();
 
         _dbContainer.StartAsync().GetAwaiter().GetResult();
@@ -59,6 +60,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
             services.AddScoped<IBookingQueries>(sp => new BookingQueries(_connectionString));
 
+
             var queriesDescriptorRoom = services.FirstOrDefault(d =>
                 d.ServiceType == typeof(IRoomQueries));
 
@@ -68,6 +70,17 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             }
 
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(_connectionString));
+
+
+            var queriesDescriptorReview = services.FirstOrDefault(d =>
+                d.ServiceType == typeof(IReviewQueries));
+
+            if (queriesDescriptorReview != null)
+            {
+                services.Remove(queriesDescriptorReview);
+            }
+
+            services.AddScoped<IReviewQueries>(sp => new ReviewQueries(_connectionString));
         });
     }
 
