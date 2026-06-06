@@ -1,8 +1,10 @@
 ﻿using Booking.Application.DTOs.Bookings;
+using Booking.Application.DTOs.Reviews;
 using Booking.Application.DTOs.Users;
 using Booking.Application.UseCases.Bookings.ConfirmBooking;
 using Booking.Application.UseCases.Bookings.CreateBooking;
 using Booking.Application.UseCases.Listing.CreateListing;
+using Booking.Application.UseCases.Reviews.CreateReview;
 using Booking.Application.UseCases.Room.CreateRoom;
 using Booking.Application.UseCases.Users.RegisterUser;
 using Booking.Domain.Common;
@@ -96,6 +98,26 @@ namespace BookingService.IntegrationTests
                 var confirmCommand = new ConfirmBookingCommand(booking!.ConfirmationToken!);
                 var confirmationResult = await Sender.Send(confirmCommand);
             }
+
+            return result;
+        }
+
+        public async Task<Result<Guid>> CreateRoomReview(Guid? roomIdInput = null, Guid? userIdInput = null)
+        {
+            userIdInput ??= await CreateTestUser();
+            var userId = userIdInput.Value;
+
+            var listingId = await CreateTestListing();
+
+            roomIdInput ??= await CreateTestRoom(listingId);
+            var roomId = roomIdInput.Value;
+
+            var createDto = new CreateReviewDto(roomId, Booking.Domain.Enums.ReviewsTargetType.Room,
+                5, "Some text for test room review");
+
+            var createReviewCoommand = new CreateReviewCommand(createDto, userId.ToString());
+
+            var result = await Sender.Send(createReviewCoommand);
 
             return result;
         }
