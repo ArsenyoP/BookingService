@@ -16,7 +16,7 @@ namespace Booking.Application.Behaviors
 
             try
             {
-                var response = await next();
+                var response = await next(cancellationToken);
 
                 _logger.LogInformation("Succeded request: {requestName}", requestName);
                 return response;
