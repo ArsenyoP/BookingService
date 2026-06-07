@@ -113,7 +113,7 @@ namespace BookingService.UnitTests.DomainTests
         {
             var review = Helpers.CreateTestReview(score: 4);
 
-            var result = review.UpdateScore(5);
+            var result = review.Update(newScore: 5);
 
             result.IsSuccess.Should().BeTrue();
             review.Score.Should().Be(5);
@@ -125,7 +125,7 @@ namespace BookingService.UnitTests.DomainTests
         {
             var review = Helpers.CreateTestReview(score: 4);
 
-            var result = review.UpdateScore(4);
+            var result = review.Update(newScore: 4);
 
             result.IsSuccess.Should().BeTrue();
             review.Score.Should().Be(4);
@@ -139,7 +139,7 @@ namespace BookingService.UnitTests.DomainTests
         {
             var review = Helpers.CreateTestReview(score: 4);
 
-            var result = review.UpdateScore(invalidScore);
+            var result = review.Update(newScore: invalidScore);
 
             result.IsSuccess.Should().BeFalse();
             result.Error.Code.Should().Be("Review.InvalidScore");
@@ -151,9 +151,9 @@ namespace BookingService.UnitTests.DomainTests
         public void UpdateScore_AlreadyEdited_IsSuccessFalse()
         {
             var review = Helpers.CreateTestReview(score: 4);
-            review.UpdateScore(5);
+            review.Update(5);
 
-            var result = review.UpdateScore(3);
+            var result = review.Update(newScore: 3);
 
             result.IsSuccess.Should().BeFalse();
             result.Error.Code.Should().Be("Review.AlreadyEdited");
@@ -166,7 +166,7 @@ namespace BookingService.UnitTests.DomainTests
             var review = Helpers.CreateTestReview(text: "Old text version.");
             var newText = "New updated text version.";
 
-            var result = review.UpdateText(newText);
+            var result = review.Update(newText: newText);
 
             result.IsSuccess.Should().BeTrue();
             review.Text.Should().Be(newText);
@@ -179,7 +179,7 @@ namespace BookingService.UnitTests.DomainTests
             var text = "Identical text version.";
             var review = Helpers.CreateTestReview(text: text);
 
-            var result = review.UpdateText(text);
+            var result = review.Update(newText: text);
 
             result.IsSuccess.Should().BeTrue();
             review.Text.Should().Be(text);
@@ -191,7 +191,7 @@ namespace BookingService.UnitTests.DomainTests
         {
             var review = Helpers.CreateTestReview(text: "Valid original text version.");
 
-            var result = review.UpdateText("Short");
+            var result = review.Update(newText: "Short");
 
             result.IsSuccess.Should().BeFalse();
             result.Error.Code.Should().Be("Review.TextTooShort");
@@ -204,7 +204,7 @@ namespace BookingService.UnitTests.DomainTests
             var review = Helpers.CreateTestReview(text: "Valid original text version.");
             var longText = new string('a', 1001);
 
-            var result = review.UpdateText(longText);
+            var result = review.Update(newText: longText);
 
             result.IsSuccess.Should().BeFalse();
             result.Error.Code.Should().Be("Review.TextTooLong");
@@ -215,9 +215,9 @@ namespace BookingService.UnitTests.DomainTests
         public void UpdateText_AlreadyEdited_IsSuccessFalse()
         {
             var review = Helpers.CreateTestReview();
-            review.UpdateText("First valid modification.");
+            review.Update(newText: "First valid modification.");
 
-            var result = review.UpdateText("Second modification attempt.");
+            var result = review.Update(newText: "Second modification attempt.");
 
             result.IsSuccess.Should().BeFalse();
             result.Error.Code.Should().Be("Review.AlreadyEdited");
