@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using System.Data.Common;
@@ -34,6 +35,16 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            config.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "JWT:SigningKey", "SuperSecretKeyThatIsLongEnoughToSatisvevmpemavmacxj340amcgxgghe9bivegsbocsovoooonfyJwtRequirements123!" },
+                { "JWT:Issuer", "BookingService" },
+                { "JWT:Audience", "BookingService" }
+            });
+        });
+
         builder.ConfigureTestServices(services =>
         {
             // Видаляємо DbContext
