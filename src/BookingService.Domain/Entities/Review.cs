@@ -75,38 +75,51 @@ namespace Booking.Domain.Entities
             return Result<Review>.Success(review);
         }
 
-        public Result<Review> Update(int newScore, string newText)
+        public Result<Review> Update(int? newScore = null, string? newText = null)
         {
+            //input validation
             if (IsEdited)
             {
                 return Result<Review>.Failure(ReviewErrors.AlreadyEdited);
             }
 
-            if (newScore < 1 || newScore > 5)
+            if (newScore is not null && (newScore.Value < 1 || newScore.Value > 5))
             {
                 return Result<Review>.Failure(ReviewErrors.InvalidScore);
             }
 
-            if (newText.Length < 10)
+            if (newText is not null)
             {
-                return Result<Review>.Failure(ReviewErrors.TextTooShort);
+                if (newText.Length < 10)
+                {
+                    return Result<Review>.Failure(ReviewErrors.TextTooShort);
+                }
+                if (newText.Length > 1000)
+                {
+                    return Result<Review>.Failure(ReviewErrors.TextTooLong);
+                }
             }
 
-            if (newText.Length > 1000)
-            {
-                return Result<Review>.Failure(ReviewErrors.TextTooLong);
-            }
-
-            bool isScoreChanged = Score != newScore;
-            bool isTextChanged = Text != newText;
+            //is changed validation
+            bool isScoreChanged = newScore is not null && Score != newScore.Value;
+            bool isTextChanged = newText is not null && Text != newText;
 
             if (!isScoreChanged && !isTextChanged)
             {
                 return Result<Review>.Success(this);
             }
 
-            Score = newScore;
-            Text = newText;
+            //Recoording 
+            if (isScoreChanged)
+            {
+                Score = newScore!.Value;
+            }
+
+            if (isTextChanged)
+            {
+                Text = newText!;
+            }
+
             IsEdited = true;
 
             return Result<Review>.Success(this);
