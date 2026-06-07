@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using System.Data.Common;
@@ -33,6 +34,16 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            config.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["JWT:Secret"] = "SuperSecretKeyThatIsLongEnoughToSatisfyJwtRequirements123!",
+                ["JWT:Issuer"] = "BookingService",
+                ["JWT:Audience"] = "BookingService"
+            });
+        });
+
         builder.ConfigureTestServices(services =>
         {
             var descriptors = services.Where(d =>
