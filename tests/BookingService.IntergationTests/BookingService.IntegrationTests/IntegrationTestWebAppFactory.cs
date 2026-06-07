@@ -41,7 +41,8 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             {
                 { "JWT:SigningKey", "SuperSecretKeyThatIsLongEnoughToSatisvevmpemavmacxj340amcgxgghe9bivegsbocsovoooonfyJwtRequirements123!" },
                 { "JWT:Issuer", "BookingService" },
-                { "JWT:Audience", "BookingService" }
+                { "JWT:Audience", "BookingService" },
+                { "JWT: ExpirationInMinutes", "60" }
             });
         });
 
