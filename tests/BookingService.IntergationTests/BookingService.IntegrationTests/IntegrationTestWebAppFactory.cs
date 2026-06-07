@@ -81,6 +81,18 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             }
 
             services.AddScoped<IReviewQueries>(sp => new ReviewQueries(_connectionString));
+
+
+            var redisDescriptor = services.FirstOrDefault(d =>
+                d.ServiceType.FullName != null && d.ServiceType.FullName.Contains("StackExchangeRedis"));
+
+            if (redisDescriptor != null)
+            {
+                services.Remove(redisDescriptor);
+            }
+
+            // Замінюємо її на звичайний кеш в пам'яті, який працює без жодних ConnectionString
+            services.AddDistributedMemoryCache();
         });
     }
 
