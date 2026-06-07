@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using System.Data.Common;
@@ -21,31 +20,32 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     private readonly MsSqlContainer _dbContainer;
     private DbConnection _dbConnection = default!;
     private Respawner _respawner = default!;
-    private string _connectionString = default!;  // <-- збережи рядок підключення
+    private string _connectionString = default!;
 
     public IntegrationTestWebAppFactory()
     {
+        // 1. Фіксимо JWT конфігурацію для GitHub Actions прямо в процесі
+        Environment.SetEnvironmentVariable("JWT__Secret", "SuperSecretKeyThatIsLongEnoughToSatisfyJwtRequirements123!");
+        Environment.SetEnvironmentVariable("JWT__Issuer", "BookingService");
+        Environment.SetEnvironmentVariable("JWT__Audience", "BookingService");
+
+        // 2. Ініціалізуємо та запускаємо контейнер БД синхронно, 
+        // щоб рядок підключення був готовий ДО ConfigureWebHost
         _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
             .WithPassword("Password123!")
             .Build();
 
         _dbContainer.StartAsync().GetAwaiter().GetResult();
+
+        _connectionString = _dbContainer.GetConnectionString()
+            .Replace("Database=master", "Database=BookingTestDb");
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration((context, config) =>
-        {
-            config.AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["JWT:Secret"] = "SuperSecretKeyThatIsLongEnoughToSatisfyJwtRequirements123!",
-                ["JWT:Issuer"] = "BookingService",
-                ["JWT:Audience"] = "BookingService"
-            });
-        });
-
         builder.ConfigureTestServices(services =>
         {
+            // Заміна DbContext
             var descriptors = services.Where(d =>
                 d.ServiceType == typeof(DbContextOptions<AppDbContext>) ||
                 d.ServiceType == typeof(AppDbContext) ||
@@ -54,67 +54,39 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             foreach (var descriptor in descriptors)
                 services.Remove(descriptor);
 
-            _connectionString = _dbContainer.GetConnectionString()
-                .Replace("Database=master", "Database=BookingTestDb");
-
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(_connectionString));
 
-
-            var queriesDescriptorBooking = services.FirstOrDefault(d =>
-                d.ServiceType == typeof(IBookingQueries));
-
-            if (queriesDescriptorBooking != null)
-            {
-                services.Remove(queriesDescriptorBooking);
-            }
-
+            // Заміна Dapper Queries
+            var queriesDescriptorBooking = services.FirstOrDefault(d => d.ServiceType == typeof(IBookingQueries));
+            if (queriesDescriptorBooking != null) services.Remove(queriesDescriptorBooking);
             services.AddScoped<IBookingQueries>(sp => new BookingQueries(_connectionString));
 
-
-            var queriesDescriptorRoom = services.FirstOrDefault(d =>
-                d.ServiceType == typeof(IRoomQueries));
-
-            if (queriesDescriptorRoom != null)
-            {
-                services.Remove(queriesDescriptorRoom);
-            }
-
+            var queriesDescriptorRoom = services.FirstOrDefault(d => d.ServiceType == typeof(IRoomQueries));
+            if (queriesDescriptorRoom != null) services.Remove(queriesDescriptorRoom);
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(_connectionString));
 
-
-            var queriesDescriptorReview = services.FirstOrDefault(d =>
-                d.ServiceType == typeof(IReviewQueries));
-
-            if (queriesDescriptorReview != null)
-            {
-                services.Remove(queriesDescriptorReview);
-            }
-
+            var queriesDescriptorReview = services.FirstOrDefault(d => d.ServiceType == typeof(IReviewQueries));
+            if (queriesDescriptorReview != null) services.Remove(queriesDescriptorReview);
             services.AddScoped<IReviewQueries>(sp => new ReviewQueries(_connectionString));
 
-
+            // Заміна Redis на вбудований MemoryCache, щоб тести не шукали реальний Redis інстанс
             var redisDescriptor = services.FirstOrDefault(d =>
                 d.ServiceType.FullName != null && d.ServiceType.FullName.Contains("StackExchangeRedis"));
+            if (redisDescriptor != null) services.Remove(redisDescriptor);
 
-            if (redisDescriptor != null)
-            {
-                services.Remove(redisDescriptor);
-            }
-
-            // Замінюємо її на звичайний кеш в пам'яті, який працює без жодних ConnectionString
             services.AddDistributedMemoryCache();
         });
     }
 
     public async Task InitializeAsync()
     {
-        // Тільки для застосування міграцій/схеми
+        // Створення схеми БД
         using var scope = Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await dbContext.Database.EnsureCreatedAsync();
 
-        // Пряме з'єднання — не залежить від DbContext або scope
+        // Ініціалізація Respawner для очищення між тестами
         _dbConnection = new SqlConnection(_connectionString);
         await _dbConnection.OpenAsync();
 
