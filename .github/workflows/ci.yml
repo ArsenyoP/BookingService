@@ -4,11 +4,12 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
-  unit-tests:
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -20,26 +21,12 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore BookingService.sln
+
+    - name: Build project
+      run: dotnet build BookingService.sln --no-restore --configuration Release
 
     - name: Run Unit Tests
-      # Будуємо і тестуємо тільки юніт-проєкт в Release
-      run: dotnet test tests/BookingService.UnitTests/BookingService.UnitTests.csproj --configuration Release --verbosity normal
-
-  integration-tests:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-
-    - name: Restore dependencies
-      run: dotnet restore BookingService.sln
+      run: dotnet test tests/BookingService.UnitTests/BookingService.UnitTests.csproj --no-build --configuration Release
 
     - name: Run Integration Tests
-      # Прибираємо --no-build, щоб dotnet сам правильно зібрав контекст тестів на сервері.
-      # Зверни увагу на шлях: перевір у себе в репозиторії, чи папка дійсно пишеться як "IntergationTests" з помилкою.
-      run: dotnet test tests/BookingService.IntergationTests/BookingService.IntegrationTests/BookingService.IntegrationTests.csproj --configuration Release --verbosity normal
+      run: dotnet test tests/BookingService.IntergationTests/BookingService.IntegrationTests/BookingService.IntegrationTests.csproj --no-build --configuration Release
