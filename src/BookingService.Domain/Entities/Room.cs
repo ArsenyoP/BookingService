@@ -45,6 +45,7 @@ namespace Booking.Domain.Entities
             ListingId = listingId;
         }
 
+        //Raise domain event
         public static Result<Room> Create(
             string title,
             string description,
