@@ -3,7 +3,7 @@
 namespace Booking.Domain.DomainEvents
 {
     public sealed record RoomCreatedDomainEvent(Guid roomId,
-        double pricePerNight,
+        decimal pricePerNight,
         string city,
         string searchText) : IDomainEvent
     {
