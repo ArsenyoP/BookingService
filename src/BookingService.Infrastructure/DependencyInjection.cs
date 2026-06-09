@@ -18,10 +18,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.SemanticKernel.Connectors.Google;
+using Qdrant.Client;
 using Quartz;
 using Web.API.Models.Settings;
 
@@ -131,6 +134,17 @@ namespace Booking.Infrastructure
                 options.Configuration = configuration["Redis:Connection"];
                 options.InstanceName = "Output_Cache_";
             });
+
+            var googleApiKey = configuration["GoogleAI:ApiKey"];
+            services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
+                new GoogleAIEmbeddingGenerator(
+                    apiKey: googleApiKey,
+                    modelId: "text-embedding-004"
+                ));
+
+            // 2. Реєструємо офіційний Qdrant Client (порт 6334)
+            var qdrantUrl = configuration["Qdrant:Url"];
+            services.AddSingleton<QdrantClient>(sp => new QdrantClient(new Uri(qdrantUrl)));
 
             services.AddHealthChecks()
                 .AddRedis(configuration["Redis:Connection"]!)

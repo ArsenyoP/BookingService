@@ -3,6 +3,8 @@ using Booking.Application;
 using Booking.Infrastructure;
 using Booking.Infrastructure.ExtensionMethods;
 using HealthChecks.UI.Client;
+using Qdrant.Client;
+using Qdrant.Client.Grpc;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -65,6 +67,20 @@ namespace Booking.API
             //        await seeder.SeedAsync();
             //    }
             //}
+            using (var scope = app.Services.CreateScope())
+            {
+                var qdrantClient = scope.ServiceProvider.GetRequiredService<IQdrantClient>();
+                var collections = await qdrantClient.ListCollectionsAsync();
+
+                if (!collections.Contains("rooms"))
+                {
+                    await qdrantClient.CreateCollectionAsync(
+                        collectionName: "rooms",
+                        vectorsConfig: new VectorParams { Size = 768, Distance = Distance.Cosine }
+                    );
+                }
+            }
+
 
             app.MapHealthChecks("health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
             {
