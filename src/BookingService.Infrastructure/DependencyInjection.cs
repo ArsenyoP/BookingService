@@ -137,10 +137,18 @@ namespace Booking.Infrastructure
 
             var googleApiKey = configuration["GoogleAI:ApiKey"];
             services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
-                new GoogleAIEmbeddingGenerator(
+            {
+                var httpClient = new HttpClient
+                {
+                    BaseAddress = new Uri("https://generativelanguage.googleapis.com/")
+                };
+
+                return new GoogleAIEmbeddingGenerator(
                     apiKey: googleApiKey,
-                    modelId: "text-embedding-004"
-                ));
+                    modelId: "gemini-embedding-2",
+                    httpClient: httpClient
+                );
+            });
 
             // 2. Реєструємо офіційний Qdrant Client (порт 6334)
             var qdrantUrl = configuration["Qdrant:Url"];
@@ -163,6 +171,7 @@ namespace Booking.Infrastructure
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<IEmbaddingService, EmbaddingService>();
             services.AddScoped<DataSeeder>();
 
             services.AddHttpClient<IOpenWeatherService, OpenWeatherService>();
