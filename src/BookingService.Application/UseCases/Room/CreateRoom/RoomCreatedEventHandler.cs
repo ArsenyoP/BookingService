@@ -1,13 +1,14 @@
 ﻿using Booking.Domain.DomainEvents;
+using Booking.Domain.Interfaces.Services;
 using MediatR;
 
 namespace Booking.Application.UseCases.Room.CreateRoom
 {
-    public sealed class RoomCreatedEventHandler : INotificationHandler<RoomCreatedDomainEvent>
+    public sealed class RoomCreatedEventHandler(IEmbaddingService _embaddingService) : INotificationHandler<RoomCreatedDomainEvent>
     {
-        public Task Handle(RoomCreatedDomainEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(RoomCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _embaddingService.EmbaddeEvent(domainEvent, cancellationToken);
         }
     }
 }
