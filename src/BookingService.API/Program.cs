@@ -76,7 +76,7 @@ namespace Booking.API
                 {
                     await qdrantClient.CreateCollectionAsync(
                         collectionName: "rooms",
-                        vectorsConfig: new VectorParams { Size = 768, Distance = Distance.Cosine }
+                        vectorsConfig: new VectorParams { Size = 3072, Distance = Distance.Cosine }
                     );
                 }
             }
