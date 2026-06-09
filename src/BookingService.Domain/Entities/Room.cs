@@ -53,7 +53,8 @@ namespace Booking.Domain.Entities
             RoomType type,
             decimal pricePerNight,
             int adultsCapacity,
-            int childrenCapacity, Guid listingId)
+            int childrenCapacity, Guid listingId,
+            string city = "Unknown")
         {
             if (string.IsNullOrWhiteSpace(title))
                 return Result<Room>.Failure(RoomErrors.EmptyTitle);
@@ -72,7 +73,7 @@ namespace Booking.Domain.Entities
 
             room.RaiseDomainEvent(new RoomCreatedDomainEvent(room.Id,
                 room.PricePerNight,
-                room._listing.Address.City,
+                city,
                 searchText));
 
             return Result<Room>.Success(room);

@@ -27,7 +27,8 @@ public class CreateRoomHandler(IRoomRepository _roomRepository, IListingReposito
             request.PricePerNight,
             request.AdultsCapacity,
             request.ChildrenCapacity,
-            listing.Id);
+            listing.Id,
+            listing.Address.City);
 
         if (!roomResult.IsSuccess || roomResult.Value is null)
         {
