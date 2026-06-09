@@ -144,7 +144,7 @@ namespace Booking.Infrastructure
 
             // 2. Реєструємо офіційний Qdrant Client (порт 6334)
             var qdrantUrl = configuration["Qdrant:Url"];
-            services.AddSingleton<QdrantClient>(sp => new QdrantClient(new Uri(qdrantUrl)));
+            services.AddSingleton<IQdrantClient>(sp => new QdrantClient(new Uri(qdrantUrl)));
 
             services.AddHealthChecks()
                 .AddRedis(configuration["Redis:Connection"]!)
