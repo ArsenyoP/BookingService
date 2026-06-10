@@ -28,8 +28,6 @@ namespace Booking.Application.UseCases.Amenities.AddAmenityToRoom
                 return Result<Guid>.Failure(result.Error);
             }
 
-            room.
-
             await _unitOfWork.SaveChangesAsync(ct);
 
             return Result<Guid>.Success(amenity.Id);

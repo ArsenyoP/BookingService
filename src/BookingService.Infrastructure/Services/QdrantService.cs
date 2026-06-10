@@ -7,7 +7,7 @@ using static Booking.Application.Interfaces.Services.IQdrantService;
 namespace Booking.Infrastructure.Services
 {
     public class QdrantService(IEmbeddingGenerator<string, Embedding<float>> _embeddingGenerator,
-        QdrantClient _qdrantClient) : IQdrantService
+        IQdrantClient _qdrantClient) : IQdrantService
     {
         private const string CollectionName = "rooms";
 
@@ -54,6 +54,7 @@ namespace Booking.Infrastructure.Services
                     RoomId: Guid.Parse(hit.Id.Uuid),
                     Score: hit.Score
                 ))
+                .Where(x => x.Score >= 0.70)
                 .ToList();
         }
     }

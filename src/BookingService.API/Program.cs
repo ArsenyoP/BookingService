@@ -106,6 +106,7 @@ namespace Booking.API
             app.MapAuthEndpoints();
             app.MapAmenityEndpoints();
             app.MapBookingEndpoints();
+            app.MapChatEndpoints();
             app.Run();
         }
     }
