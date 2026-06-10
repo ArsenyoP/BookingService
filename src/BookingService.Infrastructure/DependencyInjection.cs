@@ -23,6 +23,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.Google;
 using Qdrant.Client;
 using Quartz;
@@ -150,6 +151,20 @@ namespace Booking.Infrastructure
                 );
             });
 
+            services.AddSingleton<IChatCompletionService>(sp =>
+            {
+                var httpClient = new HttpClient
+                {
+                    BaseAddress = new Uri("https://generativelanguage.googleapis.com/")
+                };
+
+                return new GoogleAIGeminiChatCompletionService(
+                    modelId: "gemini-2.5-flash",
+                    apiKey: googleApiKey,
+                    httpClient: httpClient
+                );
+            });
+
             // 2. Реєструємо офіційний Qdrant Client (порт 6334)
             var qdrantUrl = configuration["Qdrant:Url"];
             services.AddSingleton<IQdrantClient>(sp => new QdrantClient(new Uri(qdrantUrl)));
@@ -172,6 +187,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<IEmbaddingService, EmbaddingService>();
+            services.AddScoped<IChatService, ChatService>();
             services.AddScoped<DataSeeder>();
 
             services.AddHttpClient<IOpenWeatherService, OpenWeatherService>();
