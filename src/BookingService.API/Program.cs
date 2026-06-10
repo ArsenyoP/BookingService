@@ -67,19 +67,23 @@ namespace Booking.API
             //        await seeder.SeedAsync();
             //    }
             //}
-            using (var scope = app.Services.CreateScope())
+            if (!app.Environment.IsEnvironment("Testing"))
             {
-                var qdrantClient = scope.ServiceProvider.GetRequiredService<IQdrantClient>();
-                var collections = await qdrantClient.ListCollectionsAsync();
-
-                if (!collections.Contains("rooms"))
+                using (var scope = app.Services.CreateScope())
                 {
-                    await qdrantClient.CreateCollectionAsync(
-                        collectionName: "rooms",
-                        vectorsConfig: new VectorParams { Size = 3072, Distance = Distance.Cosine }
-                    );
+                    var qdrantClient = scope.ServiceProvider.GetRequiredService<IQdrantClient>();
+                    var collections = await qdrantClient.ListCollectionsAsync();
+
+                    if (!collections.Contains("rooms"))
+                    {
+                        await qdrantClient.CreateCollectionAsync(
+                            collectionName: "rooms",
+                            vectorsConfig: new VectorParams { Size = 3072, Distance = Distance.Cosine }
+                        );
+                    }
                 }
             }
+
 
 
             app.MapHealthChecks("health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
