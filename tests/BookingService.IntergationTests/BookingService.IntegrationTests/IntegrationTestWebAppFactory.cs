@@ -44,6 +44,11 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
                 { "JWT:Audience", "BookingService" },
                 { "JWT:ExpirationInMinutes", "60" }
             });
+
+            config.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "Qdrant:Url", "http://localhost:6334" }
+            });
         });
 
         builder.ConfigureTestServices(services =>
