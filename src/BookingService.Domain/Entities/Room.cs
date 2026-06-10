@@ -86,7 +86,16 @@ namespace Booking.Domain.Entities
                 return Result.Failure(RoomErrors.AmenityAlreadyExists);
             }
 
+
             _amenity.Add(amenity);
+
+            string searchText = GetSearchText(this);
+
+            this.RaiseDomainEvent(new RoomCreatedDomainEvent(this.Id,
+                this.PricePerNight,
+                this._listing.Address.City,
+                searchText));
+
             return Result.Success();
         }
 
