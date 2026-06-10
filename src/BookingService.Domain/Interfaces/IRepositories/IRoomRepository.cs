@@ -5,5 +5,6 @@ namespace Booking.Domain.Interfaces.IRepositories
     public interface IRoomRepository : IBaseRepository<Room>
     {
         public Task<Room?> GetByIdWithAmenities(Guid Id, CancellationToken ct = default);
+        public Task<List<Room?>> GetByIds(IEnumerable<Guid> ids, CancellationToken ct = default);
     }
 }
