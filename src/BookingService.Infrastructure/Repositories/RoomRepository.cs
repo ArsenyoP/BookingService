@@ -21,7 +21,10 @@ namespace Booking.Infrastructure.Repositories
 
         public async Task<Room?> GetByIdWithAmenities(Guid Id, CancellationToken ct = default)
         {
-            var result = await dbContext.Rooms.Include(r => r.Amenities).FirstOrDefaultAsync(r => r.Id == Id);
+            var result = await dbContext.Rooms
+                .Include(r => r.Amenities)
+                .Include("_listing")
+                .FirstOrDefaultAsync(r => r.Id == Id);
 
             return result;
         }
