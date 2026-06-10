@@ -36,6 +36,8 @@ namespace BookingService.UnitTests.ApplicationTests.AmenitiesApplicationTests
             var room = Helpers.CreateTestRoom();
             var amenity = Helpers.CreateTestAmenity("Wi-Fi");
             var command = new AddAmenityToRoomCommand(room.Id, amenity.Name);
+            var listing = Helpers.CreateTestListing();
+            room.SetListing(listing);
 
             _roomRepositoryMock.Setup(x => x.GetByIdWithAmenities(command.RoomId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(room);
@@ -92,6 +94,9 @@ namespace BookingService.UnitTests.ApplicationTests.AmenitiesApplicationTests
             var command = new AddAmenityToRoomCommand(Guid.NewGuid(), "Wi-Fi");
             var amenity = Helpers.CreateTestAmenity("Wi-Fi");
             var room = Helpers.CreateTestRoom();
+            var listing = Helpers.CreateTestListing();
+
+            room.SetListing(listing);
             room.AddAmentity(amenity);
 
             _amenityQueriesMock

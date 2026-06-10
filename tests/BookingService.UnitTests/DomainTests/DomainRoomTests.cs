@@ -8,7 +8,9 @@ namespace BookingService.UnitTests.DomainTests
     {
         private static Room CreateTestRoom(decimal price = 100, int adults = 2, int children = 1)
         {
-            return Room.Create("Deluxe Room", "A beautiful room", RoomType.Deluxe, price, adults, children, Guid.NewGuid()).Value!;
+            var room = Room.Create("Deluxe Room", "A beautiful room", RoomType.Deluxe, price, adults, children, Guid.NewGuid()).Value!;
+
+            return room;
         }
 
         private static Amenity CreateTestAmenity()
@@ -84,7 +86,9 @@ namespace BookingService.UnitTests.DomainTests
         {
             var room = CreateTestRoom();
             var amenity = CreateTestAmenity();
+            var listing = Helpers.CreateTestListing();
 
+            room.SetListing(listing);
             var result = room.AddAmentity(amenity);
 
             result.IsSuccess.Should().BeTrue();
@@ -96,8 +100,10 @@ namespace BookingService.UnitTests.DomainTests
         {
             var room = CreateTestRoom();
             var amenity = CreateTestAmenity();
-            room.AddAmentity(amenity);
+            var listing = Helpers.CreateTestListing();
+            room.SetListing(listing);
 
+            room.AddAmentity(amenity);
             var result = room.AddAmentity(amenity);
 
             result.IsSuccess.Should().BeFalse();
@@ -110,8 +116,10 @@ namespace BookingService.UnitTests.DomainTests
         {
             var room = CreateTestRoom();
             var amenity = CreateTestAmenity();
-            room.AddAmentity(amenity);
+            var listing = Helpers.CreateTestListing();
+            room.SetListing(listing);
 
+            room.AddAmentity(amenity);
             var result = room.RemoveAmenity(amenity);
 
             result.IsSuccess.Should().BeTrue();

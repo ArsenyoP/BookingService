@@ -36,7 +36,9 @@ namespace BookingService.UnitTests.ApplicationTests.AmenitiesApplicationTests
             var room = Helpers.CreateTestRoom();
             var amenity = Helpers.CreateTestAmenity("Wi-Fi");
             var command = new RemoveAmenityFromRoomCommand(room.Id, amenity.Name);
+            var listing = Helpers.CreateTestListing();
 
+            room.SetListing(listing);
             room.AddAmentity(amenity);
 
             _roomRepositoryMock
