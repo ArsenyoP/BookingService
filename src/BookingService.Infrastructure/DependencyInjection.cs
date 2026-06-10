@@ -183,6 +183,7 @@ namespace Booking.Infrastructure
             services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IQdrantService, QdrantService>();
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, CacheService>();
