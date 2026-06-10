@@ -51,7 +51,8 @@ namespace Booking.Application.UseCases.Chat.GetByText
                     ? string.Join(", ", room.Amenities.Select(a => a.Name))
                     : "не вказано";
 
-                contextBuilder.AppendLine($"- ID: {room.Id}, Назва: {room.Title}, Ціна: {room.PricePerNight} грн/ніч. Зручності: {amenities}");
+                contextBuilder.AppendLine(@$"- ID: {room.Id}, Назва: {room.Title}, Ціна: {room.PricePerNight} грн/ніч. Зручності: {amenities}.
+                    Кількість місць для дорослих: {room.AdultsCapacity}. Кількість місць для дітей: {room.ChildrenCapacity} ");
 
                 double score = searchMatches.First(m => m.RoomId == room.Id).Score;
                 matchedRoomsDto.Add(new RoomSearchMatchDto(room.Id, room.Title, room.PricePerNight, score));
@@ -63,6 +64,7 @@ namespace Booking.Application.UseCases.Chat.GetByText
                         2. Спілкуйся природно, як живий менеджер підтримки. Формуй гарні списки без коду, технічних назв або UUID-ів.
                         3. Описуй лише назву, ціну, опис та зручності людською мовою.
                         4. Тобі потрібно не надто нав'язливо, але продавати бронювання, тобто без негативу, де це не необхідно.
+                        5. Проте не треба про кожну кімнату розказувати сухі дані, тільки основне, так як повні дані є у об'єкті який йде разом з цією відповідю.
                         Ось список кімнат, які найбільше підходять гостю, по них і орієнтуйся.
                 {contextBuilder}";
 

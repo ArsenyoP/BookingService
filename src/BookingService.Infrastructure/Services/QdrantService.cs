@@ -54,7 +54,6 @@ namespace Booking.Infrastructure.Services
                     RoomId: Guid.Parse(hit.Id.Uuid),
                     Score: hit.Score
                 ))
-                .Where(x => x.Score >= 0.70)
                 .ToList();
         }
     }
