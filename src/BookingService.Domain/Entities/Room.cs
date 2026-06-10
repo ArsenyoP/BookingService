@@ -99,6 +99,14 @@ namespace Booking.Domain.Entities
             return Result.Success();
         }
 
+        internal void SetListing(Listing listing)
+        {
+            ArgumentNullException.ThrowIfNull(listing);
+
+            _listing = listing;
+            ListingId = listing.Id;
+        }
+
         public Result RemoveAmenity(Amenity amenity)
         {
             var existingAmenity = _amenity.FirstOrDefault(x => x.Id == amenity.Id);

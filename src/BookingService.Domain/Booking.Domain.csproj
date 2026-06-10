@@ -10,6 +10,9 @@
 	<ItemGroup>
 		<PackageReference Include="MediatR" Version="14.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
+		
+		<InternalsVisibleTo Include="BookingService.IntegrationTests" />
+		<InternalsVisibleTo Include="BookingService.UnitTests" />
 	</ItemGroup>
 
 </Project>
