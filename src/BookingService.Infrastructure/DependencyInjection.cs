@@ -166,7 +166,7 @@ namespace Booking.Infrastructure
             });
 
             // 2. Реєструємо офіційний Qdrant Client (порт 6334)
-            var qdrantUrl = configuration["Qdrant:Url"] ?? "test-coonnection-qdrant";
+            var qdrantUrl = configuration["Qdrant:Url"] ?? "http://localhost:6334";
             services.AddSingleton<IQdrantClient>(sp => new QdrantClient(new Uri(qdrantUrl)));
 
             services.AddHealthChecks()
