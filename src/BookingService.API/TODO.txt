@@ -23,6 +23,7 @@ Refresh token - ✅
 Docker - ✅
 Minimal API - ✅
 Added external API for weather - ✅
+AI Chat RAG with Qdrant for searching rooms - ✅
 
 CI/CD
 Move seeding to separate endpoint

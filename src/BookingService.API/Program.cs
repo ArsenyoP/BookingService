@@ -51,22 +51,6 @@ namespace Booking.API
 
             var app = builder.Build();
 
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    if (app.Environment.IsDevelopment())
-            //    {
-            //        using var scope = app.Services.CreateScope();
-
-            //        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            //        Log.Information("Applying pending database migrations...");
-            //        await dbContext.Database.MigrateAsync();
-            //        Log.Information("Database migrations applied successfully.");
-
-            //        var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
-            //        await seeder.SeedAsync();
-            //    }
-            //}
             if (!app.Environment.IsEnvironment("Testing"))
             {
                 using (var scope = app.Services.CreateScope())
@@ -81,10 +65,18 @@ namespace Booking.API
                             vectorsConfig: new VectorParams { Size = 3072, Distance = Distance.Cosine }
                         );
                     }
+
+                    if (!collections.Contains("listings"))
+                    {
+                        await qdrantClient.CreateCollectionAsync(
+                            collectionName: "listings",
+                            vectorsConfig: new VectorParams { Size = 3072, Distance = Distance.Cosine }
+                        );
+                    }
                 }
             }
 
-
+            Console.WriteLine(app.Environment);
 
             app.MapHealthChecks("health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
             {
