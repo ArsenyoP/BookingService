@@ -9,7 +9,7 @@ namespace Booking.Infrastructure.Services
     public class QdrantService(IEmbeddingGenerator<string, Embedding<float>> _embeddingGenerator,
         IQdrantClient _qdrantClient) : IQdrantService
     {
-        public async Task<IReadOnlyList<IQdrantService.VectorSearchMatch>> SearchAsync(string userMessage,
+        public async Task<IReadOnlyList<VectorSearchMatch>> SearchAsync(string userMessage,
             string city, decimal? maxPrice, int limit, string CollectionName, CancellationToken ct)
         {
             var embeddingResult = await _embeddingGenerator.GenerateAsync(userMessage, cancellationToken: ct);
@@ -49,7 +49,7 @@ namespace Booking.Infrastructure.Services
 
             return searchResults
                 .Select(hit => new VectorSearchMatch(
-                    RoomId: Guid.Parse(hit.Id.Uuid),
+                    Id: Guid.Parse(hit.Id.Uuid),
                     Score: hit.Score
                 ))
                 .ToList();
