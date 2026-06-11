@@ -5,6 +5,7 @@ namespace Booking.Domain.Interfaces.Services
 {
     public interface IEmbaddingService
     {
-        Task EmbaddeEvent(RoomCreatedDomainEvent domainEvent, CancellationToken ct = default);
+        Task EmbaddeRoomCreatedEvent(RoomCreatedDomainEvent domainEvent, CancellationToken ct = default);
+        Task EmbaddeListingCreatedEvent(LisitngCreatedDomainEvent domainEvent, CancellationToken ct = default);
     }
 }
