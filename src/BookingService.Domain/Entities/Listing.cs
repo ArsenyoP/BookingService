@@ -1,4 +1,5 @@
 using Booking.Domain.Common;
+using Booking.Domain.DomainEvents;
 using Booking.Domain.Enums;
 using Booking.Domain.Errors;
 using Booking.Domain.ValueObjects;
@@ -44,6 +45,12 @@ namespace Booking.Domain.Entities
 
             var listing = new Listing(title, description, address, listingType);
 
+
+            var searchText = GetSearchText(listing);
+
+            listing.RaiseDomainEvent(new LisitngCreatedDomainEvent(listing.Id, listing.Address.City,
+                listing.Address.Street, searchText));
+
             return Result<Listing>.Success(listing);
         }
 
@@ -76,6 +83,17 @@ namespace Booking.Domain.Entities
             AverageRating = (AverageRating * ReviewsCount + newScore) / (ReviewsCount + 1);
             ReviewsCount++;
             return Result.Success();
+        }
+
+        public static string GetSearchText(Listing listing)
+        {
+            string amenitiesText = listing._amenity != null && listing._amenity.Any()
+                ? string.Join(", ", listing._amenity)
+                : "не вказано";
+
+            return $"Назва готелю: {listing.Title.Trim()}. " +
+                   $"Опис готелю: {listing.Description.Trim()}. " +
+                   $"Зручності та послуги у номері: {amenitiesText}.";
         }
     }
 }
