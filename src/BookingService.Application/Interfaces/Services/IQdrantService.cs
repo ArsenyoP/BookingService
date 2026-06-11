@@ -9,6 +9,7 @@
                 string city,
                 decimal? maxPrice,
                 int limit,
+                string CollectionName,
                 CancellationToken ct);
     }
 }

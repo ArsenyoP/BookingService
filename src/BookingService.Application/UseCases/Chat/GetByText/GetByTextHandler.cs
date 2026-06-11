@@ -24,6 +24,7 @@ namespace Booking.Application.UseCases.Chat.GetByText
                 request.city,
                 request.maxPrice,
                 limit: 4,
+                CollectionName: "rooms",
                 ct);
 
             if (!searchMatches.Any())

@@ -9,10 +9,8 @@ namespace Booking.Infrastructure.Services
     public class QdrantService(IEmbeddingGenerator<string, Embedding<float>> _embeddingGenerator,
         IQdrantClient _qdrantClient) : IQdrantService
     {
-        private const string CollectionName = "rooms";
-
         public async Task<IReadOnlyList<IQdrantService.VectorSearchMatch>> SearchAsync(string userMessage,
-            string city, decimal? maxPrice, int limit, CancellationToken ct)
+            string city, decimal? maxPrice, int limit, string CollectionName, CancellationToken ct)
         {
             var embeddingResult = await _embeddingGenerator.GenerateAsync(userMessage, cancellationToken: ct);
             var queryVector = embeddingResult.Vector.ToArray();
