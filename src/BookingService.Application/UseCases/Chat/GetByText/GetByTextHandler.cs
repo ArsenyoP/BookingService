@@ -4,15 +4,14 @@ using Booking.Application.Interfaces.Services;
 using Booking.Domain.Common;
 using Booking.Domain.Errors;
 using Booking.Domain.Interfaces.IRepositories;
-using Booking.Domain.Interfaces.Services;
 using System.Text;
+using static Booking.Application.DTOs.Chat.SearchMatchDtos;
 
 namespace Booking.Application.UseCases.Chat.GetByText
 {
-    public record RoomSearchMatchDto(Guid Id, string Title, decimal Price, double Confidence);
 
     public class GetByTextHandler(IChatService _chatService,
-        IEmbaddingService _embaddingService, IQdrantService _qdrantService,
+        IQdrantService _qdrantService,
         IRoomRepository _roomRepository) : IQueryHandler<GetByTextQuery, ChatRoomResponse>
     {
         public async Task<Result<ChatRoomResponse>> Handle(GetByTextQuery request, CancellationToken ct)
@@ -55,7 +54,7 @@ namespace Booking.Application.UseCases.Chat.GetByText
                     Кількість місць для дорослих: {room.AdultsCapacity}. Кількість місць для дітей: {room.ChildrenCapacity} ");
 
                 double score = searchMatches.First(m => m.RoomId == room.Id).Score;
-                matchedRoomsDto.Add(new RoomSearchMatchDto(room.Id, room.Title, room.PricePerNight, score));
+                matchedRoomsDto.Add(new RoomSearchMatchDto(room.Id, room.Title, room.PricePerNight, room.AverageRating, score));
             }
 
             string systemPrompt = $@"Твоє завдання — допомогти користувачу підібрати варіант.

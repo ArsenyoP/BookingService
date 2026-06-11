@@ -2,5 +2,5 @@
 
 namespace Booking.Application.DTOs.Chat
 {
-    public sealed record ChatRoomResponse(string aiResponseText, List<RoomSearchMatchDto> rooms);
+    public sealed record ChatListingResponse(string aiResponse, List<ListingSearchMatchDto> listings);
 }
