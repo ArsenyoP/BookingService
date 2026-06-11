@@ -2,7 +2,7 @@
 {
     public interface IQdrantService
     {
-        public record VectorSearchMatch(Guid RoomId, double Score);
+        public record VectorSearchMatch(Guid Id, double Score);
 
         Task<IReadOnlyList<VectorSearchMatch>> SearchAsync(
                 string userMessage,

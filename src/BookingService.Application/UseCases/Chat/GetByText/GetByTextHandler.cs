@@ -39,7 +39,7 @@ namespace Booking.Application.UseCases.Chat.GetByText
 
 
 
-            var roomIds = searchMatches.Select(m => m.RoomId).ToList();
+            var roomIds = searchMatches.Select(m => m.Id).ToList();
             var roomsFromDb = await _roomRepository.GetByIds(roomIds, ct);
 
             var contextBuilder = new StringBuilder();
@@ -54,7 +54,7 @@ namespace Booking.Application.UseCases.Chat.GetByText
                 contextBuilder.AppendLine(@$"- ID: {room.Id}, Назва: {room.Title}, Ціна: {room.PricePerNight} грн/ніч. Зручності: {amenities}.
                     Кількість місць для дорослих: {room.AdultsCapacity}. Кількість місць для дітей: {room.ChildrenCapacity} ");
 
-                double score = searchMatches.First(m => m.RoomId == room.Id).Score;
+                double score = searchMatches.First(m => m.Id == room.Id).Score;
                 matchedRoomsDto.Add(new RoomSearchMatchDto(room.Id, room.Title, room.PricePerNight, room.AverageRating, score));
             }
 
@@ -75,8 +75,6 @@ namespace Booking.Application.UseCases.Chat.GetByText
             );
 
             return Result<ChatRoomResponse>.Success(new ChatRoomResponse(aiAnswer, matchedRoomsDto));
-
-            throw new NotImplementedException();
         }
     }
 }

@@ -3,5 +3,5 @@ using Booking.Application.DTOs.Chat;
 
 namespace Booking.Application.UseCases.Chat.GetListingsByText
 {
-    public sealed record GetListingsByTextQuery : IQuery<ChatListingResponse>;
+    public sealed record GetListingsByTextQuery(string userText, string city) : IQuery<ChatListingResponse>;
 }
