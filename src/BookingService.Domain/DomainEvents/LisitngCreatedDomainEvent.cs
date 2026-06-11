@@ -2,7 +2,7 @@
 
 namespace Booking.Domain.DomainEvents
 {
-    internal class LisitngCreatedDomainEvent(Guid listingId,
+    public sealed record LisitngCreatedDomainEvent(Guid listingId,
         string city,
         string street,
         string searchText) : IDomainEvent;

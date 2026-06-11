@@ -20,7 +20,6 @@ namespace Booking.API.Endpoints
             group.MapGet("/{id:guid}", GetById);
 
             group.MapPost("/", CreateListing)
-                 .RequireAuthorization()
                  .RequireRateLimiting("write-limiter");
 
             group.MapDelete("/{id:guid}", DeleteListing);

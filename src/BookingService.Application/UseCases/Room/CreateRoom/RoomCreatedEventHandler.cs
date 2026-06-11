@@ -8,7 +8,7 @@ namespace Booking.Application.UseCases.Room.CreateRoom
     {
         public async Task Handle(RoomCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
-            await _embaddingService.EmbaddeEvent(domainEvent, cancellationToken);
+            await _embaddingService.EmbaddeRoomCreatedEvent(domainEvent, cancellationToken);
         }
     }
 }
