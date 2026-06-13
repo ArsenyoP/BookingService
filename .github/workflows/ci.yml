@@ -1,13 +1,13 @@
-name: .NET Core CI
+﻿name: .NET Core CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,14 +19,53 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.sln', '**/*.csproj', '**/*.props', '**/*.targets') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Restore dependencies
       run: dotnet restore BookingService.sln
 
     - name: Build project
       run: dotnet build BookingService.sln --no-restore --configuration Release
 
-    - name: Run Unit Tests
-      run: dotnet test tests/BookingService.UnitTests/BookingService.UnitTests.csproj --no-build --configuration Release
+    - name: Upload build output
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: |
+          **/bin/Release
+          **/obj/Release
 
-    - name: Run Integration Tests
-      run: dotnet test tests/BookingService.IntergationTests/BookingService.IntegrationTests/BookingService.IntegrationTests.csproj --no-build --configuration Release
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-project:
+          - name: Unit
+            path: tests/BookingService.UnitTests/BookingService.UnitTests.csproj
+          - name: Integration
+            path: tests/BookingService.IntergationTests/BookingService.IntegrationTests/BookingService.IntegrationTests.csproj
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Download build output
+      uses: actions/download-artifact@v4
+      with:
+        name: build-output
+        path: .
+
+    - name: Run ${{ matrix.test-project.name }} Tests
+      run: dotnet test ${{ matrix.test-project.path }} --no-build --configuration Release
