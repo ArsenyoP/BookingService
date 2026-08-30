@@ -43,5 +43,6 @@ MassTransit
 Slice architecture 
 Message in telegram using service in python if unhealth
 Azure
+SignalR
 
 
