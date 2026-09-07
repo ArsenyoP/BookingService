@@ -166,8 +166,24 @@ namespace Booking.Infrastructure
             });
 
             // 2. Реєструємо офіційний Qdrant Client (порт 6334)
-            var qdrantUrl = configuration["Qdrant:Url"] ?? "http://localhost:6334";
-            services.AddSingleton<IQdrantClient>(sp => new QdrantClient(new Uri(qdrantUrl)));
+            services.AddSingleton<QdrantClient>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var host = configuration["Qdrant:Host"] ?? "localhost";
+                var port = int.Parse(configuration["Qdrant:Port"] ?? "6334");
+
+                return new QdrantClient(host: host, port: port);
+            });
+
+            services.AddSingleton<IQdrantClient>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+
+                var host = configuration["Qdrant:Host"] ?? "localhost";
+                var port = int.Parse(configuration["Qdrant:Port"] ?? "6334");
+
+                return new QdrantClient(host: host, port: port);
+            });
 
             services.AddHealthChecks()
                 .AddRedis(configuration["Redis:Connection"]!)
