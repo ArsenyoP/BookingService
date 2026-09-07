@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Details - BookingService</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">BookingService</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="listing.html">Listings</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="listing-detail">
+                <div class="listing-gallery">
+                    <img src="../assets/placeholder.svg" alt="Main image">
+                    <div class="thumbnails">
+                        <img src="../assets/placeholder.svg" alt="Thumb 1">
+                        <img src="../assets/placeholder.svg" alt="Thumb 2">
+                        <img src="../assets/placeholder.svg" alt="Thumb 3">
+                    </div>
+                </div>
+                <div class="listing-info">
+                    <h1>Cozy Apartment in City Center</h1>
+                    <p class="location">New York, USA</p>
+                    <div class="rating">
+                        ⭐⭐⭐⭐☆ (4.2) <span>(128 reviews)</span>
+                    </div>
+                    <p class="price">$120/night</p>
+                    <button class="btn-primary btn-block">Reserve Now</button>
+                </div>
+            </div>
+
+            <section class="description">
+                <h2>About this space</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </section>
+
+            <section class="amenities">
+                <h2>Amenities</h2>
+                <div class="amenities-grid">
+                    <div class="amenity-item">
+                        <i class="icon wifi"></i>
+                        <span>WiFi</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="icon kitchen"></i>
+                        <span>Kitchen</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="icon ac"></i>
+                        <span>Air Conditioning</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="icon parking"></i>
+                        <span>Free Parking</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="icon washer"></i>
+                        <span>Washer</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="icon elevator"></i>
+                        <span>Elevator</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="host">
+                <h2>About the Host</h2>
+                <div class="host-info">
+                    <img src="../assets/placeholder.svg" alt="Host avatar" class="host-avatar">
+                    <div>
+                        <h3>John Doe</h3>
+                        <p>Superhost • Member since 2020</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="reviews">
+                <h2>Reviews (<span id="review-count">128</span>)</h2>
+                <div class="review-form">
+                    <h3>Leave a review</h3>
+                    <form id="reviewForm">
+                        <div class="rating-input">
+                            <label>Rating:</label>
+                            <div class="stars">
+                                <span class="star" data-value="1">☆</span>
+                                <span class="star" data-value="2">☆</span>
+                                <span class="star" data-value="3">☆</span>
+                                <span class="star" data-value="4">☆</span>
+                                <span class="star" data-value="5">☆</span>
+                            </div>
+                            <input type="hidden" id="ratingValue" name="rating" value="0">
+                        </div>
+                        <textarea placeholder="What did you love (or not) about your stay?" required></textarea>
+                        <button type="submit" class="btn-primary">Submit Review</button>
+                    </form>
+                </div>
+                <div class="review-list">
+                    <!-- Review cards would go here -->
+                    <div class="review-card">
+                        <div class="review-header">
+                            <h4>Emily R.</h4>
+                            <div class="review-rating">⭐⭐⭐⭐☆</div>
+                            <time datetime="2024-05-12">May 12, 2024</time>
+                        </div>
+                        <p>Great location and very clean! The host was responsive and helpful.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 BookingService. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

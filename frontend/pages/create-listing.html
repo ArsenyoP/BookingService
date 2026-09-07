@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Listing - BookingService</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">BookingService</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="listing.html">Listings</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="host-dashboard">
+                <h1>Host Dashboard</h1>
+                <nav class="host-nav">
+                    <a href="create-listing.html" class="active">Create Listing</a>
+                    <a href="my-listings.html">My Listings</a>
+                    <a href="bookings.html">Bookings</a>
+                </nav>
+            </section>
+
+            <section class="listing-form">
+                <h2>Create a New Listing</h2>
+                <form id="listingForm">
+                    <div class="form-group">
+                        <label for="title">Title*</label>
+                        <input type="text" id="title" name="title" required placeholder="Cozy Apartment in City Center">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description*</label>
+                        <textarea id="description" name="description" required placeholder="Tell guests about your space..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="listingType">Listing Type*</label>
+                        <select id="listingType" name="listingType" required>
+                            <option value="">Select type</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                            <option value="villa">Villa</option>
+                            <option value="cabin">Cabin</option>
+                            <option value="boutique_hotel">Boutique Hotel</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Address*</label>
+                        <div class="address-fields">
+                            <input type="text" id="country" name="country" placeholder="Country" required>
+                            <input type="text" id="city" name="city" placeholder="City" required>
+                            <input type="text" id="street" name="street" placeholder="Street" required>
+                            <input type="text" id="houseNumber" name="houseNumber" placeholder="House Number" required>
+                            <input type="number" id="floor" name="floor" placeholder="Floor" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Amenities</label>
+                        <div class="amenities-checkboxes">
+                            <label><input type="checkbox" name="amenity" value="wifi"> WiFi</label>
+                            <label><input type="checkbox" name="amenity" value="kitchen"> Kitchen</label>
+                            <label><input type="checkbox" name="amenity" value="ac"> Air Conditioning</label>
+                            <label><input type="checkbox" name="amenity" value="parking"> Parking</label>
+                            <label><input type="checkbox" name="amenity" value="washer"> Washer</label>
+                            <label><input type="checkbox" name="amenity" value="elevator"> Elevator</label>
+                            <label><input type="checkbox" name="amenity" value="pool"> Pool</label>
+                            <label><input type="checkbox" name="amenity" value="gym"> Gym</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary btn-block">Create Listing</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 BookingService. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

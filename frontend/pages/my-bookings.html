@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - BookingService</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">BookingService</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="listing.html">Listings</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>My Bookings</h1>
+            <div class="booking-tabs">
+                <button class="tab-active">Upcoming</button>
+                <button>Past</button>
+                <button>Cancelled</button>
+            </div>
+            <div class="booking-list">
+                <!-- Booking card -->
+                <div class="booking-card">
+                    <div class="booking-info">
+                        <h3>Cozy Apartment in City Center</h3>
+                        <p class="location">New York, USA</p>
+                        <div class="booking-dates">
+                            <span>Check-in: May 10, 2024</span>
+                            <span>Check-out: May 15, 2024</span>
+                        </div>
+                        <div class="booking-guests">
+                            <span>2 adults</span>
+                            <span>1 child</span>
+                        </div>
+                    </div>
+                    <div class="booking-details">
+                        <p class="price">$600 total</p>
+                        <span class="status confirmed">Confirmed</span>
+                        <a href="booking-details.html" class="btn-secondary">View Details</a>
+                    </div>
+                </div>
+                <!-- More booking cards -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 BookingService. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookingService - Find Your Stay</title>
+    </title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">BookingService</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="listing.html">Listings</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2>Find your perfect stay</h2>
+                <form class="search-form">
+                    <input type="text" placeholder="Destination" required>
+                    <input type="date" placeholder="Check-in" required>
+                    <input type="date" placeholder="Check-out" required>
+                    <div class="guests">
+                        <label>Guests</label>
+                        <select>
+                            <option>1 guest</option>
+                            <option>2 guests</option>
+                            <option>3 guests</option>
+                            <option>4+ guests</option>
+                        </select>
+                    </div>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="listings">
+            <div class="container">
+                <h2>Featured Listings</h2>
+                <div class="listing-grid">
+                    <!-- Listing Card -->
+                    <div class="listing-card">
+                        <img src="../assets/placeholder.svg" alt="Cozy Apartment">
+                        <div class="listing-info">
+                            <h3>Cozy Apartment in City Center</h3>
+                            <p class="location">New York, USA</p>
+                            <div class="rating">
+                                ⭐⭐⭐⭐☆ (4.2)
+                            </div>
+                            <p class="price">$120/night</p>
+                        </div>
+                        <a href="listing-details.html" class="btn-primary">View Details</a>
+                    </div>
+                    <!-- Repeat for more cards -->
+                    <div class="listing-card">
+                        <img src="../assets/placeholder.svg" alt="Beach House">
+                        <div class="listing-info">
+                            <h3>Beach House with Ocean View</h3>
+                            <p class="location">Malibu, USA</p>
+                            <div class="rating">
+                                ⭐⭐⭐⭐⭐ (5.0)
+                            </div>
+                            <p class="price">$250/night</p>
+                        </div>
+                        <a href="listing-details.html" class="btn-primary">View Details</a>
+                    </div>
+                    <div class="listing-card">
+                        <img src="../assets/placeholder.svg" alt="Mountain Cabin">
+                        <div class="listing-info">
+                            <h3>Mountain Cabin Retreat</h3>
+                            <p class="location">Aspen, USA</p>
+                            <div class="rating">
+                                ⭐⭐⭐☆☆ (3.8)
+                            </div>
+                            <p class="price">$180/night</p>
+                        </div>
+                        <a href="listing-details.html" class="btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 BookingService. All rights reserved.</p>
+            <nav>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

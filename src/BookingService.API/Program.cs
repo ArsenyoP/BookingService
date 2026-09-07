@@ -49,6 +49,18 @@ namespace Booking.API
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
+
             var app = builder.Build();
 
             if (!app.Environment.IsEnvironment("Testing"))
@@ -78,6 +90,7 @@ namespace Booking.API
 
             Console.WriteLine(app.Environment);
 
+
             app.MapHealthChecks("health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
@@ -85,6 +98,7 @@ namespace Booking.API
 
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors("AllowFrontend");
 
             app.UseExceptionHandler();
             app.UseSerilogRequestLogging();
