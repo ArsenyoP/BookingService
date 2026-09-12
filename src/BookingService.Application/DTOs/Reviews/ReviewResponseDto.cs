@@ -2,6 +2,7 @@
 {
     public sealed record ReviewResponseDto
     {
+        public Guid Id { get; init; }
         public int Score { get; init; }
         public string Text { get; init; } = string.Empty;
         public string UserName { get; init; } = string.Empty;

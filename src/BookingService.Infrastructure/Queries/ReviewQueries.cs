@@ -15,7 +15,8 @@ namespace Booking.Infrastructure.Queries
             var connection = new SqlConnection(connectionString);
 
 
-            var sql = @"SELECT 
+            var sql = @"SELECT
+                    r.Id,
 	                r.Score,
 	                r.Text,
 	                u.UserName,
@@ -47,6 +48,7 @@ namespace Booking.Infrastructure.Queries
             var connection = new SqlConnection(connectionString);
 
             var sql = @"SELECT 
+                r.Id,
                 r.Score,
                 r.Text,
                 u.UserName,
@@ -75,6 +77,7 @@ namespace Booking.Infrastructure.Queries
             var connection = new SqlConnection(connectionString);
 
             var sql = @"SELECT 
+                    r.Id,
 	                r.Score,
 	                r.Text,
 	                u.UserName,
