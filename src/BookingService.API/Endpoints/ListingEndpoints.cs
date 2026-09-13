@@ -43,7 +43,7 @@ namespace Booking.API.Endpoints
         {
             var result = await _sender.Send(new GetByIdQuery(id), ct);
 
-            return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(result.Error);
+            return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(result.Error);
         }
 
         private static async Task<IResult> CreateListing(
