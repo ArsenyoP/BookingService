@@ -6,12 +6,8 @@ using Booking.Domain.Errors;
 
 namespace Booking.Application.UseCases.Listing.GetById
 {
-    public sealed class GetByIdHandler(IListingQueries _listingQueries) : IQueryHandler<GetByIdQuery, ListingResponseDto>,
-        ICachableQuery
+    public sealed class GetByIdHandler(IListingQueries _listingQueries) : IQueryHandler<GetByIdQuery, ListingResponseDto>
     {
-        public Guid Id { get; set; }
-
-        public string Key => $"listing:{Id}";
 
         public TimeSpan Expiration => TimeSpan.FromSeconds(300);
 
