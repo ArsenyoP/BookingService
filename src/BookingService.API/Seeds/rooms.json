@@ -34,5 +34,95 @@
     "pricePerNight": 80.00,
     "adultsCapacity": 2,
     "childrenCapacity": 1
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Standard Double Room 101",
+    "description": "Cozy standard room with a double bed and city view",
+    "type": "Standard",
+    "pricePerNight": 75.00,
+    "adultsCapacity": 2,
+    "childrenCapacity": 1
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Standard Single Room 102",
+    "description": "Compact room ideal for solo travelers or business trips",
+    "type": "Standard",
+    "pricePerNight": 60.00,
+    "adultsCapacity": 1,
+    "childrenCapacity": 0
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Deluxe King Room 201",
+    "description": "Spacious deluxe room featuring a king-size bed and private balcony",
+    "type": "Deluxe",
+    "pricePerNight": 120.00,
+    "adultsCapacity": 2,
+    "childrenCapacity": 1
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Executive Suite 301",
+    "description": "Premium suite with separate living area and panoramic lake view",
+    "type": "Suite",
+    "pricePerNight": 200.00,
+    "adultsCapacity": 3,
+    "childrenCapacity": 2
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Cozy One-Bedroom Flat 401",
+    "description": "Fully equipped modern apartment with kitchen and dining zone",
+    "type": "OneBedFlar",
+    "pricePerNight": 110.00,
+    "adultsCapacity": 2,
+    "childrenCapacity": 1
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Family Two-Bedroom Flat 402",
+    "description": "Large apartment with two separate bedrooms and a spacious lounge",
+    "type": "TwoBedFlar",
+    "pricePerNight": 160.00,
+    "adultsCapacity": 4,
+    "childrenCapacity": 2
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Luxury Three-Bedroom Flat 501",
+    "description": "Premium large-scale flat suitable for big families or groups",
+    "type": "ThreeBedFlat",
+    "pricePerNight": 240.00,
+    "adultsCapacity": 6,
+    "childrenCapacity": 3
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Top-Floor Penthouse 601",
+    "description": "Exclusive penthouse with terrace, jacuzzi, and high-end finishings",
+    "type": "Penthouse",
+    "pricePerNight": 450.00,
+    "adultsCapacity": 4,
+    "childrenCapacity": 2
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Shared Budget Room 01",
+    "description": "Clean shared room with individual lockers and shared bathroom",
+    "type": "SharedRoom",
+    "pricePerNight": 30.00,
+    "adultsCapacity": 1,
+    "childrenCapacity": 0
+  },
+  {
+    "listingTitle": "Hotel Halichina",
+    "title": "Bunk Bed in 6-Bed Dormitory",
+    "description": "Single bed space in a mixed dormitory room with personal light and socket",
+    "type": "DormitoryBed",
+    "pricePerNight": 20.00,
+    "adultsCapacity": 1,
+    "childrenCapacity": 0
   }
 ]

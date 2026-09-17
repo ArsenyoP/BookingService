@@ -1,8 +1,11 @@
 using Booking.API.Endpoints;
 using Booking.Application;
 using Booking.Infrastructure;
+using Booking.Infrastructure.Data;
 using Booking.Infrastructure.ExtensionMethods;
+using Booking.Infrastructure.Seeding;
 using HealthChecks.UI.Client;
+using Microsoft.EntityFrameworkCore;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using Serilog;
@@ -62,6 +65,21 @@ namespace Booking.API
 
 
             var app = builder.Build();
+
+
+            if (app.Environment.IsDevelopment())
+            {
+                using var scope = app.Services.CreateScope();
+
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                Log.Information("Applying pending database migrations...");
+                await dbContext.Database.MigrateAsync();
+                Log.Information("Database migrations applied successfully.");
+
+                var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+                await seeder.SeedAsync();
+            }
 
             if (!app.Environment.IsEnvironment("Testing"))
             {

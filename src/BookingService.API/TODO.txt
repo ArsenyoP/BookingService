@@ -32,9 +32,10 @@ Tests
 Add telemetry
 Add payment
 API versioning
+
+
 Azure BlobStorage for photos
 
-!!!FIX CACHING FOR LISTING WHEN AMENITIES ADDED!!!
 
 
 Front:
