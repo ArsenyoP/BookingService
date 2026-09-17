@@ -255,7 +255,12 @@ namespace Booking.Infrastructure.Seeding
             if (models is null || models.Count == 0)
                 return;
 
-            var rooms = await _dbContext.Rooms.ToDictionaryAsync(r => r.Title, ct);
+            //var rooms = await _dbContext.Rooms.ToDictionaryAsync(r => r.Title, ct);
+
+            var rooms = await _dbContext.Rooms
+                .GroupBy(r => r.Title)
+                .ToDictionaryAsync(g => g.Key, g => g.First(), ct);
+
             var users = await _dbContext.Users.ToDictionaryAsync(u => u.UserName!, ct);
 
             var existingBookings = _dbContext.Bookings
