@@ -32,6 +32,7 @@ Tests
 Add telemetry
 Add payment
 API versioning
+Fix 429 response status code after proccesing pack of outbox messages
 
 
 Azure BlobStorage for photos
