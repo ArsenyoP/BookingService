@@ -6,7 +6,7 @@ namespace Booking.Application.UseCases.Room.GetById
 {
     public sealed record GetByIdQuery(Guid Id, bool expandLocation = false) : IQuery<RoomResponseDto>, ICachableQuery
     {
-        public string Key => $"room:{Id}";
+        public string Key => $"room:{Id}:expand-loc:{expandLocation}";
 
         public TimeSpan Expiration => TimeSpan.FromMinutes(5);
     }
