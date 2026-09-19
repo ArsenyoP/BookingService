@@ -1,6 +1,7 @@
 using Booking.API.Endpoints;
 using Booking.Application;
 using Booking.Infrastructure;
+using Booking.Infrastructure.Data;
 using Booking.Infrastructure.ExtensionMethods;
 using HealthChecks.UI.Client;
 using Microsoft.EntityFrameworkCore;
@@ -65,19 +66,19 @@ namespace Booking.API
             var app = builder.Build();
 
             //Seeding
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    using var scope = app.Services.CreateScope();
+            if (app.Environment.IsDevelopment())
+            {
+                using var scope = app.Services.CreateScope();
 
-            //    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            //    Log.Information("Applying pending database migrations...");
-            //    await dbContext.Database.MigrateAsync();
-            //    Log.Information("Database migrations applied successfully.");
+                Log.Information("Applying pending database migrations...");
+                await dbContext.Database.MigrateAsync();
+                Log.Information("Database migrations applied successfully.");
 
-            //    var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
-            //    await seeder.SeedAsync();
-            //}
+                //var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+                //await seeder.SeedAsync();
+            }
 
             if (!app.Environment.IsEnvironment("Testing"))
             {
