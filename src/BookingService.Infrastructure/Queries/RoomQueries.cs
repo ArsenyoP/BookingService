@@ -12,10 +12,16 @@ namespace Booking.Infrastructure.Queries
     public class RoomQueries(string connectionString) : IRoomQueries
     {
 
-        public async Task<RoomResponseDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        public async Task<RoomResponseDto?> GetByIdAsync(Guid id, bool expandLocation = false, CancellationToken ct = default)
         {
             using var connection = new SqlConnection(connectionString);
-            const string sql = """
+
+            string locationSelect = expandLocation ?
+                "l.Address_City AS City," +
+                "l.Address_Street AS Street," +
+                "l.Address_HouseNumber AS HouseNumbe," : "";
+
+            string sql = $"""
                 SELECT 
                     r.Id,
                     r.Title,
@@ -28,6 +34,7 @@ namespace Booking.Infrastructure.Queries
                     r.AverageRating,
                     r.ReviewsCount,
                     l.Title        AS ListingTitle,
+                    {locationSelect}
                     a.Id           AS AmenityId,
                     a.Name         AS Name,
                     a.Category     AS Category
