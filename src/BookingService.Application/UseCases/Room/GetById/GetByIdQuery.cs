@@ -4,7 +4,7 @@ using Booking.Application.DTOs.Rooms;
 
 namespace Booking.Application.UseCases.Room.GetById
 {
-    public sealed record GetByIdQuery(Guid Id) : IQuery<RoomResponseDto>, ICachableQuery
+    public sealed record GetByIdQuery(Guid Id, bool ExpandLocation = false) : IQuery<RoomResponseDto>, ICachableQuery
     {
         public string Key => $"room:{Id}";
 
