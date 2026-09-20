@@ -18,6 +18,7 @@ namespace Booking.Infrastructure.Queries
 
             string locationSelect = expandLocation ?
                 "l.Address_City AS City," +
+                "l.Address_Country AS Country" +
                 "l.Address_Street AS Street," +
                 "l.Address_HouseNumber AS HouseNumbe," : "";
 
