@@ -16,7 +16,7 @@ namespace Booking.Application.DTOs.Rooms
         public string Country { get; init; } = "Unknown";
         public string City { get; init; } = "Unknown";
         public string Street { get; init; } = "Unknown";
-        public string HouseNumbe { get; init; } = "Unknown";
+        public string HouseNumber { get; init; } = "Unknown";
         public Guid ListingId { get; init; }
         public decimal AverageRating { get; init; }
         public int ReviewsCount { get; set; }
