@@ -42,9 +42,10 @@ namespace Booking.API.Endpoints
         private static async Task<IResult> GetById(
             Guid id,
             ISender _sender,
+            bool expandLocation = false,
             CancellationToken ct = default)
         {
-            var result = await _sender.Send(new GetByIdQuery(id), ct);
+            var result = await _sender.Send(new GetByIdQuery(id, expandLocation), ct);
 
             return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(result.Error);
         }

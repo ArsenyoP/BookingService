@@ -1,5 +1,4 @@
 ﻿using Booking.Application.Abstractions;
-using Booking.Application.DTOs;
 using Booking.Application.DTOs.Rooms;
 using Booking.Application.Queries;
 using Booking.Domain.Common;
@@ -11,7 +10,7 @@ namespace Booking.Application.UseCases.Room.GetById
     {
         public async Task<Result<RoomResponseDto>> Handle(GetByIdQuery request, CancellationToken ct)
         {
-            var room = await _roomQueries.GetByIdAsync(request.Id, ct);
+            var room = await _roomQueries.GetByIdAsync(request.Id, request.expandLocation, ct);
 
             if (room is null)
             {
