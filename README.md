@@ -1,5 +1,7 @@
 # BookingService
 
+DOCUMENTATION: https://arsenyo198510.atlassian.net/wiki/x/dAED
+
 A comprehensive booking system built with .NET 9 following Clean Architecture principles.
 
 ## Overview
