@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emailservice-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emailservice
+  template:
+    metadata:
+      labels:
+        app: emailservice
+    spec:
+      containers:
+        - name: emailservice
+          image: arsenyoo/emailservice:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emailservice-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: emailservice
+  ports:
+    - name: emailgrpc
+      protocol: TCP
+      port: 6666
+      targetPort: 6666
