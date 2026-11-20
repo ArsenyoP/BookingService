@@ -51,7 +51,7 @@ namespace Booking.Infrastructure.Seeding
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Data seeding failed. All changes rolled back.");
-                    //await transaction.RollbackAsync(ct);
+                    await transaction.RollbackAsync(ct);
                     throw;
                 }
             });

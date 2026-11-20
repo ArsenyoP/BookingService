@@ -3,6 +3,7 @@ using Booking.Application;
 using Booking.Infrastructure;
 using Booking.Infrastructure.Data;
 using Booking.Infrastructure.ExtensionMethods;
+using Booking.Infrastructure.Seeding;
 using HealthChecks.UI.Client;
 using Microsoft.EntityFrameworkCore;
 using Qdrant.Client;
@@ -66,7 +67,7 @@ namespace Booking.API
             var app = builder.Build();
 
             //Seeding
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
             {
                 using var scope = app.Services.CreateScope();
 
@@ -76,8 +77,8 @@ namespace Booking.API
                 await dbContext.Database.MigrateAsync();
                 Log.Information("Database migrations applied successfully.");
 
-                //var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
-                //await seeder.SeedAsync();
+                var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+                await seeder.SeedAsync();
             }
 
             if (!app.Environment.IsEnvironment("Testing"))
