@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookingapi-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookingapi
+  template:
+    metadata:
+      labels:
+        app: bookingapi
+    spec:
+      containers:
+        - name: bookingapi
+          image: arsenyoo/bookingapi:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: ConnectionStrings__LocalConnections
+              value: "Server=sqlserver,1433;Database=BookingDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;"
+            - name: Redis__Connection
+              value: "redis:6379"
+            - name: Qdrant__Host
+              value: "qdrant"
+            - name: Qdrant__Port
+              value: "6334"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookingapi
+spec:
+  type: LoadBalancer
+  selector:
+    app: bookingapi
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
