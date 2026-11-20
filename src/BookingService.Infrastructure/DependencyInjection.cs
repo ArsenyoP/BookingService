@@ -7,6 +7,7 @@ using Booking.Domain.Interfaces;
 using Booking.Domain.Interfaces.IRepositories;
 using Booking.Domain.Interfaces.Services;
 using Booking.Domain.Services;
+using Booking.Infrastructure.BackgroundJobs;
 using Booking.Infrastructure.Data;
 using Booking.Infrastructure.Interceptors;
 using Booking.Infrastructure.Queries;
@@ -62,33 +63,33 @@ namespace Booking.Infrastructure
                 options.AddInterceptors(interceptor);
             });
 
-            //services.AddQuartz(configure =>
-            //{
-            //    var jobKey = new JobKey(nameof(ProcessOutboxMessageJob));
+            services.AddQuartz(configure =>
+            {
+                var jobKey = new JobKey(nameof(ProcessOutboxMessageJob));
 
-            //    configure
-            //        .AddJob<ProcessOutboxMessageJob>(jobKey)
-            //        .AddTrigger(
-            //            trigger =>
-            //            trigger.ForJob(jobKey)
-            //            .WithSimpleSchedule(
-            //            schedule =>
-            //            schedule.WithIntervalInSeconds(10)
-            //            .RepeatForever()));
+                configure
+                    .AddJob<ProcessOutboxMessageJob>(jobKey)
+                    .AddTrigger(
+                        trigger =>
+                        trigger.ForJob(jobKey)
+                        .WithSimpleSchedule(
+                        schedule =>
+                        schedule.WithIntervalInSeconds(10)
+                        .RepeatForever()));
 
-            //    var cleanUpjobKey = new JobKey(nameof(CleanExpiredRefreshTokenJob));
-            //    configure
-            //        .AddJob<CleanExpiredRefreshTokenJob>(cleanUpjobKey)
-            //        .AddTrigger(
-            //            trigger =>
-            //            trigger.ForJob(cleanUpjobKey)
-            //            .WithSimpleSchedule(
-            //                schedule =>
-            //                schedule.WithIntervalInHours(1)
-            //            .RepeatForever()));
+                var cleanUpjobKey = new JobKey(nameof(CleanExpiredRefreshTokenJob));
+                configure
+                    .AddJob<CleanExpiredRefreshTokenJob>(cleanUpjobKey)
+                    .AddTrigger(
+                        trigger =>
+                        trigger.ForJob(cleanUpjobKey)
+                        .WithSimpleSchedule(
+                            schedule =>
+                            schedule.WithIntervalInHours(1)
+                        .RepeatForever()));
 
 
-            //});
+            });
 
             services.AddQuartzHostedService();
 
