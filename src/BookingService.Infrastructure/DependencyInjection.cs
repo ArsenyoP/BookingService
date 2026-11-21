@@ -209,7 +209,6 @@ namespace Booking.Infrastructure
             services.AddHttpClient<IOpenWeatherService, OpenWeatherService>();
 
             services.Configure<EmailSettings>(configuration.GetSection(nameof(EmailSettings)));
-            services.AddScoped<IEmailService, EmailService>();
 
             services.AddScoped<IRoomQueries>(sp => new RoomQueries(connectionString!));
             services.AddScoped<IListingQueries>(sp => new ListingQueries(connectionString!));
