@@ -1,0 +1,17 @@
+﻿namespace Booking.EmailService.Services
+{
+    public interface IEmailService
+    {
+        Task SendAsync(string toEmail, string subject, string body, CancellationToken ct = default);
+
+        Task SendBookingConfirmationAsync(
+            string toEmail,
+            string guestName,
+            string roomTitle,
+            string period,
+            string totalPrice,
+            string confirmationToken,
+            string ListingTitle,
+            CancellationToken ct = default);
+    }
+}
